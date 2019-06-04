@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/calendar.qml</file>
+        <file>assets/localbase.db</file>
+    </qresource>
+</RCC>
