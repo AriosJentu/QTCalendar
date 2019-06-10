@@ -15,7 +15,7 @@ QList<QObject*> EventModel::eventsForDate(const QDate &date) {
     QList<QObject*> events;
 
     QSqlQuery query;
-    query.prepare("SELECT * FROM Events WHERE date(':dateobj') >= date(EventStart) AND date(':dateobj') <= date(EventEnd)");
+    query.prepare("SELECT * FROM Events WHERE date(:dateobj) >= date(EventStart) AND date(:dateobj) <= date(EventEnd)");
     query.bindValue(":dateobj", date.toString("yyyy-MM-dd"));
 
     bool x = query.exec();
@@ -125,14 +125,18 @@ void EventModel::createConnection() {
     if (!dir.exists(path)) {
         dir.mkpath(path);
         qDebug() << "::: Path created in " << path;
+    } else {
+        qDebug() << "::: Path exist at " << path;
     }
 
     QFile database(filePath);
     if (!database.exists()) {
         database.open(QIODevice::WriteOnly);
         database.close();
-        qDebug() << "::: File created in " << filePath;
+        qDebug() << "::: Database file created in " << filePath;
         alreadyCreated = true;
+    } else {
+        qDebug() << "::: Database file exist in " << filePath;
     }
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
