@@ -16,10 +16,11 @@ Item {
         layoutDirection: Qt.LeftToRight
 
         Rectangle {
+
             width: {
                 var res = parent.width*0.5 - parent.spacing;
                 if (parent.width < parent.height) {
-                    res = parent.width;
+                    res = parent.width - parent.spacing;
                 }
                 res;
             }
@@ -27,7 +28,7 @@ Item {
             height: {
                 var res = parent.height*0.4 - parent.spacing;
                 if (parent.width > parent.height) {
-                    res = parent.height;
+                    res = parent.height - parent.spacing;
                 }
                 res;
             }
@@ -37,6 +38,9 @@ Item {
                 id: viewEventListHeader
                 width: parent.width
                 height: viewEventDayLabel.height
+                color: "transparent"
+                anchors.fill: parent
+                anchors.margins: 10
 
                 Row {
                     id: viewEventDayRow
@@ -46,9 +50,10 @@ Item {
 
                     Label {
                         id: viewEventDayLabel
-                        text: "Hello world"
+                        text: "29"
                         font.pointSize: 35
                     }
+
                     Column {
                         height: viewEventDayLabel.height
                         anchors.margins: 5
@@ -56,13 +61,13 @@ Item {
                         Label {
                             id: viewEventStandaloneDayName
                             readonly property var options: { weekday: "long" }
-                            text: "Hello world 2"
+                            text: "Wednesday"
                             font.pointSize: 18
                         }
 
                         Label {
                             id: viewEventMonthYearName
-                            text: "Hello world 3"
+                            text: "September 2019"
                             font.pointSize: 12
                         }
 
@@ -72,8 +77,8 @@ Item {
 
                 RoundButton {
                     id: closeEventButton
-                    width: parent.height-10
-                    height: parent.height-10
+                    width: viewEventDayLabel.height-10
+                    height: viewEventDayLabel.height-10
                     anchors.right: viewEventDayRow.right
                     anchors.margins: 5
 
@@ -86,8 +91,8 @@ Item {
 
                 RoundButton {
                     id: editEventButton
-                    width: parent.height-10
-                    height: parent.height-10
+                    width: (viewEventDayLabel.height-10)*1.5
+                    height: viewEventDayLabel.height-10
                     anchors.right: closeEventButton.left
                     anchors.margins: 5
 
@@ -96,8 +101,8 @@ Item {
 
                 RoundButton {
                     id: deleteEventButton
-                    width: parent.height-10
-                    height: parent.height-10
+                    width: (viewEventDayLabel.height-10)*2
+                    height: viewEventDayLabel.height-10
                     anchors.right: editEventButton.left
                     anchors.margins: 5
 
@@ -111,15 +116,15 @@ Item {
             width: {
                 var res = parent.width*0.5 - parent.spacing;
                 if (parent.width < parent.height) {
-                    res = parent.width;
+                    res = parent.width - parent.spacing;
                 }
                 res;
             }
 
             height: {
-                var res = parent.height*0.5 - parent.spacing;
+                var res = parent.height*0.6 - parent.spacing;
                 if (parent.width > parent.height) {
-                    res = parent.height;
+                    res = parent.height - parent.spacing;
                 }
                 res;
             }
@@ -137,5 +142,10 @@ Item {
         viewEventMonthYearName.text = Qt.locale().standaloneMonthName(
             modelobj.startDate.getMonth())
             + modelobj.startDate.toLocaleDateString(Qt.locale(), " yyyy")
+        console.log("Changing titles");
+    }
+
+    function sendMessage(message) {
+        console.log(message);
     }
 }

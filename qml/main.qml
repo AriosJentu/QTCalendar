@@ -9,8 +9,9 @@ Window {
 
     id: root
     visible: true
-    minimumWidth: 500
-    minimumHeight: 400
+    minimumWidth: 700
+    minimumHeight: 500
+
 
     StackView {
         id: mainStackView;
@@ -25,14 +26,10 @@ Window {
 
     Component {
         id: viewPage
+
         EventView {
-            id: viewPageEventViewElement
+            id: viewPageEventView
         }
     }
 
-    Component {
-        id: testView
-        TestView {}
-
-    }
 }

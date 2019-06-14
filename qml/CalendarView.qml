@@ -2,12 +2,11 @@ import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
-import QtQuick.Window 2.10
 import org.jentucalendar.calendar 1.0
 
 Item {
 
-    id: rootWindow
+    id: calendarWindow
     //anchors.fill: parent
 
     EventModel {
@@ -193,8 +192,6 @@ Item {
 
             ListView {
                 id: eventsListView
-                anchors.leftMargin: 10
-                anchors.topMargin: 5
                 spacing: 4
                 clip: true
                 header: eventListHeader
@@ -242,7 +239,6 @@ Item {
                                 width: parent.width
                                 wrapMode: Text.Wrap
                                 text: {
-                                    //console.log(modelData.startDate);
                                     modelData.startDate.toLocaleTimeString(maincalendar.locale, Locale.ShortFormat);
                                 }
                             }
@@ -271,18 +267,20 @@ Item {
                             }
 
                             onClicked: {
+
                                 if (mouse.button === Qt.RightButton) {
                                     contextMenu.popup();
                                     currentEventRectangle.hoverColor = "transparent";
                                 } else {
                                     mainStackView.push(viewPage);
-                                    //viewPage.setEvent(modelData);
+                                    //viewPageEventView.sendMessage("Hello world!");
+                                    //viewPageEventView.setEvent(modelData);
                                 }
 
-//                                console.log(modelData.startDate);
-//                                console.log(modelData.endDate);
-//                                console.log(modelData.name);
-//                                console.log(modelData.information);
+                                //console.log(modelData.startDate);
+                                //console.log(modelData.endDate);
+                                //console.log(modelData.name);
+                                //console.log(modelData.information);
                             }
 
                             Menu {
