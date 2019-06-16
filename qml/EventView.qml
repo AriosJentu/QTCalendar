@@ -144,8 +144,4 @@ Item {
             + modelobj.startDate.toLocaleDateString(Qt.locale(), " yyyy")
         console.log("Changing titles");
     }
-
-    function sendMessage(message) {
-        console.log(message);
-    }
 }

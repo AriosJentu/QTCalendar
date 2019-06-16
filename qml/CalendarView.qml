@@ -205,8 +205,6 @@ Item {
                     height: eventItemColumn.height
                     anchors.horizontalCenter: parent.horizontalCenter
 
-                    property variant win;
-
                     Rectangle {
                         width: parent.width
                         height: 1
@@ -244,7 +242,9 @@ Item {
                             }
                         }
 
+
                         MouseArea {
+
                             width: parent.width
                             height: parent.height
                             hoverEnabled: true
@@ -273,14 +273,9 @@ Item {
                                     currentEventRectangle.hoverColor = "transparent";
                                 } else {
                                     mainStackView.push(viewPage);
-                                    //viewPageEventView.sendMessage("Hello world!");
-                                    //viewPageEventView.setEvent(modelData);
+                                    mainStackView.currentItem.setEvent(modelData);
                                 }
 
-                                //console.log(modelData.startDate);
-                                //console.log(modelData.endDate);
-                                //console.log(modelData.name);
-                                //console.log(modelData.information);
                             }
 
                             Menu {

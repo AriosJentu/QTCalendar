@@ -28,7 +28,7 @@ Window {
         id: viewPage
 
         EventView {
-            id: viewPageEventView
+            id: eventViewObject
         }
     }
 
