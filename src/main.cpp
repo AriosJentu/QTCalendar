@@ -35,14 +35,16 @@ int main(int argc, char *argv[])
 
     engine.load(url);
 
-    /*Event today;
+    /*
+    Event today;
     today.setName("Welcome to the future");
     today.setInfo("Were going to use this bullshit at the end of the starts");
     today.setStartDate(QDateTime(QDate(2019, 6, 5), QTime(12, 16, 25)));
     today.setEndDate(QDateTime(QDate(2019, 6, 5), QTime(12, 19, 26)));
 
     EventModel model;
-    model.addEvent(today);*/
+    model.addEvent(today);
+    */
 
     app.applicationDirPath();
 

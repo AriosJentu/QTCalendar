@@ -29,6 +29,7 @@ QList<QObject*> EventModel::eventsForDate(const QDate &date) {
 //        qInfo() << query.value("EventStart") << " " << query.value("EventEnd");
 
         Event* curevt = new Event(this);
+        curevt->setID(query.value("EventID").toInt());
         curevt->setName(query.value("EventName").toString());
         curevt->setInfo(query.value("EventInformation").toString());
 
@@ -158,4 +159,32 @@ void EventModel::createConnection() {
             ) \
         ");
     }
+}
+
+void EventModel::addEvent(const int id, const QString name, const QString info, const QDateTime startDate, const QDateTime endDate) {
+    Event evt;
+    evt.setName(name);
+    evt.setInfo(info);
+    evt.setStartDate(startDate);
+    evt.setEndDate(endDate);
+    addEvent(evt);
+}
+
+void EventModel::removeEvent(const int id) {
+    Event evt;
+    evt.setID(id);
+    removeEvent(evt);
+}
+
+void EventModel::updateEvent(const int updid, const QString newName, const QString newInfo, const QDateTime newStartDate, const QDateTime newEndDate) {
+    Event updatable;
+    updatable.setID(updid);
+
+    Event update;
+    update.setName(newName);
+    update.setInfo(newInfo);
+    update.setStartDate(newStartDate);
+    update.setEndDate(newEndDate);
+
+    updateEvent(updatable, update);
 }
