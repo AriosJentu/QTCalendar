@@ -166,7 +166,20 @@ Item {
                     onClicked: {
                         mainStackView.push(editPage);
                     }
+                }
 
+                RoundButton {
+                    id: gotoTodayButton
+                    width: (parent.height-10)*1.5
+                    height: parent.height-10
+                    anchors.right: addEventButton.left
+                    anchors.margins: 5
+
+                    text: "Today"
+
+                    onClicked: {
+                        maincalendar.selectedDate = new Date();
+                    }
                 }
             }
 
@@ -280,7 +293,12 @@ Item {
 
                             Menu {
                                 id: contextMenu
-                                MenuItem { text: "Edit" }
+                                MenuItem {
+                                    text: "Edit"
+                                    onTriggered: {
+                                        mainStackView.push(editPage);
+                                    }
+                                }
                                 MenuItem {
                                     text: "Delete"
                                     onTriggered: {

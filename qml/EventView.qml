@@ -111,6 +111,10 @@ Item {
                         anchors.margins: 5
 
                         text: "Edit"
+
+                        onClicked: {
+                            mainStackView.push(editPage);
+                        }
                     }
 
                     RoundButton {
