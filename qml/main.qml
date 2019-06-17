@@ -30,10 +30,12 @@ Window {
 
     Component {
         id: viewPage
+        EventView {}
+    }
 
-        EventView {
-            id: eventViewObject
-        }
+    Component {
+        id: editPage
+        EditView {}
     }
 
 }
