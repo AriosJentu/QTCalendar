@@ -26,12 +26,10 @@ Item {
 
         Rectangle {
 
-            id: parentRectangle
-
             width: {
                 var res = parent.width*0.5 - parent.spacing;
                 if (parent.width < parent.height) {
-                    res = parent.width - parent.spacing;
+                    res = parent.width;
                 }
                 res;
             }
@@ -39,7 +37,7 @@ Item {
             height: {
                 var res = parent.height*0.4 - parent.spacing;
                 if (parent.width > parent.height) {
-                    res = parent.height - parent.spacing;
+                    res = parent.height;
                 }
                 res;
             }
@@ -101,9 +99,6 @@ Item {
                         onClicked: {
                             mainStackView.push(mainPage);
                         }
-                        onWindowChanged: {
-                            console.log(closeEventButton.x, closeEventButton.y);
-                        }
 
                         text: "x"
                     }
@@ -136,7 +131,6 @@ Item {
                     }
                 }
             }
-
 
             ListView {
 
@@ -228,7 +222,7 @@ Item {
             width: {
                 var res = parent.width*0.5 - parent.spacing;
                 if (parent.width < parent.height) {
-                    res = parent.width - parent.spacing;
+                    res = parent.width;
                 }
                 res;
             }
@@ -236,7 +230,7 @@ Item {
             height: {
                 var res = parent.height*0.6 - parent.spacing;
                 if (parent.width > parent.height) {
-                    res = parent.height - parent.spacing;
+                    res = parent.height;
                 }
                 res;
             }

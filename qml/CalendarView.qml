@@ -163,6 +163,10 @@ Item {
 
                     text: "+"
 
+                    onClicked: {
+                        mainStackView.push(editPage);
+                    }
+
                 }
             }
 
@@ -287,7 +291,6 @@ Item {
                                 }
                             }
                         }
-
                     }
                 }
             }
