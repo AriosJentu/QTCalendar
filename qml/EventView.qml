@@ -126,6 +126,13 @@ Item {
                         anchors.margins: 5
 
                         text: "Delete"
+
+                        onClicked: {
+                            console.log("::: Removing event with ID ", currentEvent.id)
+                            eventModel.removeEvent(currentEvent.id);
+                            mainStackView.push(mainPage);
+                            currentEvent = none;
+                        }
                     }
                 }
             }

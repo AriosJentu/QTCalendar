@@ -12,6 +12,10 @@ Window {
     minimumWidth: 700
     minimumHeight: 500
 
+    EventModel {
+        id: eventModel
+    }
+
 
     StackView {
         id: mainStackView;

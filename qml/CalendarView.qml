@@ -9,10 +9,6 @@ Item {
     id: calendarWindow
     //anchors.fill: parent
 
-    EventModel {
-        id: eventModel
-    }
-
     Flow {
         id: row
         anchors.fill: parent
@@ -198,7 +194,7 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 10
                 model: eventModel.eventsForDate(maincalendar.selectedDate)
-
+                interactive: true
 
                 delegate: Rectangle {
                     width: eventsListView.width
@@ -281,7 +277,14 @@ Item {
                             Menu {
                                 id: contextMenu
                                 MenuItem { text: "Edit" }
-                                MenuItem { text: "Delete" }
+                                MenuItem {
+                                    text: "Delete"
+                                    onTriggered: {
+                                        console.log("::: Removing event with ID ", modelData.id)
+                                        eventModel.removeEvent(modelData.id);
+                                        eventsListView.model = eventModel.eventsForDate(maincalendar.selectedDate)
+                                    }
+                                }
                             }
                         }
 
