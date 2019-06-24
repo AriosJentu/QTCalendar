@@ -6,6 +6,7 @@ import QtQuick.Controls 2.5
 Item {
 
     id: editWindow
+    property var currentEvent
 
     Flow {
 
@@ -60,6 +61,7 @@ Item {
                     }
 
                     RoundButton {
+
                         id: closeEditButton
                         width: viewEditTitle.height*1.5
                         height: viewEditTitle.height
@@ -68,6 +70,7 @@ Item {
 
                         onClicked: {
                             mainStackView.push(mainPage);
+                            mainStackView.currentItem.setSelectedDate(currentEvent.startDate);
                         }
 
                         onWindowChanged: {
@@ -78,6 +81,7 @@ Item {
                     }
 
                     RoundButton {
+
                         id: saveEditButton
                         width: viewEditTitle.height*1.5
                         height: viewEditTitle.height
@@ -85,6 +89,11 @@ Item {
                         anchors.margins: 5
 
                         text: "Save"
+
+                        onClicked: {
+                            mainStackView.push(mainPage);
+                            mainStackView.currentItem.setSelectedDate(currentEvent.startDate);
+                        }
                     }
                 }
             }
@@ -111,5 +120,10 @@ Item {
             }
             border.color: Qt.darker("#F4F4F4", 1.2)
         }
+    }
+
+    function setEvent(modelobj) {
+        console.log("Changing titles");
+        currentEvent = modelobj;
     }
 }

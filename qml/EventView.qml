@@ -64,7 +64,7 @@ Item {
 
                         Label {
                             id: viewEventDayLabel
-                            text: {viewEventDayLabelText}
+                            text: viewEventDayLabelText
                             font.pointSize: 35
                         }
 
@@ -75,13 +75,13 @@ Item {
                             Label {
                                 id: viewEventStandaloneDayName
                                 readonly property var options: { weekday: "long" }
-                                text: {viewEventStandaloneDayNameText}
+                                text: viewEventStandaloneDayNameText
                                 font.pointSize: 18
                             }
 
                             Label {
                                 id: viewEventMonthYearName
-                                text: {viewEventMonthYearNameText}
+                                text: viewEventMonthYearNameText
                                 font.pointSize: 12
                             }
 
@@ -98,6 +98,7 @@ Item {
 
                         onClicked: {
                             mainStackView.push(mainPage);
+                            mainStackView.currentItem.setSelectedDate(currentEvent.startDate);
                         }
 
                         text: "x"
@@ -114,6 +115,7 @@ Item {
 
                         onClicked: {
                             mainStackView.push(editPage);
+                            mainStackView.currentItem.setEvent(currentEvent);
                         }
                     }
 
@@ -130,7 +132,7 @@ Item {
                             console.log("::: Removing event with ID ", currentEvent.id)
                             eventModel.removeEvent(currentEvent.id);
                             mainStackView.push(mainPage);
-                            currentEvent = none;
+                            mainStackView.currentItem.setSelectedDate(currentEvent.startDate);
                         }
                     }
                 }
@@ -181,13 +183,13 @@ Item {
                             text: {
                                 switch (index) {
                                 case 0:
-                                    currentEvent.name;
+                                    currentEvent.name || "";
                                     break;
                                 case 1:
-                                    currentEvent.startDate.toLocaleString(Qt.locale(), dateFormat);
+                                    currentEvent.startDate.toLocaleString(Qt.locale(), dateFormat) || "";
                                     break;
                                 case 2:
-                                    currentEvent.endDate.toLocaleString(Qt.locale(), dateFormat);
+                                    currentEvent.endDate.toLocaleString(Qt.locale(), dateFormat) || "";
                                     break;
                                 default:
                                     "Event"
@@ -254,7 +256,18 @@ Item {
     }
 
     function setEvent(modelobj) {
+
         console.log("Changing titles");
         currentEvent = modelobj;
+
+        viewEventDayLabelText = modelobj.startDate.getDate()
+
+        viewEventStandaloneDayNameText = Qt.locale().standaloneDayName(
+            modelobj.startDate.getDay(),
+            Locale.LongFormat)
+
+        viewEventMonthYearNameText = Qt.locale().standaloneMonthName(
+            modelobj.startDate.getMonth()) +
+            modelobj.startDate.toLocaleDateString(Qt.locale(), " yyyy")
     }
 }

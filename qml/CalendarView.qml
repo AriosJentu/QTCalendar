@@ -9,6 +9,10 @@ Item {
     id: calendarWindow
     //anchors.fill: parent
 
+    function setSelectedDate(date) {
+        maincalendar.selectedDate = date;
+    }
+
     Flow {
         id: row
         anchors.fill: parent
@@ -297,6 +301,7 @@ Item {
                                     text: "Edit"
                                     onTriggered: {
                                         mainStackView.push(editPage);
+                                        mainStackView.currentItem.setEvent(modelData);
                                     }
                                 }
                                 MenuItem {
