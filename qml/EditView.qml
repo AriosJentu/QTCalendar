@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
+import org.jentucalendar.calendar 1.0
 
 Item {
 
@@ -123,7 +124,11 @@ Item {
     }
 
     function setEvent(modelobj) {
-        console.log("Changing titles");
+        viewEditTitle.text = "Edit event";
         currentEvent = modelobj;
+    }
+
+    function setNewEvent(date) {
+        viewEditTitle.text = "New event";
     }
 }

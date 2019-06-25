@@ -169,6 +169,7 @@ Item {
 
                     onClicked: {
                         mainStackView.push(editPage);
+                        mainStackView.currentItem.setNewEvent(maincalendar.selectedDate);
                     }
                 }
 
