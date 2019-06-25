@@ -161,7 +161,7 @@ void EventModel::createConnection() {
     }
 }
 
-void EventModel::addEvent(const int id, const QString name, const QString info, const QDateTime startDate, const QDateTime endDate) {
+void EventModel::addEvent(const QString name, const QString info, const QDateTime startDate, const QDateTime endDate) {
     Event evt;
     evt.setName(name);
     evt.setInfo(info);
