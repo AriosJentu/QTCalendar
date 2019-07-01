@@ -6,5 +6,6 @@
         <file>qml/main.qml</file>
         <file>qml/EventView.qml</file>
         <file>qml/EditView.qml</file>
+        <file>assets/faregular.ttf</file>
     </qresource>
 </RCC>

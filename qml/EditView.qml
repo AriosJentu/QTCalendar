@@ -64,7 +64,7 @@ Item {
                     RoundButton {
 
                         id: closeEditButton
-                        width: viewEditTitle.height*1.5
+                        width: viewEditTitle.height
                         height: viewEditTitle.height
                         anchors.right: mainEditRectangle.right
                         anchors.margins: 5
@@ -78,18 +78,22 @@ Item {
                             console.log(closeEditButton.x, closeEditButton.y, mainEditRectangle.width, viewEditEventListHeader.width, test.width);
                         }
 
-                        text: "Cancel"
+                        text: ""
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
                     }
 
                     RoundButton {
 
                         id: saveEditButton
-                        width: viewEditTitle.height*1.5
+                        width: viewEditTitle.height
                         height: viewEditTitle.height
                         anchors.right: closeEditButton.left
                         anchors.margins: 5
 
-                        text: "Save"
+                        text: ""
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
 
                         onClicked: {
                             mainStackView.push(mainPage);

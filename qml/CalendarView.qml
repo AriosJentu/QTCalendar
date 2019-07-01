@@ -165,7 +165,9 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: 5
 
-                    text: "+"
+                    text: ""
+                    font.family: root.fontAwesome.name
+                    font.pixelSize: 20
 
                     onClicked: {
                         mainStackView.push(editPage);
@@ -175,19 +177,36 @@ Item {
 
                 RoundButton {
                     id: gotoTodayButton
-                    width: (parent.height-10)*1.5
+                    width: parent.height-10
                     height: parent.height-10
                     anchors.right: addEventButton.left
                     anchors.margins: 5
 
-                    text: "Today"
+                    text: ""
+                    font.family: root.fontAwesome.name
+                    font.pixelSize: 20
 
                     onClicked: {
                         maincalendar.selectedDate = new Date();
                     }
                 }
-            }
 
+                RoundButton {
+                    id: refreshDatabase
+                    width: parent.height-10
+                    height: parent.height-10
+                    anchors.right: gotoTodayButton.left
+                    anchors.margins: 5
+
+                    text: ""
+                    font.family: root.fontAwesome.name
+                    font.pixelSize: 20
+
+                    onClicked: {
+                        maincalendar.selectedDate = maincalendar.selectedDate;
+                    }
+                }
+            }
         }
 
         Rectangle {
@@ -248,6 +267,7 @@ Item {
                                 width: parent.width
                                 wrapMode: Text.Wrap
                                 text: modelData.name
+                                font.bold: true
                             }
 
                             Label {
@@ -255,8 +275,10 @@ Item {
                                 width: parent.width
                                 wrapMode: Text.Wrap
                                 text: {
-                                    modelData.startDate.toLocaleTimeString(maincalendar.locale, Locale.ShortFormat);
+                                    "Start: " + modelData.startDate.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:MM") + "\t" +
+                                    "End: " + modelData.endDate.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:MM");
                                 }
+                                font.italic: true
                             }
                         }
 

@@ -101,17 +101,21 @@ Item {
                             mainStackView.currentItem.setSelectedDate(currentEvent.startDate);
                         }
 
-                        text: "x"
+                        text: ""
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
                     }
 
                     RoundButton {
                         id: editEventButton
-                        width: (viewEventDayLabel.height-10)*1.5
+                        width: viewEventDayLabel.height-10
                         height: viewEventDayLabel.height-10
                         anchors.right: closeEventButton.left
                         anchors.margins: 5
 
-                        text: "Edit"
+                        text: ""
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
 
                         onClicked: {
                             mainStackView.push(editPage);
@@ -121,12 +125,14 @@ Item {
 
                     RoundButton {
                         id: deleteEventButton
-                        width: (viewEventDayLabel.height-10)*2
+                        width: viewEventDayLabel.height-10
                         height: viewEventDayLabel.height-10
                         anchors.right: editEventButton.left
                         anchors.margins: 5
 
-                        text: "Delete"
+                        text: ""
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
 
                         onClicked: {
                             console.log("::: Removing event with ID ", currentEvent.id)
@@ -183,13 +189,13 @@ Item {
                             text: {
                                 switch (index) {
                                 case 0:
-                                    currentEvent.name || "";
+                                    currentEvent.name;
                                     break;
                                 case 1:
-                                    currentEvent.startDate.toLocaleString(Qt.locale(), dateFormat) || "";
+                                    currentEvent.startDate.toLocaleString(Qt.locale(), dateFormat);
                                     break;
                                 case 2:
-                                    currentEvent.endDate.toLocaleString(Qt.locale(), dateFormat) || "";
+                                    currentEvent.endDate.toLocaleString(Qt.locale(), dateFormat);
                                     break;
                                 default:
                                     "Event"
@@ -257,7 +263,6 @@ Item {
 
     function setEvent(modelobj) {
 
-        console.log("Changing titles");
         currentEvent = modelobj;
 
         viewEventDayLabelText = modelobj.startDate.getDate()

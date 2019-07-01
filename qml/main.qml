@@ -12,6 +12,8 @@ Window {
     minimumWidth: 700
     minimumHeight: 500
 
+    readonly property FontLoader fontAwesome: FontLoader { source: "qrc:/assets/faregular.ttf" }
+
     EventModel {
         id: eventModel
     }
