@@ -187,20 +187,26 @@ Item {
                             width: parent.width
                             wrapMode: Text.Wrap
                             text: {
-                                switch (index) {
-                                case 0:
-                                    currentEvent.name;
-                                    break;
-                                case 1:
-                                    currentEvent.startDate.toLocaleString(Qt.locale(), dateFormat);
-                                    break;
-                                case 2:
-                                    currentEvent.endDate.toLocaleString(Qt.locale(), dateFormat);
-                                    break;
-                                default:
-                                    "Event"
-                                    break;
+                                if (currentEvent) {
+
+                                    switch (index) {
+                                    case 0:
+                                        currentEvent.name;
+                                        break;
+                                    case 1:
+                                        currentEvent.startDate.toLocaleString(Qt.locale(), dateFormat);
+                                        break;
+                                    case 2:
+                                        currentEvent.endDate.toLocaleString(Qt.locale(), dateFormat);
+                                        break;
+                                    default:
+                                        "Event"
+                                        break;
+                                    }
+                                } else {
+                                    "None"
                                 }
+
                             }
                         }
                     }
@@ -252,7 +258,7 @@ Item {
                 id: eventInfoLabel
                 width: parent.width
                 wrapMode: Text.Wrap
-                text: currentEvent.information
+                text: currentEvent ? currentEvent.information : "None"
                 anchors.fill: parent
                 anchors.margins: 10
             }
