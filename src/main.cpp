@@ -1,7 +1,8 @@
 #include <QGuiApplication>
-#include <QNetworkAccessManager>
 #include <QQmlApplicationEngine>
+#include <QNetworkAccessManager>
 #include <QNetworkReply>
+#include <QUrlQuery>
 
 #include "event.h"
 #include "eventmodel.h"
@@ -55,7 +56,14 @@ int main(int argc, char *argv[])
     //Test GET request
     QNetworkAccessManager* manager = new QNetworkAccessManager();
     QNetworkRequest request;
-    request.setUrl(QUrl("http://planner.skillmasters.ga/api/v1/events"));
+
+    QUrlQuery urlquery;
+    urlquery.addQueryItem("count", "2");
+
+    QUrl dir("http://planner.skillmasters.ga/api/v1/events");
+    dir.setQuery(urlquery);
+
+    request.setUrl(dir);
     request.setRawHeader("X-Firebase-Auth", "serega_mem");
 
     QObject::connect(manager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply) {
