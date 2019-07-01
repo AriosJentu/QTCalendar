@@ -40,4 +40,9 @@ Window {
         EditView {}
     }
 
+    Component {
+        id: selectorView
+        SelectorView {}
+    }
+
 }
