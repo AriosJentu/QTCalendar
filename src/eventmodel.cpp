@@ -42,7 +42,7 @@ QList<QObject*> EventModel::eventsForDate(const QDate &date) {
         repeats.setDate(query.value("EventRepeating").toDate());
         repeats.setTime(query.value("EventRepeating").toDateTime().time());
 
-        qInfo() << query.value("EventEnd") << query.value("EventEnd").toDate() << query.value("EventEnd").toDateTime().time();
+//        qInfo() << query.value("EventEnd") << query.value("EventEnd").toDate() << query.value("EventEnd").toDateTime().time();
 
         curevt->setStartDate(startDate);
         curevt->setEndDate(endDate);
@@ -55,6 +55,12 @@ QList<QObject*> EventModel::eventsForDate(const QDate &date) {
 
     return events;
 }
+
+QObject* EventModel::createEvent() {
+    Event* event = new Event();
+    return event;
+}
+
 
 void EventModel::addEvent(Event &event) {
 
