@@ -7,5 +7,6 @@
         <file>qml/EventView.qml</file>
         <file>qml/EditView.qml</file>
         <file>assets/faregular.ttf</file>
+        <file>qml/SelectorView.qml</file>
     </qresource>
 </RCC>

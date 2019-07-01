@@ -32,6 +32,7 @@ DISTFILES += \
     qml/CalendarView.qml \
     qml/EditView.qml \
     qml/EventView.qml \
+    qml/SelectorView.qml \
     qml/TestView.qml \
     qml/main.qml
 
