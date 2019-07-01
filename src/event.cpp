@@ -64,5 +64,16 @@ void Event::setEndDate(const QDateTime &endDate) {
     }
 }
 
+//Event repeating
+
+QDateTime Event::repeats() const {
+    return repeating;
+}
+
+void Event::setRepeating(const QDateTime &repeats) {
+    repeating = repeats;
+    emit repeatingChanged(repeating);
+}
+
 
 

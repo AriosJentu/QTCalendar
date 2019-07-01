@@ -14,6 +14,7 @@ class Event: public QObject {
     Q_PROPERTY(QString information READ information WRITE setInfo NOTIFY infoChanged)
     Q_PROPERTY(QDateTime startDate READ startDate WRITE setStartDate NOTIFY startDateChanged)
     Q_PROPERTY(QDateTime endDate READ endDate WRITE setEndDate NOTIFY endDateChanged)
+    Q_PROPERTY(QDateTime repeating READ repeats WRITE setRepeating NOTIFY repeatingChanged)
 
     public:
         explicit Event(QObject* parent = nullptr);
@@ -30,9 +31,11 @@ class Event: public QObject {
         QDateTime startDate() const;
         void setStartDate(const QDateTime &startDate);
 
-
         QDateTime endDate() const;
         void setEndDate(const QDateTime &endDate);
+
+        QDateTime repeats() const;
+        void setRepeating(const QDateTime &repeating);
 
     private:
 
@@ -41,6 +44,7 @@ class Event: public QObject {
         QString evtInformation;
         QDateTime evtStartDate;
         QDateTime evtEndDate;
+        QDateTime repeating;
 
     signals:
 
@@ -48,6 +52,7 @@ class Event: public QObject {
         void infoChanged(const QString &information);
         void startDateChanged(const QDateTime &startDate);
         void endDateChanged(const QDateTime &endDate);
+        void repeatingChanged(const QDateTime &repeats);
 
 };
 

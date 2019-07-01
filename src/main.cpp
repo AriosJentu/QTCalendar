@@ -39,8 +39,9 @@ int main(int argc, char *argv[])
     Event today;
     today.setName("Welcome to the future");
     today.setInfo("Were going to use this bullshit at the end of the starts");
-    today.setStartDate(QDateTime(QDate(2019, 6, 5), QTime(12, 16, 25)));
-    today.setEndDate(QDateTime(QDate(2019, 6, 5), QTime(12, 19, 26)));
+    today.setStartDate(QDateTime(QDate(2019, 7, 5), QTime(12, 16, 25)));
+    today.setEndDate(QDateTime(QDate(2019, 7, 8), QTime(12, 19, 26)));
+    today.setRepeating(QDateTime(QDate(0, 0, 0), QTime(0, 0, 0)));
 
     EventModel model;
     model.addEvent(today);
