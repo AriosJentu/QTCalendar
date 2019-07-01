@@ -1,4 +1,4 @@
-QT += qml quick sql
+QT += qml quick sql network
 CONFIG += c++11
 TARGER = Calendar
 
@@ -6,12 +6,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
     src/event.h \
-    src/eventmodel.h
+    src/eventmodel.h \
+    src/sevent.h
 
 SOURCES += \
         src/event.cpp \
         src/eventmodel.cpp \
-        src/main.cpp
+        src/main.cpp \
+        src/sevent.cpp
 
 RESOURCES += resources.qrc
 OTHER_FILES +=
