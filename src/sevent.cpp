@@ -1,4 +1,5 @@
 #include "sevent.h"
+using namespace Server;
 
 //Response class
 
@@ -32,7 +33,7 @@ QString Response::getMessage() {return message;}
 
 //Event Class
 
-ServerEvent::ServerEvent(QString nam, QString dets, QString locn, QString stat) {
+Event::Event(QString nam, QString dets, QString locn, QString stat) {
     created_at = 0;
     updated_at = 0;
     id = 0;
@@ -42,7 +43,7 @@ ServerEvent::ServerEvent(QString nam, QString dets, QString locn, QString stat) 
     location = locn;
     status = stat;
 }
-ServerEvent::ServerEvent(QJsonObject dat) {
+Event::Event(QJsonObject dat) {
     created_at = dat["created_at"].toVariant().toLongLong();
     updated_at = dat["updated_at"].toVariant().toLongLong();
     id = dat["id"].toVariant().toLongLong();
@@ -53,19 +54,19 @@ ServerEvent::ServerEvent(QJsonObject dat) {
     status = dat["status"].toString();
 }
 
-void ServerEvent::setDetails(QString dets) {details = dets;}
-void ServerEvent::setLocation(QString locn) {location = locn;}
-void ServerEvent::setName(QString nam) {name = nam;}
-void ServerEvent::setStatus(QString stat) {status = stat;}
+void Event::setDetails(QString dets) {details = dets;}
+void Event::setLocation(QString locn) {location = locn;}
+void Event::setName(QString nam) {name = nam;}
+void Event::setStatus(QString stat) {status = stat;}
 
-QString ServerEvent::getDetails() {return details;}
-QString ServerEvent::getLocation() {return location;}
-QString ServerEvent::getName() {return name;}
-QString ServerEvent::getStatus() {return status;}
-QString ServerEvent::getOwnerID() {return owner_id;}
-qlonglong ServerEvent::getCreationTime() {return created_at;}
-qlonglong ServerEvent::getUpdateTime() {return updated_at;}
-qlonglong ServerEvent::getID() {return id;}
+QString Event::getDetails() {return details;}
+QString Event::getLocation() {return location;}
+QString Event::getName() {return name;}
+QString Event::getStatus() {return status;}
+QString Event::getOwnerID() {return owner_id;}
+qlonglong Event::getCreationTime() {return created_at;}
+qlonglong Event::getUpdateTime() {return updated_at;}
+qlonglong Event::getID() {return id;}
 
 
 // Event Instance class
@@ -152,8 +153,8 @@ template <class Evt> ResponseData<Evt>::ResponseData(QJsonObject obj) : Response
 template <class Evt> void ResponseData<Evt>::setData(QList<Evt*> dat) {data = dat;}
 template <class Evt> QList<Evt*> ResponseData<Evt>::getData() {return data;}
 
-EventResponse::EventResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<ServerEvent*> dat) : ResponseData<ServerEvent>(cnt, ofst, stat, succ, msg, dat){};
-EventResponse::EventResponse(QJsonObject obj) : ResponseData<ServerEvent>(obj){};
+EventResponse::EventResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<Event*> dat) : ResponseData<Event>(cnt, ofst, stat, succ, msg, dat){};
+EventResponse::EventResponse(QJsonObject obj) : ResponseData<Event>(obj){};
 
 EventInstanceResponse::EventInstanceResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<EventInstance*> dat) : ResponseData<EventInstance>(cnt, ofst, stat, succ, msg, dat){};
 EventInstanceResponse::EventInstanceResponse(QJsonObject obj) : ResponseData<EventInstance>(obj){};

@@ -7,159 +7,162 @@
 #include <QtNetwork>
 #include <QList>
 
-class Response: public QObject {
+namespace Server {
 
-    qlonglong count;
-    qlonglong offset;
-    qlonglong status;
-    bool success;
-    QString message;
+    class Response: public QObject {
 
-    public:
+        qlonglong count;
+        qlonglong offset;
+        qlonglong status;
+        bool success;
+        QString message;
 
-        Response(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message);
-        Response(QJsonObject object);
+        public:
 
-        void setCount(qlonglong count);
-        void setOffset(qlonglong offset);
-        void setStatus(qlonglong status);
-        void setSuccess(bool success);
-        void setMessage(QString message);
+            Response(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message);
+            Response(QJsonObject object);
 
-        qlonglong getCount();
-        qlonglong getOffset();
-        qlonglong getStatus();
-        bool getSuccess();
-        QString getMessage();
+            void setCount(qlonglong count);
+            void setOffset(qlonglong offset);
+            void setStatus(qlonglong status);
+            void setSuccess(bool success);
+            void setMessage(QString message);
 
-};
+            qlonglong getCount();
+            qlonglong getOffset();
+            qlonglong getStatus();
+            bool getSuccess();
+            QString getMessage();
 
-class ServerEvent: public QObject {
+    };
 
-    qlonglong created_at;
-    qlonglong updated_at;
-    qlonglong id;
-    QString owner_id;
+    class Event: public QObject {
 
-    QString details;
-    QString location;
-    QString name;
-    QString status;
+        qlonglong created_at;
+        qlonglong updated_at;
+        qlonglong id;
+        QString owner_id;
 
-    public:
+        QString details;
+        QString location;
+        QString name;
+        QString status;
 
-        ServerEvent(QString name, QString details, QString location, QString status);
-        ServerEvent(QJsonObject object);
+        public:
 
-        void setDetails(QString details);
-        void setLocation(QString location);
-        void setName(QString name);
-        void setStatus(QString status);
+            Event(QString name, QString details, QString location, QString status);
+            Event(QJsonObject object);
 
-        qlonglong getCreationTime();
-        qlonglong getUpdateTime();
-        qlonglong getID();
-        QString getOwnerID();
+            void setDetails(QString details);
+            void setLocation(QString location);
+            void setName(QString name);
+            void setStatus(QString status);
 
-        QString getDetails();
-        QString getLocation();
-        QString getName();
-        QString getStatus();
+            qlonglong getCreationTime();
+            qlonglong getUpdateTime();
+            qlonglong getID();
+            QString getOwnerID();
 
-};
+            QString getDetails();
+            QString getLocation();
+            QString getName();
+            QString getStatus();
 
-class EventInstance: public QObject {
+    };
 
-    qlonglong started_at;
-    qlonglong ended_at;
+    class EventInstance: public QObject {
 
-    qlonglong event_id;
-    qlonglong pattern_id;
+        qlonglong started_at;
+        qlonglong ended_at;
 
-    public:
+        qlonglong event_id;
+        qlonglong pattern_id;
 
-        EventInstance(qlonglong event_id, qlonglong pattern_id);
-        EventInstance(QJsonObject object);
+        public:
 
-        void setEventID(qlonglong event_id);
-        void setPatternID(qlonglong pattern_id);
+            EventInstance(qlonglong event_id, qlonglong pattern_id);
+            EventInstance(QJsonObject object);
 
-        qlonglong getStartTime();
-        qlonglong getEndTime();
-        qlonglong getEventID();
-        qlonglong getPatternID();
+            void setEventID(qlonglong event_id);
+            void setPatternID(qlonglong pattern_id);
 
-};
+            qlonglong getStartTime();
+            qlonglong getEndTime();
+            qlonglong getEventID();
+            qlonglong getPatternID();
 
-class EventPattern: public QObject {
+    };
 
-    qlonglong created_at;
-    qlonglong updated_at;
-    qlonglong id;
+    class EventPattern: public QObject {
 
-    qlonglong started_at;
-    qlonglong ended_at;
-    qlonglong duration;
+        qlonglong created_at;
+        qlonglong updated_at;
+        qlonglong id;
 
-    QString exrule;
-    QString rrule;
-    QString timezone;
+        qlonglong started_at;
+        qlonglong ended_at;
+        qlonglong duration;
 
-    public:
+        QString exrule;
+        QString rrule;
+        QString timezone;
 
-        EventPattern(qlonglong duration, qlonglong started_at, qlonglong ended_at, QString exrule, QString rrule, QString timezone);
-        EventPattern(QJsonObject object);
+        public:
 
-        void setExcRule(QString exrule);
-        void setRepRule(QString rrule);
-        void setTimeZone(QString timezone);
-        void setDuration(qlonglong duration);
-        void setStartTime(qlonglong started_at);
-        void setEndTime(qlonglong ended_at);
+            EventPattern(qlonglong duration, qlonglong started_at, qlonglong ended_at, QString exrule, QString rrule, QString timezone);
+            EventPattern(QJsonObject object);
 
-        qlonglong getCreationTime();
-        qlonglong getUpdateTime();
-        qlonglong getStartTime();
-        qlonglong getEndTime();
-        qlonglong getID();
-        qlonglong getDuration();
+            void setExcRule(QString exrule);
+            void setRepRule(QString rrule);
+            void setTimeZone(QString timezone);
+            void setDuration(qlonglong duration);
+            void setStartTime(qlonglong started_at);
+            void setEndTime(qlonglong ended_at);
 
-        QString getExcRule();
-        QString getRepRule();
-        QString getTimeZone();
+            qlonglong getCreationTime();
+            qlonglong getUpdateTime();
+            qlonglong getStartTime();
+            qlonglong getEndTime();
+            qlonglong getID();
+            qlonglong getDuration();
 
-};
+            QString getExcRule();
+            QString getRepRule();
+            QString getTimeZone();
 
-template <class Evt>
-class ResponseData: public Response {
+    };
 
-    QList<Evt*> data;
+    template <class Evt>
+    class ResponseData: public Response {
 
-    public:
-        explicit ResponseData(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<Evt*> data);
-        explicit ResponseData(QJsonObject object);
+        QList<Evt*> data;
 
-        void setData(QList<Evt*> data);
-        QList<Evt*> getData();
+        public:
+            explicit ResponseData(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<Evt*> data);
+            explicit ResponseData(QJsonObject object);
 
-};
+            void setData(QList<Evt*> data);
+            QList<Evt*> getData();
 
-class EventResponse: public ResponseData<ServerEvent> {
-    public:
-        explicit EventResponse(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<ServerEvent*> data);
-        explicit EventResponse(QJsonObject object);
-};
+    };
 
-class EventInstanceResponse: public ResponseData<EventInstance> {
-    public:
-        explicit EventInstanceResponse(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<EventInstance*> data);
-        explicit EventInstanceResponse(QJsonObject object);
-};
+    class EventResponse: public ResponseData<Event> {
+        public:
+            explicit EventResponse(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<Event*> data);
+            explicit EventResponse(QJsonObject object);
+    };
 
-class EventPatternResponse: public ResponseData<EventPattern> {
-    public:
-        explicit EventPatternResponse(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<EventPattern*> data);
-        explicit EventPatternResponse(QJsonObject object);
-};
+    class EventInstanceResponse: public ResponseData<EventInstance> {
+        public:
+            explicit EventInstanceResponse(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<EventInstance*> data);
+            explicit EventInstanceResponse(QJsonObject object);
+    };
+
+    class EventPatternResponse: public ResponseData<EventPattern> {
+        public:
+            explicit EventPatternResponse(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<EventPattern*> data);
+            explicit EventPatternResponse(QJsonObject object);
+    };
+}
 
 #endif // SEVENT_H

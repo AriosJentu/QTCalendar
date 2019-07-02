@@ -33,7 +33,7 @@ void getRequestTest() {
         qDebug() << arr;
 
         QJsonDocument doc = QJsonDocument::fromJson(arr);
-        EventResponse resp(doc.object());
+        Server::EventResponse resp(doc.object());
         qDebug() << resp.getCount() << resp.getStatus();
 
     });
