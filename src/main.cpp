@@ -3,9 +3,45 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrlQuery>
+#include <QJsonDocument>
 
 #include "event.h"
 #include "eventmodel.h"
+#include "sevent.h"
+
+void getRequestTest() {
+    //Test GET request
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager();
+    QNetworkRequest request;
+
+    QUrlQuery urlquery;
+    urlquery.addQueryItem("count", "2");
+
+    QUrl dir("http://planner.skillmasters.ga/api/v1/events");
+    dir.setQuery(urlquery);
+
+    request.setUrl(dir);
+    request.setRawHeader("X-Firebase-Auth", "serega_mem");
+
+    QObject::connect(manager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply) {
+        if (reply->error()) {
+            qDebug() << reply->errorString();
+            return;
+        }
+        QByteArray arr = reply->readAll();
+        qDebug() << arr;
+
+        QJsonDocument doc = QJsonDocument::fromJson(arr);
+        EventResponse resp(doc.object());
+        qDebug() << resp.getCount() << resp.getStatus();
+
+    });
+
+    manager->get(request);
+
+    //Test GET request finished
+}
 
 int main(int argc, char *argv[])
 {
@@ -52,31 +88,7 @@ int main(int argc, char *argv[])
 
     app.applicationDirPath();
 
-
-    //Test GET request
-    QNetworkAccessManager* manager = new QNetworkAccessManager();
-    QNetworkRequest request;
-
-    QUrlQuery urlquery;
-    urlquery.addQueryItem("count", "2");
-
-    QUrl dir("http://planner.skillmasters.ga/api/v1/events");
-    dir.setQuery(urlquery);
-
-    request.setUrl(dir);
-    request.setRawHeader("X-Firebase-Auth", "serega_mem");
-
-    QObject::connect(manager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply) {
-        if (reply->error()) {
-            qDebug() << reply->errorString();
-            return;
-        }
-        qDebug() << reply->readAll();
-    });
-
-    manager->get(request);
-
-
+    getRequestTest();
 
     return app.exec();
 }
