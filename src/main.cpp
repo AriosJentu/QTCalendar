@@ -5,11 +5,12 @@
 #include <QUrlQuery>
 #include <QJsonDocument>
 
-#include "event.h"
-#include "eventmodel.h"
+//#include "event.h"
+//#include "eventmodel.h"
 #include "sevent.h"
+#include "seventmodel.h"
 
-void getRequestTest() {
+/*void getRequestTest() {
     //Test GET request
 
     QNetworkAccessManager* manager = new QNetworkAccessManager();
@@ -30,7 +31,7 @@ void getRequestTest() {
             return;
         }
         QByteArray arr = reply->readAll();
-        qDebug() << arr;
+        //qDebug() << arr;
 
         QJsonDocument doc = QJsonDocument::fromJson(arr);
         Server::EventResponse resp(doc.object());
@@ -50,14 +51,19 @@ void getRequestTest() {
     qint64 ntime = dat.toMSecsSinceEpoch();
     qDebug() << time << ntime;
 
+    QDate date = QDate::currentDate();
+    QDateTime start(date);
+    QDateTime end = QDateTime(date.addDays(1)).addSecs(-1);
+
+    qDebug() << start << end;
+
     //Test GET request finished
-}
+}*/
 
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    qmlRegisterType<EventModel>("org.jentucalendar.calendar", 1, 0, "EventModel");
-//    qmlRegisterType<Event>("org.jentucalendar.calendar", 1, 0, "Event");
+    qmlRegisterType<Server::EventModel>("org.jentucalendar.calendar", 1, 0, "EventModel");
 
     QGuiApplication app(argc, argv);
 
@@ -67,7 +73,8 @@ int main(int argc, char *argv[])
 
     engine.setOfflineStoragePath(QString("./"));
 
-    EventModel::createConnection();
+    //Server::EventModel();
+
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreated,
@@ -84,6 +91,8 @@ int main(int argc, char *argv[])
 
     engine.load(url);
 
+    app.applicationDirPath();
+
     /*
     Event today;
     today.setName("Welcome to the future");
@@ -96,9 +105,59 @@ int main(int argc, char *argv[])
     model.addEvent(today);
     */
 
-    app.applicationDirPath();
+    QNetworkAccessManager* manager = new QNetworkAccessManager();
+    QString start = "1561665600000";
+    QString end = "1581674400000";
 
-    getRequestTest();
+    QUrlQuery query;
+    query.addQueryItem("from", start);
+    query.addQueryItem("to", end);
+
+    QUrl location("http://planner.skillmasters.ga/api/v1/events/instances");
+    location.setQuery(query);
+
+    QNetworkRequest request(location);
+    request.setRawHeader("X-Firebase-Auth", "serega_mem");
+
+    QObject::connect(manager, &QNetworkAccessManager::finished, [=](QNetworkReply* reply) {
+        if (reply->error()) {
+            qDebug() << reply->errorString();
+            return;
+        }
+        QByteArray jsonreply = reply->readAll();
+
+        QJsonDocument document = QJsonDocument::fromJson(jsonreply);
+        Server::EventInstanceResponse response(document.object());
+
+        QList<QObject*> data;
+        foreach (Server::EventInstance* obj, response.getData()) {
+            QObject* nobj = obj;
+            data.append(nobj);
+            //qDebug() << "Testing data:" << obj->getEventID() << obj->getStartTime();
+        }
+        //qDebug() << "";
+
+        if (data.length() == 0) {
+            return;
+        }
+
+
+    });
+
+    manager->get(request);
+
+    start = "1561665600000";
+    end = "1581674400000";
+
+    QUrlQuery nquery;
+    nquery.addQueryItem("from", start);
+    nquery.addQueryItem("to", end);
+
+    location = QUrl("http://planner.skillmasters.ga/api/v1/events/instances");
+    location.setQuery(query);
+
+    request.setUrl(location);
+    manager->get(request);
 
     return app.exec();
 }
