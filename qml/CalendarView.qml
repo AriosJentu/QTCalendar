@@ -13,6 +13,8 @@ Item {
         maincalendar.selectedDate = date;
     }
 
+
+
     Flow {
         id: row
         anchors.fill: parent
@@ -49,6 +51,19 @@ Item {
                     readonly property color currentDateColor: "#84C391"
                     readonly property color selectedDateColor: "#4F9EE0"
 
+//                    property bool visibility: false;
+
+//                    Component.onCompleted: {
+//                        eventModel.eventsForDate(styleData.date);
+//                        eventModel.eventsAvailable.connect(setVisible);
+//                        console.log("Searching for", styleData.date)
+//                    }
+
+//                    function setVisible(result) {
+//                        visibility = result.length > 0;
+//                        //console.log(result.length);
+//                        console.log("Here for", styleData.date, result.length);
+//                    }
 
                     Rectangle {
                         id: dateDelegateRect
@@ -60,6 +75,10 @@ Item {
                             var date1 = Qt.formatDateTime(new Date(), "yyMMdd")
                             var date2 = Qt.formatDateTime(styleData.date, "yyMMdd")
 
+                            if (!styleData.visibleMonth) {
+                                color = "#EEEEEE"
+                            }
+
                             if (date1 === date2) {
                                 color = currentDateColor;
                             }
@@ -68,13 +87,8 @@ Item {
                                 color = selectedDateColor;
                             }
 
-                            if (!styleData.visibleMonth) {
-                                color = "#EEEEEE"
-                            }
-
                             color;
                         }
-
                     }
 
                     Rectangle {
@@ -86,7 +100,8 @@ Item {
                     }
 
                     Image {
-                        visible: eventModel.eventsForDate(styleData.date).length > 0
+
+                        visible: false
                         anchors.top: parent.top
                         anchors.left: parent.left
                         anchors.margins: 0
@@ -203,7 +218,8 @@ Item {
                     font.pixelSize: 20
 
                     onClicked: {
-                        maincalendar.selectedDate = maincalendar.selectedDate;
+                        eventModel.eventsForDate(maincalendar.selectedDate);
+                        console.log("Click")
                     }
                 }
             }
@@ -228,14 +244,30 @@ Item {
             border.color: Qt.darker("#F4F4F4", 1.2)
 
             ListView {
+
+                property var array: [];
+
                 id: eventsListView
                 spacing: 4
                 clip: true
                 header: eventListHeader
                 anchors.fill: parent
                 anchors.margins: 10
-                model: eventModel.eventsForDate(maincalendar.selectedDate)
+                model: {
+                    array;
+                    //console.log("Update here")
+                }
                 interactive: true
+
+                Component.onCompleted: {
+                    eventModel.eventsAvailable.connect(setEvents);
+                    //console.log("Update");
+                }
+
+                function setEvents(result) {
+                    array = result;
+                    //console.log("Here", result.length)
+                }
 
                 delegate: Rectangle {
                     width: eventsListView.width
@@ -275,8 +307,8 @@ Item {
                                 width: parent.width
                                 wrapMode: Text.Wrap
                                 text: {
-                                    "Start: " + modelData.startDate.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:MM") + "\t" +
-                                    "End: " + modelData.endDate.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:MM");
+                                    "Start: " + modelData.startTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:MM") + "\t" +
+                                    "End: " + modelData.endTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:MM");
                                 }
                                 font.italic: true
                             }
@@ -332,7 +364,7 @@ Item {
                                     onTriggered: {
                                         console.log("::: Removing event with ID ", modelData.id)
                                         eventModel.removeEvent(modelData.id);
-                                        eventsListView.model = eventModel.eventsForDate(maincalendar.selectedDate)
+                                        array = eventModel.eventsForDate(maincalendar.selectedDate)
                                     }
                                 }
                             }

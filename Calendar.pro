@@ -5,15 +5,18 @@ TARGER = Calendar
 DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
+    src/consts.h \
     src/event.h \
     src/eventmodel.h \
-    src/sevent.h
+    src/sevent.h \
+    src/seventmodel.h
 
 SOURCES += \
         src/event.cpp \
         src/eventmodel.cpp \
         src/main.cpp \
-        src/sevent.cpp
+        src/sevent.cpp \
+        src/seventmodel.cpp
 
 RESOURCES += resources.qrc
 OTHER_FILES +=
