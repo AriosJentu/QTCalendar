@@ -1,4 +1,21 @@
 #include "sevent.h"
+
+template <class Evt>
+QList<Evt*> Server::getEventData(QJsonObject obj) {
+    QList<Evt*> data;
+    QJsonArray data_arr = obj["data"].toArray();
+    qDebug() << "!::::! Count: " << data_arr.count();
+
+    for (int i = 0; i < data_arr.count(); i++) {
+
+        QJsonObject val = data_arr[i].toObject();
+        Evt* evt = new Evt(val);
+        data.append(evt);
+    }
+
+    return data;
+}
+
 using namespace Server;
 
 //Response class
@@ -34,8 +51,6 @@ QString Response::getMessage() {return message;}
 //Event Class
 
 Event::Event(QString nam, QString dets, QString locn, QString stat) {
-    created_at = 0;
-    updated_at = 0;
     id = 0;
     owner_id = "";
     name = nam;
@@ -44,8 +59,8 @@ Event::Event(QString nam, QString dets, QString locn, QString stat) {
     status = stat;
 }
 Event::Event(QJsonObject dat) {
-    created_at = dat["created_at"].toVariant().toLongLong();
-    updated_at = dat["updated_at"].toVariant().toLongLong();
+    created_at = toDateFromTimestamp(dat["created_at"]);
+    updated_at = toDateFromTimestamp(dat["updated_at"]);
     id = dat["id"].toVariant().toLongLong();
     owner_id = dat["owner_id"].toString();
     name = dat["name"].toString();
@@ -64,22 +79,20 @@ QString Event::getLocation() {return location;}
 QString Event::getName() {return name;}
 QString Event::getStatus() {return status;}
 QString Event::getOwnerID() {return owner_id;}
-qlonglong Event::getCreationTime() {return created_at;}
-qlonglong Event::getUpdateTime() {return updated_at;}
+QDateTime Event::getCreationTime() {return created_at;}
+QDateTime Event::getUpdateTime() {return updated_at;}
 qlonglong Event::getID() {return id;}
 
 
 // Event Instance class
 
 EventInstance::EventInstance(qlonglong evtid, qlonglong patrnid) {
-    started_at = 0;
-    ended_at = 0;
     event_id = evtid;
     pattern_id = patrnid;
 }
 EventInstance::EventInstance(QJsonObject dat) {
-    started_at = dat["started_at"].toVariant().toLongLong();
-    ended_at = dat["ended_at"].toVariant().toLongLong();
+    started_at = toDateFromTimestamp(dat["started_at"]);
+    ended_at = toDateFromTimestamp(dat["ended_at"]);
     event_id = dat["event_id"].toVariant().toLongLong();
     pattern_id = dat["pattern_id"].toVariant().toLongLong();
 }
@@ -87,17 +100,15 @@ EventInstance::EventInstance(QJsonObject dat) {
 void EventInstance::setEventID(qlonglong evtid) {event_id = evtid;}
 void EventInstance::setPatternID(qlonglong patrnid) {pattern_id = patrnid;}
 
-qlonglong EventInstance::getStartTime() {return started_at;}
-qlonglong EventInstance::getEndTime() {return ended_at;}
+QDateTime EventInstance::getStartTime() {return started_at;}
+QDateTime EventInstance::getEndTime() {return ended_at;}
 qlonglong EventInstance::getEventID() {return event_id;}
 qlonglong EventInstance::getPatternID() {return pattern_id;}
 
 
 //Event Pattern class
 
-EventPattern::EventPattern(qlonglong dur, qlonglong start, qlonglong end, QString exrl, QString rrl, QString tzone) {
-    created_at = 0;
-    updated_at = 0;
+EventPattern::EventPattern(QDateTime start, QDateTime end, qlonglong dur, QString exrl, QString rrl, QString tzone) {
     started_at = start;
     ended_at = end;
     duration = dur;
@@ -107,10 +118,10 @@ EventPattern::EventPattern(qlonglong dur, qlonglong start, qlonglong end, QStrin
     timezone = tzone;
 };
 EventPattern::EventPattern(QJsonObject dat) {
-    created_at = dat["created_at"].toVariant().toLongLong();
-    updated_at = dat["updated_at"].toVariant().toLongLong();
-    started_at = dat["started_at"].toVariant().toLongLong();
-    ended_at = dat["ended_at"].toVariant().toLongLong();
+    created_at = toDateFromTimestamp(dat["created_at"]);
+    updated_at = toDateFromTimestamp(dat["updated_at"]);
+    started_at = toDateFromTimestamp(dat["started_at"]);
+    ended_at = toDateFromTimestamp(dat["ended_at"]);
     id = dat["id"].toVariant().toLongLong();
     duration = dat["duration"].toVariant().toLongLong();
     exrule = dat["exrule"].toString();
@@ -121,20 +132,21 @@ EventPattern::EventPattern(QJsonObject dat) {
 void EventPattern::setExcRule(QString exrl) {exrule = exrl;}
 void EventPattern::setRepRule(QString rrl) {rrule = rrl;}
 void EventPattern::setTimeZone(QString tzone) {timezone = tzone;}
-void EventPattern::setStartTime(qlonglong start) {started_at = start;}
-void EventPattern::setEndTime(qlonglong end) {ended_at = end;}
+void EventPattern::setStartTime(QDateTime start) {started_at = start;}
+void EventPattern::setEndTime(QDateTime end) {ended_at = end;}
 void EventPattern::setDuration(qlonglong dur) {duration = dur;}
 
 QString EventPattern::getExcRule() {return exrule;}
 QString EventPattern::getRepRule() {return rrule;}
 QString EventPattern::getTimeZone() {return timezone;}
-qlonglong EventPattern::getStartTime() {return started_at;}
-qlonglong EventPattern::getEndTime() {return ended_at;}
+QDateTime EventPattern::getStartTime() {return started_at;}
+QDateTime EventPattern::getEndTime() {return ended_at;}
+QDateTime EventPattern::getCreationTime() {return created_at;}
+QDateTime EventPattern::getUpdateTime() {return updated_at;}
 qlonglong EventPattern::getDuration() {return duration;}
-qlonglong EventPattern::getCreationTime() {return created_at;}
-qlonglong EventPattern::getUpdateTime() {return updated_at;}
 qlonglong EventPattern::getID() {return id;}
 
+/*
 template <class Evt> ResponseData<Evt>::ResponseData(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<Evt*> dat) : Response(cnt, ofst, stat, succ, msg) {
     data = dat;
 }
@@ -152,12 +164,19 @@ template <class Evt> ResponseData<Evt>::ResponseData(QJsonObject obj) : Response
 
 template <class Evt> void ResponseData<Evt>::setData(QList<Evt*> dat) {data = dat;}
 template <class Evt> QList<Evt*> ResponseData<Evt>::getData() {return data;}
+*/
 
-EventResponse::EventResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<Event*> dat) : ResponseData<Event>(cnt, ofst, stat, succ, msg, dat){};
-EventResponse::EventResponse(QJsonObject obj) : ResponseData<Event>(obj){};
+EventResponse::EventResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<Event*> dat) : Response(cnt, ofst, stat, succ, msg) {data = dat;};
+EventResponse::EventResponse(QJsonObject obj) : Response(obj) {data = getEventData<Event>(obj);};
+void EventResponse::setData(QList<Event*> dat) {data = dat;};
+QList<Event*> EventResponse::getData() {return data;};
 
-EventInstanceResponse::EventInstanceResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<EventInstance*> dat) : ResponseData<EventInstance>(cnt, ofst, stat, succ, msg, dat){};
-EventInstanceResponse::EventInstanceResponse(QJsonObject obj) : ResponseData<EventInstance>(obj){};
+EventInstanceResponse::EventInstanceResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<EventInstance*> dat) : Response(cnt, ofst, stat, succ, msg) {data = dat;};
+EventInstanceResponse::EventInstanceResponse(QJsonObject obj) : Response(obj) {data = getEventData<EventInstance>(obj);};
+void EventInstanceResponse::setData(QList<EventInstance*> dat) {data = dat;};
+QList<EventInstance*> EventInstanceResponse::getData() {return data;};
 
-EventPatternResponse::EventPatternResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<EventPattern*> dat) : ResponseData<EventPattern>(cnt, ofst, stat, succ, msg, dat){};
-EventPatternResponse::EventPatternResponse(QJsonObject obj) : ResponseData<EventPattern>(obj){};
+EventPatternResponse::EventPatternResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<EventPattern*> dat) : Response(cnt, ofst, stat, succ, msg) {data = dat;};
+EventPatternResponse::EventPatternResponse(QJsonObject obj) : Response(obj) {data = getEventData<EventPattern>(obj);};
+void EventPatternResponse::setData(QList<EventPattern*> dat) {data = dat;};
+QList<EventPattern*> EventPatternResponse::getData() {return data;};

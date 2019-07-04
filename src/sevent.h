@@ -7,7 +7,15 @@
 #include <QtNetwork>
 #include <QList>
 
+
 namespace Server {
+
+    template <class Evt>
+    QList<Evt*> getEventData(QJsonObject obj);
+
+    qint64 fromDateToTimestamp(QDateTime dat) {return dat.toMSecsSinceEpoch();}
+    QDateTime toDateFromTimestamp(qint64 time) {return QDateTime::fromMSecsSinceEpoch(time).toUTC();}
+    QDateTime toDateFromTimestamp(QJsonValue val) {return QDateTime::fromMSecsSinceEpoch(val.toVariant().toLongLong()).toUTC();}
 
     class Response: public QObject {
 
@@ -38,8 +46,8 @@ namespace Server {
 
     class Event: public QObject {
 
-        qlonglong created_at;
-        qlonglong updated_at;
+        QDateTime created_at;
+        QDateTime updated_at;
         qlonglong id;
         QString owner_id;
 
@@ -58,8 +66,8 @@ namespace Server {
             void setName(QString name);
             void setStatus(QString status);
 
-            qlonglong getCreationTime();
-            qlonglong getUpdateTime();
+            QDateTime getCreationTime();
+            QDateTime getUpdateTime();
             qlonglong getID();
             QString getOwnerID();
 
@@ -72,8 +80,8 @@ namespace Server {
 
     class EventInstance: public QObject {
 
-        qlonglong started_at;
-        qlonglong ended_at;
+        QDateTime started_at;
+        QDateTime ended_at;
 
         qlonglong event_id;
         qlonglong pattern_id;
@@ -86,8 +94,8 @@ namespace Server {
             void setEventID(qlonglong event_id);
             void setPatternID(qlonglong pattern_id);
 
-            qlonglong getStartTime();
-            qlonglong getEndTime();
+            QDateTime getStartTime();
+            QDateTime getEndTime();
             qlonglong getEventID();
             qlonglong getPatternID();
 
@@ -95,12 +103,12 @@ namespace Server {
 
     class EventPattern: public QObject {
 
-        qlonglong created_at;
-        qlonglong updated_at;
+        QDateTime created_at;
+        QDateTime updated_at;
         qlonglong id;
 
-        qlonglong started_at;
-        qlonglong ended_at;
+        QDateTime started_at;
+        QDateTime ended_at;
         qlonglong duration;
 
         QString exrule;
@@ -109,20 +117,20 @@ namespace Server {
 
         public:
 
-            EventPattern(qlonglong duration, qlonglong started_at, qlonglong ended_at, QString exrule, QString rrule, QString timezone);
+            EventPattern(QDateTime started_at, QDateTime ended_at, qlonglong duration, QString exrule, QString rrule, QString timezone);
             EventPattern(QJsonObject object);
 
             void setExcRule(QString exrule);
             void setRepRule(QString rrule);
             void setTimeZone(QString timezone);
             void setDuration(qlonglong duration);
-            void setStartTime(qlonglong started_at);
-            void setEndTime(qlonglong ended_at);
+            void setStartTime(QDateTime started_at);
+            void setEndTime(QDateTime ended_at);
 
-            qlonglong getCreationTime();
-            qlonglong getUpdateTime();
-            qlonglong getStartTime();
-            qlonglong getEndTime();
+            QDateTime getCreationTime();
+            QDateTime getUpdateTime();
+            QDateTime getStartTime();
+            QDateTime getEndTime();
             qlonglong getID();
             qlonglong getDuration();
 
@@ -132,36 +140,40 @@ namespace Server {
 
     };
 
-    template <class Evt>
-    class ResponseData: public Response {
+    class EventResponse: public Response {
 
-        QList<Evt*> data;
+        QList<Event*> data;
 
-        public:
-            explicit ResponseData(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<Evt*> data);
-            explicit ResponseData(QJsonObject object);
-
-            void setData(QList<Evt*> data);
-            QList<Evt*> getData();
-
-    };
-
-    class EventResponse: public ResponseData<Event> {
         public:
             explicit EventResponse(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<Event*> data);
             explicit EventResponse(QJsonObject object);
+
+            void setData(QList<Event*> dat);
+            QList<Event*> getData();
     };
 
-    class EventInstanceResponse: public ResponseData<EventInstance> {
+    class EventInstanceResponse: public Response {
+
+        QList<EventInstance*> data;
+
         public:
             explicit EventInstanceResponse(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<EventInstance*> data);
             explicit EventInstanceResponse(QJsonObject object);
+
+            void setData(QList<EventInstance*> dat);
+            QList<EventInstance*> getData();
     };
 
-    class EventPatternResponse: public ResponseData<EventPattern> {
+    class EventPatternResponse: public Response {
+
+        QList<EventPattern*> data;
+
         public:
             explicit EventPatternResponse(qlonglong count, qlonglong offset, qlonglong status, bool success, QString message, QList<EventPattern*> data);
             explicit EventPatternResponse(QJsonObject object);
+
+            void setData(QList<EventPattern*> dat);
+            QList<EventPattern*> getData();
     };
 }
 

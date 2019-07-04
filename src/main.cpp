@@ -16,7 +16,7 @@ void getRequestTest() {
     QNetworkRequest request;
 
     QUrlQuery urlquery;
-    urlquery.addQueryItem("count", "2");
+    urlquery.addQueryItem("count", "100");
 
     QUrl dir("http://planner.skillmasters.ga/api/v1/events");
     dir.setQuery(urlquery);
@@ -34,11 +34,21 @@ void getRequestTest() {
 
         QJsonDocument doc = QJsonDocument::fromJson(arr);
         Server::EventResponse resp(doc.object());
-        qDebug() << resp.getCount() << resp.getStatus();
+        qDebug() << resp.getCount() << resp.getStatus() << resp.getData().length();
+        foreach (Server::Event* evt, resp.getData()) {
+            qDebug() << evt->getName() << evt->getCreationTime() << evt->getUpdateTime();
+        }
 
     });
 
     manager->get(request);
+
+    qint64 time = 1562126697917;
+    QJsonValue val = "1562126697917";
+    QDateTime dat = QDateTime::fromMSecsSinceEpoch(time);
+    qDebug() << dat << QDateTime::fromMSecsSinceEpoch(val.toVariant().toLongLong()) << QDateTime::fromTime_t(static_cast<uint>(0));
+    qint64 ntime = dat.toMSecsSinceEpoch();
+    qDebug() << time << ntime;
 
     //Test GET request finished
 }
