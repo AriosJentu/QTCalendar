@@ -7,15 +7,14 @@
 #include <QtNetwork>
 #include <QList>
 
-
 namespace Server {
 
     template <class Evt>
     QList<Evt*> getEventData(QJsonObject obj);
 
-    qint64 fromDateToTimestamp(QDateTime dat) {return dat.toMSecsSinceEpoch();}
-    QDateTime toDateFromTimestamp(qint64 time) {return QDateTime::fromMSecsSinceEpoch(time).toUTC();}
-    QDateTime toDateFromTimestamp(QJsonValue val) {return QDateTime::fromMSecsSinceEpoch(val.toVariant().toLongLong()).toUTC();}
+    qint64 fromDateToTimestamp(QDateTime dat);
+    QDateTime toDateFromTimestamp(qint64 time);
+    QDateTime toDateFromTimestamp(QJsonValue val);
 
     class Response: public QObject {
 
@@ -82,6 +81,7 @@ namespace Server {
             QString getLocation();
             QString getName();
             QString getStatus();
+            QDateTime getStartTime() {return getCreationTime();}
 
         signals:
 
@@ -96,8 +96,8 @@ namespace Server {
 
         Q_PROPERTY(qlonglong event READ getEventID WRITE setEventID NOTIFY eventChanged)
         Q_PROPERTY(qlonglong pattern READ getPatternID WRITE setPatternID NOTIFY patternChanged)
-        Q_PROPERTY(QDateTime startTime READ getStartTime)
-        Q_PROPERTY(QDateTime endTime READ getEndTime)
+        Q_PROPERTY(QDateTime startTime READ getStartTime CONSTANT)
+        Q_PROPERTY(QDateTime endTime READ getEndTime CONSTANT)
 
         QDateTime started_at;
         QDateTime ended_at;
@@ -133,8 +133,8 @@ namespace Server {
         Q_PROPERTY(QDateTime startTime READ getStartTime WRITE setStartTime NOTIFY startChanged)
         Q_PROPERTY(QDateTime endTime READ getEndTime WRITE setEndTime NOTIFY endChanged)
         Q_PROPERTY(qlonglong duration READ getDuration WRITE setDuration NOTIFY durationChanged)
-        Q_PROPERTY(QDateTime createTime READ getCreateTime)
-        Q_PROPERTY(QDateTime updateTime READ getUpdateTime)
+        Q_PROPERTY(QDateTime createTime READ getCreationTime CONSTANT)
+        Q_PROPERTY(QDateTime updateTime READ getUpdateTime CONSTANT)
         Q_PROPERTY(QString timezone READ getTimeZone WRITE setTimeZone NOTIFY timezoneChanged)
         Q_PROPERTY(QString exRule READ getExcRule WRITE setExcRule NOTIFY exRuleChanged)
         Q_PROPERTY(QString rRule READ getRepRule WRITE setRepRule NOTIFY rRuleChanged)

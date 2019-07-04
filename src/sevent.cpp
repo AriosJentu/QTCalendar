@@ -4,17 +4,23 @@ template <class Evt>
 QList<Evt*> Server::getEventData(QJsonObject obj) {
     QList<Evt*> data;
     QJsonArray data_arr = obj["data"].toArray();
-    qDebug() << "!::::! Count: " << data_arr.count();
+    //qDebug() << "!::::! Count: " << data_arr.count();
 
     for (int i = 0; i < data_arr.count(); i++) {
 
         QJsonObject val = data_arr[i].toObject();
         Evt* evt = new Evt(val);
         data.append(evt);
+        //qDebug() << evt->getStartTime();
     }
 
     return data;
 }
+
+qint64 Server::fromDateToTimestamp(QDateTime dat) {return dat.toMSecsSinceEpoch();}
+QDateTime Server::toDateFromTimestamp(qint64 time) {return QDateTime::fromMSecsSinceEpoch(time).toUTC();}
+QDateTime Server::toDateFromTimestamp(QJsonValue val) {return QDateTime::fromMSecsSinceEpoch(val.toVariant().toLongLong()).toUTC();}
+
 
 using namespace Server;
 
@@ -145,26 +151,6 @@ QDateTime EventPattern::getCreationTime() {return created_at;}
 QDateTime EventPattern::getUpdateTime() {return updated_at;}
 qlonglong EventPattern::getDuration() {return duration;}
 qlonglong EventPattern::getID() {return id;}
-
-/*
-template <class Evt> ResponseData<Evt>::ResponseData(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<Evt*> dat) : Response(cnt, ofst, stat, succ, msg) {
-    data = dat;
-}
-template <class Evt> ResponseData<Evt>::ResponseData(QJsonObject obj) : Response(obj) {
-
-    QJsonArray data_arr = obj["data"].toArray();
-
-    for (int i = 0; i > data_arr.count(); i++) {
-
-        QJsonObject val = data_arr[i].toObject();
-        Evt* evt = new Evt(val);
-        data.append(evt);
-    }
-}
-
-template <class Evt> void ResponseData<Evt>::setData(QList<Evt*> dat) {data = dat;}
-template <class Evt> QList<Evt*> ResponseData<Evt>::getData() {return data;}
-*/
 
 EventResponse::EventResponse(qlonglong cnt, qlonglong ofst, qlonglong stat, bool succ, QString msg, QList<Event*> dat) : Response(cnt, ofst, stat, succ, msg) {data = dat;};
 EventResponse::EventResponse(QJsonObject obj) : Response(obj) {data = getEventData<Event>(obj);};
