@@ -46,6 +46,13 @@ namespace Server {
 
     class Event: public QObject {
 
+        Q_OBJECT
+
+        Q_PROPERTY(qlonglong id READ getID)
+        Q_PROPERTY(QString name READ getName WRITE setName NOTIFY nameChanged)
+        Q_PROPERTY(QString details READ getDetails WRITE setDetails NOTIFY detailsChanged)
+        Q_PROPERTY(QString owner READ getOwnerID)
+
         QDateTime created_at;
         QDateTime updated_at;
         qlonglong id;
@@ -76,9 +83,21 @@ namespace Server {
             QString getName();
             QString getStatus();
 
+        signals:
+
+            void nameChanged(const QString &name);
+            void detailsChanged(const QString &details);
+
     };
 
     class EventInstance: public QObject {
+
+        Q_OBJECT
+
+        Q_PROPERTY(qlonglong event READ getEventID WRITE setEventID NOTIFY eventChanged)
+        Q_PROPERTY(qlonglong pattern READ getPatternID WRITE setPatternID NOTIFY patternChanged)
+        Q_PROPERTY(QDateTime startTime READ getStartTime)
+        Q_PROPERTY(QDateTime endTime READ getEndTime)
 
         QDateTime started_at;
         QDateTime ended_at;
@@ -99,9 +118,26 @@ namespace Server {
             qlonglong getEventID();
             qlonglong getPatternID();
 
+        signals:
+
+            void eventChanged(const qlonglong &event);
+            void patternChanged(const qlonglong &pattern);
+
     };
 
     class EventPattern: public QObject {
+
+        Q_OBJECT
+
+        Q_PROPERTY(qlonglong id READ getID)
+        Q_PROPERTY(QDateTime startTime READ getStartTime WRITE setStartTime NOTIFY startChanged)
+        Q_PROPERTY(QDateTime endTime READ getEndTime WRITE setEndTime NOTIFY endChanged)
+        Q_PROPERTY(qlonglong duration READ getDuration WRITE setDuration NOTIFY durationChanged)
+        Q_PROPERTY(QDateTime createTime READ getCreateTime)
+        Q_PROPERTY(QDateTime updateTime READ getUpdateTime)
+        Q_PROPERTY(QString timezone READ getTimeZone WRITE setTimeZone NOTIFY timezoneChanged)
+        Q_PROPERTY(QString exRule READ getExcRule WRITE setExcRule NOTIFY exRuleChanged)
+        Q_PROPERTY(QString rRule READ getRepRule WRITE setRepRule NOTIFY rRuleChanged)
 
         QDateTime created_at;
         QDateTime updated_at;
@@ -137,6 +173,15 @@ namespace Server {
             QString getExcRule();
             QString getRepRule();
             QString getTimeZone();
+
+        signals:
+
+            void startChanged(const QDateTime &start);
+            void endChanged(const QDateTime &end);
+            void durationChanged(const qlonglong &duration);
+            void timezoneChanged(const QString &timezone);
+            void exRuleChanged(const QString &exrule);
+            void rRuleChanged(const QString &rrule);
 
     };
 
