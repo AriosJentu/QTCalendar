@@ -98,6 +98,50 @@ void EventModel::eventsForDate(const QDate &date) {
 
     QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFunction(QNetworkReply*)), Qt::UniqueConnection);
     manager->get(request);
+}
+
+void EventModel::replyCountFunction(QNetworkReply* reply) {
+
+    qDebug() << "Calling connector for function eventsCountForDate";
+
+    if (reply->error()) {
+        qDebug() << reply->errorString();
+        return;
+    }
+    QByteArray jsonreply = reply->readAll();
+
+    if (jsonreply.length() == 0) {
+        return;
+    }
+
+    QJsonDocument document = QJsonDocument::fromJson(jsonreply);
+    Server::EventInstanceResponse response(document.object());
+
+    emit eventsCount(response.getCount());
+
+    return;
+}
+
+void EventModel::eventsCountForDate(const QDate &date) {
+
+    qint64 start = fromDateToTimestamp(QDateTime(date));
+    qint64 end = fromDateToTimestamp(QDateTime(date.addDays(1)).addSecs(-1));
+
+    QUrlQuery query;
+    query.addQueryItem("from", QString::number(start));
+    query.addQueryItem("to", QString::number(end));
+
+    QUrl location(Consts::srv_instances);
+    location.setQuery(query);
+
+    QNetworkRequest request(location);
+    request.setRawHeader(Consts::AuthName, Consts::AuthToken);
+    qDebug() << "Calling function eventsCountForDate" << date << request.url();
+
+    QNetworkAccessManager* manager = new QNetworkAccessManager();
+
+    QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyCountFunction(QNetworkReply*)), Qt::UniqueConnection);
+    manager->get(request);
 
 }
 

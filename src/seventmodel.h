@@ -77,7 +77,11 @@ namespace Server {
 
             EventModel();
 
+            Q_INVOKABLE QDateTime toDateFromTimestamp(const qlonglong timestamp) {return Server::toDateFromTimestamp(timestamp);}
+            Q_INVOKABLE qlonglong fromDateToTimestamp(const QDateTime date) {return Server::fromDateToTimestamp(date);}
+
             Q_INVOKABLE void eventsForDate(const QDate &date);
+            Q_INVOKABLE void eventsCountForDate(const QDate &date);
             //Q_INVOKABLE void eventsForMonth(const QDate &date);
             /*Q_INVOKABLE void getEventByID(const qlonglong id);
             Q_INVOKABLE void addEvent(QObject* event);
@@ -86,6 +90,7 @@ namespace Server {
             Q_SIGNAL void eventAvailable(QObject* &result);
             Q_INVOKABLE QObject* createEvent();*/
             Q_SIGNAL void eventsAvailable(const QList<QObject*> &result);
+            Q_SIGNAL void eventsCount(const qlonglong &result);
 
             void addEvent(Event &event);
             void removeEvent(Event &event);
@@ -94,6 +99,7 @@ namespace Server {
         public slots:
 
             void replyFunction(QNetworkReply* reply);
+            void replyCountFunction(QNetworkReply* reply);
 
     };
 
