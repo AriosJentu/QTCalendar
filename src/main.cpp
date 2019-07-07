@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
     model.addEvent(today);
     */
 
-    QNetworkAccessManager* manager = new QNetworkAccessManager();
+    /*QNetworkAccessManager* manager = new QNetworkAccessManager();
     QString start = "1561665600000";
     QString end = "1581674400000";
 
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
     location.setQuery(query);
 
     request.setUrl(location);
-    manager->get(request);
+    manager->get(request);*/
 
     return app.exec();
 }

@@ -13,8 +13,6 @@ Item {
         maincalendar.selectedDate = date;
     }
 
-
-
     Flow {
         id: row
         anchors.fill: parent
@@ -50,20 +48,39 @@ Item {
 
                     readonly property color currentDateColor: "#84C391"
                     readonly property color selectedDateColor: "#4F9EE0"
+                    property bool visibility: false;
 
-//                    property bool visibility: false;
+                    function getVisibilityForCurrentDate() {
 
-//                    Component.onCompleted: {
-//                        eventModel.eventsForDate(styleData.date);
-//                        eventModel.eventsAvailable.connect(setVisible);
-//                        console.log("Searching for", styleData.date)
-//                    }
+                        var request = new XMLHttpRequest();
 
-//                    function setVisible(result) {
-//                        visibility = result.length > 0;
-//                        //console.log(result.length);
-//                        console.log("Here for", styleData.date, result.length);
-//                    }
+                        var date = styleData.date;
+                        date.setHours(0, 0, 0, 0);
+                        var start = eventModel.fromDateToTimestamp(date);
+                        date.setHours(23, 59, 59, 999);
+                        var ends = eventModel.fromDateToTimestamp(date);
+
+                        var url = "http://planner.skillmasters.ga/api/v1/events/instances";
+                        var dat = root.encodeQueryData({"from": start, "to": ends});
+                        url = url + dat;
+
+
+                        request.onreadystatechange = function() {
+                            if (request.readyState === 4) {
+                                if (request.status === 200) {
+                                    var jsonRes = JSON.parse(request.responseText);
+                                    visibility = jsonRes.count > 0;
+                                } else {
+                                    console.log("HTTP Request failed", request.status);
+                                }
+                            }
+                        }
+
+                        request.open("GET", url);
+                        request.setRequestHeader("X-Firebase-Auth", "serega_mem");
+                        request.send();
+
+                    }
 
                     Rectangle {
                         id: dateDelegateRect
@@ -85,8 +102,11 @@ Item {
 
                             if (styleData.selected) {
                                 color = selectedDateColor;
+                                eventsListView.getEventsForCurrentDate();
                             }
 
+                            visibility = false;
+                            getVisibilityForCurrentDate();
                             color;
                         }
                     }
@@ -101,13 +121,14 @@ Item {
 
                     Image {
 
-                        visible: false
+                        visible: visibility
                         anchors.top: parent.top
                         anchors.left: parent.left
                         anchors.margins: 0
                         width: 12
                         height: width
                         source: "qrc:/assets/event.png"
+
                     }
 
                     Label {
@@ -218,8 +239,9 @@ Item {
                     font.pixelSize: 20
 
                     onClicked: {
-                        eventModel.eventsForDate(maincalendar.selectedDate);
-                        console.log("Click")
+                        eventsListView.getEventsForCurrentDate();
+                        //eventModel.eventsForDate(maincalendar.selectedDate);
+                        //console.log("Click")
                     }
                 }
             }
@@ -245,29 +267,107 @@ Item {
 
             ListView {
 
-                property var array: [];
-
                 id: eventsListView
                 spacing: 4
                 clip: true
                 header: eventListHeader
                 anchors.fill: parent
                 anchors.margins: 10
-                model: {
-                    array;
-                    //console.log("Update here")
-                }
+                model: []
                 interactive: true
 
                 Component.onCompleted: {
-                    eventModel.eventsAvailable.connect(setEvents);
-                    //console.log("Update");
+                    getEventsForCurrentDate()
                 }
 
-                function setEvents(result) {
-                    array = result;
-                    //console.log("Here", result.length)
+                function getEventsForCurrentDate() {
+
+                    var array = [];
+                    model = array;
+
+                    var request = new XMLHttpRequest();
+
+                    var date = maincalendar.selectedDate;
+                    date.setHours(0, 0, 0, 0);
+                    var start = eventModel.fromDateToTimestamp(date);
+                    date.setHours(23, 59, 59, 999);
+                    var ends = eventModel.fromDateToTimestamp(date);
+
+                    var url = "http://planner.skillmasters.ga/api/v1/events/instances";
+                    var dat = root.encodeQueryData({"from": start, "to": ends});
+                    url = url + dat;
+
+                    request.onreadystatechange = function() {
+
+                        model = array;
+
+                        if (request.readyState === 4) {
+                            if (request.status === 200) {
+
+                                var jsonData = JSON.parse(request.responseText).data;
+                                //console.log(jsonData.length);
+                                //console.log(jsonData);
+
+                                for (var i = 0; i < jsonData.length; i++) {
+
+                                    var element = jsonData[i];
+
+                                    //console.log("Element", element);
+
+                                    var dataArray = {};
+                                    var starttime = Number(element.started_at);
+                                    var endtime = Number(element.ended_at);
+
+                                    dataArray.id = element.event_id;
+                                    dataArray.patrnid = element.pattern_id;
+                                    dataArray.startTime = eventModel.toDateFromTimestamp(starttime);
+                                    dataArray.endTime = eventModel.toDateFromTimestamp(endtime);
+
+                                    var nrequest = new XMLHttpRequest();
+                                    var nurl = "http://planner.skillmasters.ga/api/v1/events/"+dataArray.id;
+
+                                    nrequest.onreadystatechange = function() {
+                                        if (nrequest.readyState === 4) {
+                                            if (nrequest.status === 200) {
+
+                                                var njsonData = JSON.parse(nrequest.responseText).data[0];
+                                                //console.log(nrequest.responseText);
+
+                                                dataArray.name = njsonData.name;
+                                                dataArray.details = njsonData.details;
+                                                dataArray.owner = njsonData.owner_id;
+                                                dataArray.location = njsonData.location;
+
+                                                //console.log("Data:", dataArray, "Here");
+
+                                                if (!(dataArray in array)) {
+                                                    array.push(dataArray);
+                                                }
+
+                                                model = array;
+                                            }
+                                        }
+                                    }
+
+                                    nrequest.open("GET", nurl);
+                                    nrequest.setRequestHeader("X-Firebase-Auth", "serega_mem");
+                                    nrequest.send();
+
+                                }
+                            } else {
+                                console.log("HTTP Request failed", request.readyState, request.status);
+                            }
+
+                            //console.log("Array:", array);
+                        }
+                    }
+
+                    request.open("GET", url);
+                    request.setRequestHeader("X-Firebase-Auth", "serega_mem");
+                    request.send();
+
                 }
+
 
                 delegate: Rectangle {
                     width: eventsListView.width
