@@ -5,18 +5,13 @@ TARGER = Calendar
 DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
-    src/consts.h \
     src/event.h \
-    src/eventmodel.h \
-    src/sevent.h \
-    src/seventmodel.h
+    src/eventmodel.h
 
 SOURCES += \
         src/event.cpp \
         src/eventmodel.cpp \
-        src/main.cpp \
-        src/sevent.cpp \
-        src/seventmodel.cpp
+        src/main.cpp
 
 RESOURCES += resources.qrc
 OTHER_FILES +=
@@ -39,7 +34,8 @@ DISTFILES += \
     qml/EventView.qml \
     qml/SelectorView.qml \
     qml/TestView.qml \
-    qml/main.qml
+    qml/main.qml \
+    src/server.js
 
 contains(ANDROID_TARGET_ARCH,arm64-v8a) {
     ANDROID_PACKAGE_SOURCE_DIR = \
