@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
-import org.jentucalendar.calendar 1.0
+//import org.jentucalendar.calendar 1.0
 
 Item {
 
@@ -68,7 +68,7 @@ Item {
 
                         onClicked: {
                             mainStackView.push(mainPage);
-                            mainStackView.currentItem.setSelectedDate(currentEvent.startDate);
+                            mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                         }
 
                         onWindowChanged: {
@@ -94,7 +94,7 @@ Item {
 
                         onClicked: {
                             mainStackView.push(mainPage);
-                            mainStackView.currentItem.setSelectedDate(currentEvent.startDate);
+                            mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                         }
                     }
                 }
@@ -102,6 +102,7 @@ Item {
 
             Component {
                 id: startDatePickerComponent
+
 
                 Rectangle {
                     height: eventObjectLabel.height + 10
@@ -121,7 +122,7 @@ Item {
                         text: {
                             var date = "None"
                             if (currentEvent) {
-                                var obj = currentEvent.startDate
+                                var obj = currentEvent.startTime
 
                                 if (obj) {
                                     date = obj.toLocaleString(Qt.locale(), "yyyy-MM-dd HH:mm");
@@ -131,7 +132,6 @@ Item {
                             "Start event at: \t" + date;
                         }
 
-                        font.bold: true
                         font.pixelSize: 18
                     }
 
@@ -171,7 +171,7 @@ Item {
                         text: {
                             var date = "None"
                             if (currentEvent) {
-                                var obj = currentEvent.endDate
+                                var obj = currentEvent.endTime
 
                                 if (obj.toString() !== "Invalid Date") {
                                     console.log("I'm here with", obj.toString())
@@ -182,7 +182,6 @@ Item {
                             "End event at: \t" + date;
                         }
 
-                        font.bold: true
                         font.pixelSize: 18
                     }
 
@@ -218,9 +217,8 @@ Item {
                         id: repeatEventLabel
                         height: metricElement.height*1.5
 
-                        text: "Repeat event: "
+                        text: "Repeat event: \t"
 
-                        font.bold: true
                         font.pixelSize: 18
                         verticalAlignment: Text.AlignVCenter;
                     }
@@ -244,11 +242,18 @@ Item {
                         id: eventNameLabel
                         height: metricElement.height
 
-                        text: "Name: "
+                        text: {
+                            var name = "None"
+                            if (currentEvent && currentEvent.name) {
+                                var obj = currentEvent.name
+                                name = obj;
+                            }
 
-                        font.bold: true
+                            "Name: \t\t" + name
+                        }
+
                         font.pixelSize: 18
-                        verticalAlignment: Text.AlignVCenter;
+                        verticalAlignment: Text.AlignVCenter
                     }
                 }
             }
@@ -260,15 +265,21 @@ Item {
 
                 header: viewEditEventListHeader
                 anchors.fill: parent
-                anchors.margins: 10
+                anchors.margins: 15
 
                 model: editBlocksModel
 
                 delegate: Rectangle {
                     width: viewEditEventList.width
-                    height: eventObjectLoader.height + 10
+                    height: eventObjectLoader.height + 5
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.topMargin: 10
+
+                    Rectangle {
+                        width: parent.width
+                        height: 1
+                        color: "#EEEEEE"
+                    }
 
                     Loader {
                         id: eventObjectLoader
@@ -282,21 +293,6 @@ Item {
                         }
                     }
                 }
-                /*
-                delegate: Component{
-                    Loader {
-                        sourceComponent: switch(index) {
-                            case 0: return eventNameComponent
-
-                            case 1:
-                            case 2: return datePickerComponent
-
-                            case 3: return repeatorSwitcherComponent
-                        }
-                    }
-                }
-                */
-
             }
 
             ListModel {
@@ -338,8 +334,20 @@ Item {
 
     function setNewEvent(date) {
         viewEditTitleText = "New event";
-        currentEvent = eventModel.createEvent();
-        currentEvent.startDate = date;
+
+        currentEvent = {}
+
+        currentEvent.id = 0;
+        currentEvent.patrnid = 0;
+
+        currentEvent.startTime = date;
+        currentEvent.endTime = date;
+
+        currentEvent.name = "Empty";
+        currentEvent.details = "";
+        currentEvent.owner = "";
+        currentEvent.location = "";
+        console.log(currentEvent.name);
     }
 
     function setNewUpdatableEvent(modelobj) {

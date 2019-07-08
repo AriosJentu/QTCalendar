@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
-import org.jentucalendar.calendar 1.0
+//import org.jentucalendar.calendar 1.0
 
 Item {
 
@@ -98,7 +98,7 @@ Item {
 
                         onClicked: {
                             mainStackView.push(mainPage);
-                            mainStackView.currentItem.setSelectedDate(currentEvent.startDate);
+                            mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                         }
 
                         text: ""
@@ -136,9 +136,9 @@ Item {
 
                         onClicked: {
                             console.log("::: Removing event with ID ", currentEvent.id)
-                            eventModel.removeEvent(currentEvent.id);
+                            //eventModel.removeEvent(currentEvent.id);
                             mainStackView.push(mainPage);
-                            mainStackView.currentItem.setSelectedDate(currentEvent.startDate);
+                            mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                         }
                     }
                 }
@@ -194,10 +194,10 @@ Item {
                                         currentEvent.name;
                                         break;
                                     case 1:
-                                        currentEvent.startDate.toLocaleString(Qt.locale(), dateFormat);
+                                        currentEvent.startTime.toLocaleString(Qt.locale(), dateFormat);
                                         break;
                                     case 2:
-                                        currentEvent.endDate.toLocaleString(Qt.locale(), dateFormat);
+                                        currentEvent.endTime.toLocaleString(Qt.locale(), dateFormat);
                                         break;
                                     default:
                                         "Event"
@@ -258,7 +258,7 @@ Item {
                 id: eventInfoLabel
                 width: parent.width
                 wrapMode: Text.Wrap
-                text: currentEvent ? currentEvent.information : "None"
+                text: currentEvent ? currentEvent.details : "None"
                 anchors.fill: parent
                 anchors.margins: 10
             }
@@ -271,14 +271,14 @@ Item {
 
         currentEvent = modelobj;
 
-        viewEventDayLabelText = modelobj.startDate.getDate()
+        viewEventDayLabelText = modelobj.startTime.getDate()
 
         viewEventStandaloneDayNameText = Qt.locale().standaloneDayName(
-            modelobj.startDate.getDay(),
+            modelobj.startTime.getDay(),
             Locale.LongFormat)
 
         viewEventMonthYearNameText = Qt.locale().standaloneMonthName(
-            modelobj.startDate.getMonth()) +
-            modelobj.startDate.toLocaleDateString(Qt.locale(), " yyyy")
+            modelobj.startTime.getMonth()) +
+            modelobj.startTime.toLocaleDateString(Qt.locale(), " yyyy")
     }
 }

@@ -2,7 +2,8 @@ import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
-import org.jentucalendar.calendar 1.0
+//import org.jentucalendar.calendar 1.0
+import "qrc:/src/server.js" as Server;
 
 Item {
 
@@ -50,36 +51,8 @@ Item {
                     readonly property color selectedDateColor: "#4F9EE0"
                     property bool visibility: false;
 
-                    function getVisibilityForCurrentDate() {
-
-                        var request = new XMLHttpRequest();
-
-                        var date = styleData.date;
-                        date.setHours(0, 0, 0, 0);
-                        var start = eventModel.fromDateToTimestamp(date);
-                        date.setHours(23, 59, 59, 999);
-                        var ends = eventModel.fromDateToTimestamp(date);
-
-                        var url = "http://planner.skillmasters.ga/api/v1/events/instances";
-                        var dat = root.encodeQueryData({"from": start, "to": ends});
-                        url = url + dat;
-
-
-                        request.onreadystatechange = function() {
-                            if (request.readyState === 4) {
-                                if (request.status === 200) {
-                                    var jsonRes = JSON.parse(request.responseText);
-                                    visibility = jsonRes.count > 0;
-                                } else {
-                                    console.log("HTTP Request failed", request.status);
-                                }
-                            }
-                        }
-
-                        request.open("GET", url);
-                        request.setRequestHeader("X-Firebase-Auth", "serega_mem");
-                        request.send();
-
+                    function getVisibilityForCurrentDate() {                        
+                        Server.getVisibilityForDate(styleData.date, function(cnt) {visibility = cnt > 0});
                     }
 
                     Rectangle {
@@ -222,9 +195,7 @@ Item {
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
-                    onClicked: {
-                        maincalendar.selectedDate = new Date();
-                    }
+                    onClicked:  maincalendar.selectedDate = new Date()
                 }
 
                 RoundButton {
@@ -238,11 +209,7 @@ Item {
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
-                    onClicked: {
-                        eventsListView.getEventsForCurrentDate();
-                        //eventModel.eventsForDate(maincalendar.selectedDate);
-                        //console.log("Click")
-                    }
+                    onClicked: eventsListView.getEventsForCurrentDate()
                 }
             }
         }
@@ -282,89 +249,7 @@ Item {
 
                 function getEventsForCurrentDate() {
 
-                    var array = [];
-                    model = array;
-
-                    var request = new XMLHttpRequest();
-
-                    var date = maincalendar.selectedDate;
-                    date.setHours(0, 0, 0, 0);
-                    var start = eventModel.fromDateToTimestamp(date);
-                    date.setHours(23, 59, 59, 999);
-                    var ends = eventModel.fromDateToTimestamp(date);
-
-                    var url = "http://planner.skillmasters.ga/api/v1/events/instances";
-                    var dat = root.encodeQueryData({"from": start, "to": ends});
-                    url = url + dat;
-
-                    request.onreadystatechange = function() {
-
-                        model = array;
-
-                        if (request.readyState === 4) {
-                            if (request.status === 200) {
-
-                                var jsonData = JSON.parse(request.responseText).data;
-                                //console.log(jsonData.length);
-                                //console.log(jsonData);
-
-                                for (var i = 0; i < jsonData.length; i++) {
-
-                                    var element = jsonData[i];
-
-                                    //console.log("Element", element);
-
-                                    var dataArray = {};
-                                    var starttime = Number(element.started_at);
-                                    var endtime = Number(element.ended_at);
-
-                                    dataArray.id = element.event_id;
-                                    dataArray.patrnid = element.pattern_id;
-                                    dataArray.startTime = eventModel.toDateFromTimestamp(starttime);
-                                    dataArray.endTime = eventModel.toDateFromTimestamp(endtime);
-
-                                    var nrequest = new XMLHttpRequest();
-                                    var nurl = "http://planner.skillmasters.ga/api/v1/events/"+dataArray.id;
-
-                                    nrequest.onreadystatechange = function() {
-                                        if (nrequest.readyState === 4) {
-                                            if (nrequest.status === 200) {
-
-                                                var njsonData = JSON.parse(nrequest.responseText).data[0];
-                                                //console.log(nrequest.responseText);
-
-                                                dataArray.name = njsonData.name;
-                                                dataArray.details = njsonData.details;
-                                                dataArray.owner = njsonData.owner_id;
-                                                dataArray.location = njsonData.location;
-
-                                                //console.log("Data:", dataArray, "Here");
-
-                                                if (!(dataArray in array)) {
-                                                    array.push(dataArray);
-                                                }
-
-                                                model = array;
-                                            }
-                                        }
-                                    }
-
-                                    nrequest.open("GET", nurl);
-                                    nrequest.setRequestHeader("X-Firebase-Auth", "serega_mem");
-                                    nrequest.send();
-
-                                }
-                            } else {
-                                console.log("HTTP Request failed", request.readyState, request.status);
-                            }
-
-                            //console.log("Array:", array);
-                        }
-                    }
-
-                    request.open("GET", url);
-                    request.setRequestHeader("X-Firebase-Auth", "serega_mem");
-                    request.send();
+                    Server.getEventsForDate(maincalendar.selectedDate, function(array) {model = array});
 
                 }
 
@@ -463,8 +348,8 @@ Item {
                                     text: "Delete"
                                     onTriggered: {
                                         console.log("::: Removing event with ID ", modelData.id)
-                                        eventModel.removeEvent(modelData.id);
-                                        array = eventModel.eventsForDate(maincalendar.selectedDate)
+                                        //eventModel.removeEvent(modelData.id);
+                                        //array = eventModel.eventsForDate(maincalendar.selectedDate)
                                     }
                                 }
                             }

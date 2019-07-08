@@ -8,7 +8,6 @@
         <file>qml/EditView.qml</file>
         <file>assets/faregular.ttf</file>
         <file>qml/SelectorView.qml</file>
-        <file>src/sevent.cpp</file>
-        <file>src/sevent.h</file>
+        <file>src/server.js</file>
     </qresource>
 </RCC>

@@ -7,8 +7,8 @@
 
 //#include "event.h"
 //#include "eventmodel.h"
-#include "sevent.h"
-#include "seventmodel.h"
+//#include "sevent.h"
+//#include "seventmodel.h"
 
 /*void getRequestTest() {
     //Test GET request
@@ -63,7 +63,7 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    qmlRegisterType<Server::EventModel>("org.jentucalendar.calendar", 1, 0, "EventModel");
+    //qmlRegisterType<Server::EventModel>("org.jentucalendar.calendar", 1, 0, "EventModel");
 
     QGuiApplication app(argc, argv);
 
