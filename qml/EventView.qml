@@ -101,7 +101,7 @@ Item {
                             mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                         }
 
-                        text: ""
+                        text: Server.ICONS.back
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
                     }
@@ -113,7 +113,7 @@ Item {
                         anchors.right: closeEventButton.left
                         anchors.margins: 5
 
-                        text: ""
+                        text: Server.ICONS.edit_evt
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -130,7 +130,7 @@ Item {
                         anchors.right: editEventButton.left
                         anchors.margins: 5
 
-                        text: ""
+                        text: Server.ICONS.remove_evt
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 

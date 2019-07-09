@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
+import "qrc:/src/server.js" as Server;
 
 Item {
 
@@ -74,7 +75,7 @@ Item {
                             console.log(closeEditButton.x, closeEditButton.y, mainEditRectangle.width, viewEditEventListHeader.width, test.width);
                         }
 
-                        text: ""
+                        text: Server.ICONS.back
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
                     }
@@ -87,7 +88,7 @@ Item {
                         anchors.right: closeEditButton.left
                         anchors.margins: 5
 
-                        text: ""
+                        text: Server.ICONS.save
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -142,7 +143,7 @@ Item {
                         anchors.margins: 10
                         anchors.left: eventObjectLabel.right
 
-                        text: ""
+                        text: Server.ICONS.picker
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
                     }
@@ -192,7 +193,7 @@ Item {
                         anchors.margins: 10
                         anchors.left: eventObjectLabel.right
 
-                        text: ""
+                        text: Server.ICONS.picker
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
                     }
@@ -334,19 +335,13 @@ Item {
     function setNewEvent(date) {
         viewEditTitleText = "New event";
 
-        currentEvent = {}
+        currentEvent = Server.generateEmptyEvent();
 
         currentEvent.id = 0;
         currentEvent.patrnid = 0;
 
         currentEvent.startTime = date;
         currentEvent.endTime = date;
-
-        currentEvent.name = "Empty";
-        currentEvent.details = "";
-        currentEvent.owner = "";
-        currentEvent.location = "";
-        console.log(currentEvent.name);
     }
 
     function setNewUpdatableEvent(modelobj) {

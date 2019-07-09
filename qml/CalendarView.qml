@@ -175,15 +175,18 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: 5
 
-                    text: ""
+                    text: Server.ICONS.new_evt
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
                     onClicked: {
-                        Server.postEventToServer(Server.generateRandomEvent(maincalendar.selectedDate), function() {
+                        /*Server.postEventToServer(Server.generateRandomEvent(maincalendar.selectedDate), function() {
                             console.log("Event successfully added");
                             eventsListView.getEventsForCurrentDate();
-                        }, Server.basicErrorFunc)
+                        }, Server.basicErrorFunc)*/
+
+                        mainStackView.push(editPage);
+                        mainStackView.currentItem.setNewEvent(maincalendar.selectedDate);
                     }
                 }
 
@@ -194,7 +197,7 @@ Item {
                     anchors.right: addEventButton.left
                     anchors.margins: 5
 
-                    text: ""
+                    text: Server.ICONS.today
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -208,7 +211,7 @@ Item {
                     anchors.right: gotoTodayButton.left
                     anchors.margins: 5
 
-                    text: ""
+                    text: Server.ICONS.refresh
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -341,6 +344,10 @@ Item {
                                 MenuItem {
                                     text: "Edit"
                                     onTriggered: {
+                                        /*Server.postEventToServer(Server.generateUpdateForEvent(modelData), function() {
+                                            console.log("Event successfully updated");
+                                            eventsListView.getEventsForCurrentDate();
+                                        }, Server.basicErrorFunc, true);*/
                                         mainStackView.push(editPage);
                                         mainStackView.currentItem.setEvent(modelData);
                                     }
