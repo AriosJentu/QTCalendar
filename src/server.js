@@ -71,6 +71,11 @@ function getEventsForDate(inputdate, updatefunc, errorfunc) {
 
                 var identifs = [];
                 var identsByID = {}
+
+                if (jsonData.length === 0) {
+                    return;
+                }
+
                 for (let i = 0; i < jsonData.length; i++) {
                     identifs.push("id=" + jsonData[i].event_id);
                     identsByID[jsonData[i].event_id] = i;
@@ -82,7 +87,6 @@ function getEventsForDate(inputdate, updatefunc, errorfunc) {
                 requestEvents.onreadystatechange = function() {
                     if (requestEvents.readyState === 4) {
                         if (requestEvents.status === 200) {
-
 
                             var jsonEventsData = JSON.parse(requestEvents.responseText).data;
 
@@ -194,6 +198,30 @@ function postEventToServer(event, afterfunc, errorfunc) {
     requestEvent.setRequestHeader("Content-Type", "application/json");
     requestEvent.send(evtJsonString);
 }
+
+function deleteEventFromServer(event, afterfunc, errorfunc) {
+
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function() {
+
+        if (request.readyState === 4) {
+            if (request.status === 200) {
+                afterfunc();
+            } else {
+                console.log("Error in Event DELETE Request");
+                errorfunc(request);
+            }
+        }
+
+    }
+
+    request.open("DELETE", S_EVENT_ID+event.id);
+    request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
+    request.send();
+
+}
+
 
 function generateRandomEvent(inputdate) {
 

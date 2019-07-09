@@ -181,11 +181,9 @@ Item {
 
                     onClicked: {
                         Server.postEventToServer(Server.generateRandomEvent(maincalendar.selectedDate), function() {
-                            console.log("Successfully");
+                            console.log("Event successfully added");
+                            eventsListView.getEventsForCurrentDate();
                         }, Server.basicErrorFunc)
-
-                        //mainStackView.push(editPage);
-                        //mainStackView.currentItem.setNewEvent(maincalendar.selectedDate);
                     }
                 }
 
@@ -248,9 +246,9 @@ Item {
                 model: []
                 interactive: true
 
-                Component.onCompleted: {
+                /*Component.onCompleted: {
                     getEventsForCurrentDate()
-                }
+                }*/
 
                 function getEventsForCurrentDate() {
                     Server.getEventsForDate(maincalendar.selectedDate, function(array) {model = array});
@@ -350,9 +348,10 @@ Item {
                                 MenuItem {
                                     text: "Delete"
                                     onTriggered: {
-                                        console.log("::: Removing event with ID ", modelData.id)
-                                        //eventModel.removeEvent(modelData.id);
-                                        //array = eventModel.eventsForDate(maincalendar.selectedDate)
+                                        Server.deleteEventFromServer(modelData, function() {
+                                            console.log("Event successfully removed");
+                                            eventsListView.getEventsForCurrentDate();
+                                        }, Server.basicErrorFunc);
                                     }
                                 }
                             }
