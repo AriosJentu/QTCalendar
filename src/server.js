@@ -142,6 +142,8 @@ function getEventsForDate(inputdate, updatefunc, errorfunc) {
                                             eventData.reprule = patternElement.rrule;
                                             eventData.timezone = patternElement.timezone;
 
+                                            eventData.selectedDate = inputdate;
+
                                             array.push(eventData);
                                             updatefunc(array);
 

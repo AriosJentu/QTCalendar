@@ -9,10 +9,6 @@ Item {
     id: calendarWindow
     //anchors.fill: parent
 
-    function setSelectedDate(date) {
-        maincalendar.selectedDate = date;
-    }
-
     Flow {
         id: row
         anchors.fill: parent
@@ -51,7 +47,9 @@ Item {
                     property bool visibility: false;
 
                     function getVisibilityForCurrentDate() {                        
-                        Server.getVisibilityForDate(styleData.date, function(cnt) {visibility = cnt > 0});
+                        Server.getVisibilityForDate(styleData.date, function(cnt) {
+                            visibility = cnt > 0
+                        }, Server.basicErrorFunc);
                     }
 
 
@@ -249,12 +247,22 @@ Item {
                 model: []
                 interactive: true
 
-                /*Component.onCompleted: {
-                    getEventsForCurrentDate()
-                }*/
-
                 function getEventsForCurrentDate() {
-                    Server.getEventsForDate(maincalendar.selectedDate, function(array) {model = array});
+
+                    Server.getEventsForDate(maincalendar.selectedDate, function(array) {
+                        if (array.length > 0) {
+
+                            var ldate = array[0].selectedDate.toLocaleString(maincalendar.locale, "yyyy-MM-dd");
+                            var rdate = maincalendar.selectedDate.toLocaleString(maincalendar.locale, "yyyy-MM-dd");
+
+                            if (ldate !== rdate) {
+                                console.log("Loaded incorrect date");
+                                return;
+                            }
+                        }
+
+                        model = array
+                    }, Server.basicErrorFunc);
                 }
 
 
@@ -367,5 +375,10 @@ Item {
                 }
             }
         }
+    }
+
+    function setSelectedDate(date) {
+        maincalendar.selectedDate = date;
+        eventsListView.getEventsForCurrentDate();
     }
 }
