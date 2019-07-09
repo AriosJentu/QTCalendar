@@ -2,7 +2,6 @@ import QtQuick 2.5
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
-//import org.jentucalendar.calendar 1.0
 
 Item {
 
@@ -75,7 +74,7 @@ Item {
                             console.log(closeEditButton.x, closeEditButton.y, mainEditRectangle.width, viewEditEventListHeader.width, test.width);
                         }
 
-                        text: ""
+                        text: ""
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
                     }

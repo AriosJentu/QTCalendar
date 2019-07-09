@@ -2,7 +2,6 @@ import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
-//import org.jentucalendar.calendar 1.0
 import "qrc:/src/server.js" as Server;
 
 Item {
@@ -55,6 +54,7 @@ Item {
                         Server.getVisibilityForDate(styleData.date, function(cnt) {visibility = cnt > 0});
                     }
 
+
                     Rectangle {
                         id: dateDelegateRect
                         anchors.fill: parent
@@ -80,6 +80,7 @@ Item {
 
                             visibility = false;
                             getVisibilityForCurrentDate();
+
                             color;
                         }
                     }
@@ -179,8 +180,12 @@ Item {
                     font.pixelSize: 20
 
                     onClicked: {
-                        mainStackView.push(editPage);
-                        mainStackView.currentItem.setNewEvent(maincalendar.selectedDate);
+                        Server.postEventToServer(Server.generateRandomEvent(maincalendar.selectedDate), function() {
+                            console.log("Successfully");
+                        }, Server.basicErrorFunc)
+
+                        //mainStackView.push(editPage);
+                        //mainStackView.currentItem.setNewEvent(maincalendar.selectedDate);
                     }
                 }
 
@@ -205,7 +210,7 @@ Item {
                     anchors.right: gotoTodayButton.left
                     anchors.margins: 5
 
-                    text: ""
+                    text: ""
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -248,9 +253,7 @@ Item {
                 }
 
                 function getEventsForCurrentDate() {
-
                     Server.getEventsForDate(maincalendar.selectedDate, function(array) {model = array});
-
                 }
 
 

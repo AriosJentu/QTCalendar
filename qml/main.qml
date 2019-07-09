@@ -14,10 +14,7 @@ Window {
 
     readonly property FontLoader fontAwesome: FontLoader { source: "qrc:/assets/faregular.ttf" }
 
-    /*EventModel {
-        id: eventModel
-    }*/
-
+    //FontLoader { id: fontAwesome; source: "qrc:/assets/faregular.ttf" }
 
     StackView {
         id: mainStackView;

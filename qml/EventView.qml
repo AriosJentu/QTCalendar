@@ -2,7 +2,6 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
-//import org.jentucalendar.calendar 1.0
 
 Item {
 
@@ -101,7 +100,7 @@ Item {
                             mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                         }
 
-                        text: ""
+                        text: ""
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
                     }
@@ -113,7 +112,7 @@ Item {
                         anchors.right: closeEventButton.left
                         anchors.margins: 5
 
-                        text: ""
+                        text: ""
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
