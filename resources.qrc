@@ -6,8 +6,8 @@
         <file>qml/main.qml</file>
         <file>qml/EventView.qml</file>
         <file>qml/EditView.qml</file>
-        <file>assets/faregular.ttf</file>
         <file>qml/SelectorView.qml</file>
         <file>src/server.js</file>
+        <file>assets/miregular.ttf</file>
     </qresource>
 </RCC>
