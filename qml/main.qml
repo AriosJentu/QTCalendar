@@ -12,9 +12,7 @@ Window {
     minimumWidth: 700
     minimumHeight: 500
 
-    readonly property FontLoader fontAwesome: FontLoader { source: "qrc:/assets/faregular.ttf" }
-
-    //FontLoader { id: fontAwesome; source: "qrc:/assets/faregular.ttf" }
+    readonly property FontLoader fontAwesome: FontLoader { source: "qrc:/assets/miregular.ttf" }
 
     StackView {
         id: mainStackView;
