@@ -215,6 +215,20 @@ Item {
 
                     onClicked: eventsListView.getEventsForCurrentDate()
                 }
+
+                RoundButton {
+                    id: accountInfo
+                    width: parent.height-10
+                    height: parent.height-10
+                    anchors.right: refreshDatabase.left
+                    anchors.margins: 5
+
+                    text: Server.ICONS.account
+                    font.family: root.fontAwesome.name
+                    font.pixelSize: 20
+
+                    //onClicked:{}
+                }
             }
         }
 
@@ -304,8 +318,8 @@ Item {
                                 width: parent.width
                                 wrapMode: Text.Wrap
                                 text: {
-                                    "Start: " + modelData.startTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:MM") + "\t" +
-                                    "End: " + modelData.endTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:MM");
+                                    "Start: " + modelData.startTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:mm") + "\t" +
+                                    "End: " + modelData.endTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:mm");
                                 }
                                 font.italic: true
                             }
