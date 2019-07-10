@@ -61,18 +61,14 @@ Item {
                     RoundButton {
 
                         id: closeEditButton
-                        width: viewEditTitle.height
-                        height: viewEditTitle.height
+                        width: viewEditTitle.height-10
+                        height: viewEditTitle.height-10
                         anchors.right: mainEditRectangle.right
                         anchors.margins: 5
 
                         onClicked: {
                             mainStackView.push(mainPage);
                             mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
-                        }
-
-                        onWindowChanged: {
-                            console.log(closeEditButton.x, closeEditButton.y, mainEditRectangle.width, viewEditEventListHeader.width, test.width);
                         }
 
                         text: Server.ICONS.back
@@ -83,8 +79,8 @@ Item {
                     RoundButton {
 
                         id: saveEditButton
-                        width: viewEditTitle.height
-                        height: viewEditTitle.height
+                        width: viewEditTitle.height-10
+                        height: viewEditTitle.height-10
                         anchors.right: closeEditButton.left
                         anchors.margins: 5
 
@@ -334,15 +330,15 @@ Item {
                             array[0]
                         }
                         currentIndex: {
-                            var index = "UTC";
+                            var tzindex = "GMT";
                             if (currentEvent && currentEvent.timezone) {
-                                index = currentEvent.timezone;
+                                tzindex = currentEvent.timezone;
                             }
-                            Server.getTimezoneIndex(index, array[1]);
+                            Server.getTimezoneIndex(tzindex);
                         }
 
                         onCurrentIndexChanged: {
-                            console.log(Server.getTimezoneStringFromOffset(array[1][currentIndex].offset));
+                            currentEvent.timezone = Server.getTimezoneStringFromOffset(array[1][currentIndex].offset)
                         }
                     }
                 }
