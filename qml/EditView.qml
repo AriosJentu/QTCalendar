@@ -8,7 +8,7 @@ Item {
 
     id: editWindow
     property var currentEvent
-    property string viewEditTitleText: "Edit event"
+    property bool isNewEvent: false
 
     Flow {
 
@@ -54,7 +54,7 @@ Item {
 
                     Label {
                         id: viewEditTitle
-                        text: viewEditTitleText
+                        text: isNewEvent ? "New Event" : "Edit Event"
                         font.pointSize: 32
                     }
 
@@ -104,6 +104,7 @@ Item {
                 id: startDatePickerComponent
 
                 Rectangle {
+                    width: startDatePickerComponent.width
                     height: eventObjectLabel.height + 10
 
                     Label {
@@ -138,7 +139,7 @@ Item {
                         width: eventObjectLabel.height
                         height: eventObjectLabel.height
                         anchors.margins: 10
-                        anchors.left: eventObjectLabel.right
+                        x: viewEditEventList.width - width*2
 
                         text: Server.ICONS.picker
                         font.family: root.fontAwesome.name
@@ -151,6 +152,7 @@ Item {
                 id: endDatePickerComponent
 
                 Rectangle {
+                    width: endDatePickerComponent.width
                     height: eventObjectLabel.height + 10
 
                     Label {
@@ -185,7 +187,7 @@ Item {
                         width: eventObjectLabel.height
                         height: eventObjectLabel.height
                         anchors.margins: 10
-                        anchors.left: eventObjectLabel.right
+                        x: viewEditEventList.width - width*2
 
                         text: Server.ICONS.picker
                         font.family: root.fontAwesome.name
@@ -198,6 +200,7 @@ Item {
                 id: repeatorSwitcherComponent
 
                 Rectangle {
+                    width: repeatorSwitcherComponent.width
                     height: repeatEventLabel.height + 10
 
                     Label {
@@ -230,7 +233,7 @@ Item {
                         width: repeatEventLabel.height
                         height: repeatEventLabel.height
                         anchors.margins: 10
-                        anchors.left: repeatEventLabel.right
+                        x: viewEditEventList.width - width*2
 
                         text: Server.ICONS.edit_evt
                         font.family: root.fontAwesome.name
@@ -311,12 +314,10 @@ Item {
 
                         id: eventTimezoneLabel
                         width: metricElement.width*0.7
-                        height: metricElement.height
+                        height: metricElement.height*1.5
 
                         text: "<b>Time Zone:</b>"
                         verticalAlignment: Text.AlignVCenter
-
-                        font.pixelSize: 14
                     }
 
                     ComboBox {
@@ -345,7 +346,53 @@ Item {
                         }
                     }
                 }
+            }
 
+            Component {
+                id: eventOnMapComponent
+
+                Rectangle {
+                    width: eventOnMapComponent.width
+                    height: eventOnMapLabel.height + 10
+
+                    Label {
+
+                        TextMetrics {
+                            id: metricElement
+                            font: eventOnMapLabel.font
+                            text: eventOnMapLabel.text
+                        }
+
+                        id: eventOnMapLabel
+                        width: metricElement.width*0.7
+                        height: metricElement.height*1.5
+
+                        text: {
+
+                            var location = "Unknown"
+                            if (currentEvent && currentEvent.location) {
+                                location = currentEvent.location;
+                            }
+
+                            "<b>Location:</b> " + location;
+                        }
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+
+                    RoundButton {
+                        id: eventOnMapButton
+
+                        width: eventOnMapLabel.height
+                        height: eventOnMapLabel.height
+                        anchors.margins: 10
+                        x: viewEditEventList.width - width*2
+
+                        text: Server.ICONS.map
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
+                    }
+                }
             }
 
             ListView {
@@ -381,6 +428,7 @@ Item {
 
                             case 3: return repeatorSwitcherComponent
                             case 4: return eventTimezoneComponent
+                            case 5: return eventOnMapComponent
                         }
                     }
                 }
@@ -394,6 +442,7 @@ Item {
                 ListElement {index: 2}
                 ListElement {index: 3}
                 ListElement {index: 4}
+                ListElement {index: 5}
             }
 
         }
@@ -446,12 +495,12 @@ Item {
     }
 
     function setEvent(modelobj) {
-        viewEditTitleText = "Edit event";
+        isNewEvent = false;
         currentEvent = modelobj;
     }
 
     function setNewEvent(date) {
-        viewEditTitleText = "New event";
+        isNewEvent = true;
 
         currentEvent = Server.generateEmptyEvent();
 
@@ -463,7 +512,7 @@ Item {
     }
 
     function setNewUpdatableEvent(modelobj) {
-        viewEditTitleText = "New event";
+        isNewEvent = true;
         currentEvent = modelobj;
     }
 }
