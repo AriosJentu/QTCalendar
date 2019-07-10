@@ -370,6 +370,7 @@ Item {
                                             console.log("Event successfully updated");
                                             eventsListView.getEventsForCurrentDate();
                                         }, Server.basicErrorFunc, true);*/
+                                        modelData.selectedDate = maincalendar.selectedDate;
                                         mainStackView.push(editPage);
                                         mainStackView.currentItem.setEvent(modelData);
                                     }
