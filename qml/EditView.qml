@@ -140,6 +140,11 @@ Item {
                         text: Server.ICONS.picker
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
+
+                        onClicked: {
+                            mainStackView.push(selectorView);
+                            mainStackView.currentItem.loadEvent(currentEvent, true, isNewEvent);
+                        }
                     }
                 }
             }
@@ -188,6 +193,11 @@ Item {
                         text: Server.ICONS.picker
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
+
+                        onClicked: {
+                            mainStackView.push(selectorView);
+                            mainStackView.currentItem.loadEvent(currentEvent, false, isNewEvent);
+                        }
                     }
                 }
             }
