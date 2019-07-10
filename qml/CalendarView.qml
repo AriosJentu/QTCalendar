@@ -234,7 +234,7 @@ Item {
 
         Rectangle {
             width: {
-                var res = parent.width*0.5 - parent.spacing;
+                var res = parent.width*0.5;
                 if (parent.width < parent.height) {
                     res = parent.width;
                 }
@@ -242,7 +242,7 @@ Item {
             }
 
             height: {
-                var res = parent.height*0.5 - parent.spacing;
+                var res = parent.height*0.5;
                 if (parent.width > parent.height) {
                     res = parent.height;
                 }
