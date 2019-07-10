@@ -135,7 +135,7 @@ Item {
                         width: eventObjectLabel.height
                         height: eventObjectLabel.height
                         anchors.margins: 10
-                        x: viewEditEventList.width - width*2
+                        x: viewEditEventList.width - width
 
                         text: Server.ICONS.picker
                         font.family: root.fontAwesome.name
@@ -188,7 +188,7 @@ Item {
                         width: eventObjectLabel.height
                         height: eventObjectLabel.height
                         anchors.margins: 10
-                        x: viewEditEventList.width - width*2
+                        x: viewEditEventList.width - width
 
                         text: Server.ICONS.picker
                         font.family: root.fontAwesome.name
@@ -239,7 +239,7 @@ Item {
                         width: repeatEventLabel.height
                         height: repeatEventLabel.height
                         anchors.margins: 10
-                        x: viewEditEventList.width - width*2
+                        x: viewEditEventList.width - width
 
                         text: Server.ICONS.edit_evt
                         font.family: root.fontAwesome.name
@@ -296,6 +296,8 @@ Item {
                                     currentEvent.name = text;
                                 }
                             }
+
+                            placeholderText: "Event name"
 
                             font.pointSize: 12
                         }
@@ -392,7 +394,7 @@ Item {
                         width: eventOnMapLabel.height
                         height: eventOnMapLabel.height
                         anchors.margins: 10
-                        x: viewEditEventList.width - width*2
+                        x: viewEditEventList.width - width
 
                         text: Server.ICONS.map
                         font.family: root.fontAwesome.name
@@ -418,11 +420,11 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.topMargin: 10
 
-                    Rectangle {
+                    /*Rectangle {
                         width: parent.width
                         height: 1
                         color: "#EEEEEE"
-                    }
+                    }*/
 
                     Loader {
                         id: eventObjectLoader
@@ -472,31 +474,35 @@ Item {
             }
             border.color: Qt.darker("#F4F4F4", 1.2)
 
-            OldContr.TextArea {
+            ScrollView {
 
                 width: parent.width-10
                 height: parent.height - 10
-                anchors.fill: parent
                 anchors.margins: 1
+                anchors.fill: parent
 
-                text: {
-                    var details = "None"
-                    if (currentEvent && typeof(currentEvent.details) == "string") {
-                        var obj = currentEvent.details
-                        details = obj;
+                TextArea {
+
+                    text: {
+                        var details = "None"
+                        if (currentEvent && typeof(currentEvent.details) == "string") {
+                            var obj = currentEvent.details
+                            details = obj;
+                        }
+                        details
                     }
-                    details
-                }
 
-                font.pointSize: 14
+                    font.pointSize: 14
+                    placeholderText: "Event descriptions"
 
-                onTextChanged: {
-                    if (currentEvent && typeof(currentEvent.details) == "string") {
-                        currentEvent.details = text;
+                    onTextChanged: {
+                        if (currentEvent && typeof(currentEvent.details) == "string") {
+                            currentEvent.details = text;
+                        }
                     }
                 }
-
             }
+
         }
     }
 
