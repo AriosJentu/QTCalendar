@@ -225,7 +225,7 @@ Item {
                                     case 4:
                                         var array = Server.getListOfTimezones();
                                         var tzindex = Server.getTimezoneIndex(currentEvent.timezone);
-                                        array[0][tzindex];
+                                        array[0][tzindex] + " ("+currentEvent.timezone+")";
                                         break;
                                     case 5:
                                         var location = "Unknown";
