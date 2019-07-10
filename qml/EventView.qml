@@ -143,6 +143,20 @@ Item {
 
                         }
                     }
+
+                    RoundButton {
+                        id: eventOnMapButton
+                        width: viewEventDayLabel.height-10
+                        height: viewEventDayLabel.height-10
+                        anchors.right: deleteEventButton.left
+                        anchors.margins: 5
+
+                        text: Server.ICONS.map
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
+
+                        //onClicked: {}
+                    }
                 }
             }
 
@@ -210,7 +224,6 @@ Item {
                                         break;
                                     case 4:
                                         var array = Server.getListOfTimezones();
-                                        console.log(currentEvent.timezone);
                                         var tzindex = Server.getTimezoneIndex(currentEvent.timezone);
                                         array[0][tzindex];
                                         break;
@@ -220,6 +233,9 @@ Item {
                                             location = currentEvent.location;
                                         }
                                         location;
+                                        break;
+                                    case 6:
+                                        currentEvent.id;
                                         break;
                                     default:
                                         "Event"
@@ -265,6 +281,11 @@ Item {
                 ListElement {
                     type: "Location:"
                     index: 5
+                }
+
+                ListElement {
+                    type: "Event ID:"
+                    index: 6
                 }
             }
         }
