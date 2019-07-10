@@ -7,8 +7,8 @@
 //#include "OAuth/o2google.h"
 //#include "OAuth/o1requestor.h"
 
-#define CLIENT_ID "992699481264-cnfqr8ae042isn32j6erralfkt0ku6fp.apps.googleusercontent.com"
-#define CLIENT_SEC "gTJ2OfspgNafvj645rB87zFP"
+#define CLIENT_ID "nothing"
+#define CLIENT_SEC "nothing"
 #define AUTH_URI "https://accounts.google.com/o/oauth2/auth"
 #define AUTH_TOKEN_URI "https://oauth2.googleapis.com/token"
 
