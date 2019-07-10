@@ -358,14 +358,15 @@ function getListOfTimezones() {
 
 function getTimezoneIndex(value) {
 
-    if (value === "UTC") {
-
-    }
+    var defaultval = 0;
 
     for (var i = 0; i < array.length; i++) {
 
-        if (value === "UTC" && array[i].offset === 0) {
-            return i;
+        if (array[i].offset === 0) {
+            defaultval = i;
+            if (value === "UTC") {
+                return i;
+            }
         }
 
         var offset = array[i].offset.toString();
@@ -386,6 +387,7 @@ function getTimezoneIndex(value) {
             }
         }
     }
+    return defaultval;
 }
 
 function getTimezoneStringFromOffset(offset) {
@@ -399,4 +401,10 @@ function getTimezoneStringFromOffset(offset) {
     }
 
     return "GMT"+offst;
+}
+
+function getIntArray(size) {
+    var array = []
+    for (var i = 0; i < size; i++) {array[i] = i;}
+    return array
 }
