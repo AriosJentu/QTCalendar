@@ -98,7 +98,7 @@ Item {
 
                         onClicked: {
                             mainStackView.push(mainPage);
-                            mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
+                            mainStackView.currentItem.setSelectedDate(currentEvent.selectedDate);
                         }
 
                         text: Server.ICONS.back
@@ -201,6 +201,26 @@ Item {
                                     case 2:
                                         currentEvent.endTime.toLocaleString(Qt.locale(), dateFormat);
                                         break;
+                                    case 3:
+                                        var repeats = "None"
+                                        if (currentEvent && currentEvent.reprule) {
+                                            repeats = currentEvent.reprule;
+                                        }
+                                        repeats;
+                                        break;
+                                    case 4:
+                                        var array = Server.getListOfTimezones();
+                                        console.log(currentEvent.timezone);
+                                        var tzindex = Server.getTimezoneIndex(currentEvent.timezone);
+                                        array[0][tzindex];
+                                        break;
+                                    case 5:
+                                        var location = "Unknown";
+                                        if (currentEvent && currentEvent.location) {
+                                            location = currentEvent.location;
+                                        }
+                                        location;
+                                        break;
                                     default:
                                         "Event"
                                         break;
@@ -208,13 +228,10 @@ Item {
                                 } else {
                                     "None"
                                 }
-
                             }
                         }
                     }
-
                 }
-
             }
 
             ListModel {
@@ -233,6 +250,21 @@ Item {
                 ListElement {
                     type: "Finish at:"
                     index: 2
+                }
+
+                ListElement {
+                    type: "Repeats:"
+                    index: 3
+                }
+
+                ListElement {
+                    type: "Time Zone:"
+                    index: 4
+                }
+
+                ListElement {
+                    type: "Location:"
+                    index: 5
                 }
             }
         }
@@ -273,14 +305,14 @@ Item {
 
         currentEvent = modelobj;
 
-        viewEventDayLabelText = modelobj.startTime.getDate()
+        viewEventDayLabelText = modelobj.selectedDate.getDate()
 
         viewEventStandaloneDayNameText = Qt.locale().standaloneDayName(
-            modelobj.startTime.getDay(),
+            modelobj.selectedDate.getDay(),
             Locale.LongFormat)
 
         viewEventMonthYearNameText = Qt.locale().standaloneMonthName(
-            modelobj.startTime.getMonth()) +
-            modelobj.startTime.toLocaleDateString(Qt.locale(), " yyyy")
+            modelobj.selectedDate.getMonth()) +
+            modelobj.selectedDate.toLocaleDateString(Qt.locale(), " yyyy")
     }
 }
