@@ -1,4 +1,4 @@
-QT += qml quick sql network
+QT += qml quick sql network networkauth
 CONFIG += c++11
 TARGER = Calendar
 
@@ -6,11 +6,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
     src/event.h \
-    src/eventmodel.h
+    src/eventmodel.h \
+    src/googleauth.h
 
 SOURCES += \
         src/event.cpp \
         src/eventmodel.cpp \
+        src/googleauth.cpp \
         src/main.cpp
 
 RESOURCES += resources.qrc
