@@ -1,7 +1,7 @@
 import QtQuick 2.5
-import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
+import QtQuick.Controls 1.5 as OldContr
 import "qrc:/src/server.js" as Server;
 
 Item {
@@ -103,7 +103,6 @@ Item {
             Component {
                 id: startDatePickerComponent
 
-
                 Rectangle {
                     height: eventObjectLabel.height + 10
 
@@ -129,10 +128,8 @@ Item {
                                 }
                             }
 
-                            "Start event at: \t" + date;
+                            "<b>Start event at:</b> " + date;
                         }
-
-                        font.pixelSize: 18
                     }
 
                     RoundButton {
@@ -174,15 +171,12 @@ Item {
                                 var obj = currentEvent.endTime
 
                                 if (obj.toString() !== "Invalid Date") {
-                                    console.log("I'm here with", obj.toString())
                                     date = obj.toLocaleString(Qt.locale(), "yyyy-MM-dd HH:mm");
                                 }
                             }
 
-                            "End event at: \t" + date;
+                            "<b>End event at:</b> " + date;
                         }
-
-                        font.pixelSize: 18
                     }
 
                     RoundButton {
@@ -217,10 +211,30 @@ Item {
                         id: repeatEventLabel
                         height: metricElement.height*1.5
 
-                        text: "Repeat event: \t"
+                        text: {
+                            var repeats = "None"
 
-                        font.pixelSize: 18
+                            if (currentEvent && currentEvent.reprule) {
+                                repeats = currentEvent.reprule;
+                            }
+
+                            "<b>Repeat event:</b> " + repeats
+                        }
+
                         verticalAlignment: Text.AlignVCenter;
+                    }
+
+                    RoundButton {
+                        id: eventRepeatEditorButton
+
+                        width: repeatEventLabel.height
+                        height: repeatEventLabel.height
+                        anchors.margins: 10
+                        anchors.left: repeatEventLabel.right
+
+                        text: Server.ICONS.edit_evt
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
                     }
                 }
             }
@@ -229,6 +243,7 @@ Item {
                 id: eventNameComponent
 
                 Rectangle {
+                    width: eventNameComponent.width
                     height: eventNameLabel.height + 10
 
                     Label {
@@ -240,22 +255,97 @@ Item {
                         }
 
                         id: eventNameLabel
+                        width: metricElement.width*0.7
                         height: metricElement.height
 
-                        text: {
-                            var name = "None"
-                            if (currentEvent && currentEvent.name) {
-                                var obj = currentEvent.name
-                                name = obj;
-                            }
+                        text: "<b>Name:</b>"
 
-                            "Name: \t\t" + name
-                        }
-
-                        font.pixelSize: 18
                         verticalAlignment: Text.AlignVCenter
                     }
+
+                    Rectangle {
+
+                        width: viewEditEventList.width - x - 10
+                        height: eventNameLabel.height + 10
+                        anchors.left: eventNameLabel.right
+                        color: "grey"
+
+                        TextField {
+
+                            anchors.fill: parent
+
+                            text: {
+                                var name = ""
+                                if (currentEvent && typeof(currentEvent.name) == "string") {
+                                    name = currentEvent.name;
+                                }
+                                name
+                            }
+
+                            onTextChanged: {
+                                if (currentEvent && typeof(currentEvent.name) == "string") {
+                                    currentEvent.name = text;
+                                }
+                            }
+
+                            font.pointSize: 12
+                        }
+                    }
                 }
+            }
+
+            Component {
+                id: eventTimezoneComponent
+
+                Rectangle {
+                    width: eventTimezoneComponent.width
+                    height: eventTimezoneLabel.height + 10
+
+                    Label {
+
+                        TextMetrics {
+                            id: metricElement
+                            font: eventTimezoneLabel.font
+                            text: eventTimezoneLabel.text
+                        }
+
+                        id: eventTimezoneLabel
+                        width: metricElement.width*0.7
+                        height: metricElement.height
+
+                        text: "<b>Time Zone:</b>"
+                        verticalAlignment: Text.AlignVCenter
+
+                        font.pixelSize: 14
+                    }
+
+                    ComboBox {
+
+                        width: viewEditEventList.width - x - 10
+                        height: eventTimezoneLabel.height + 10
+                        anchors.left: eventTimezoneLabel.right
+
+                        property var array: []
+
+                        id: eventTimezonesCombobox
+                        model: {
+                            array = Server.getListOfTimezones()
+                            array[0]
+                        }
+                        currentIndex: {
+                            var index = "UTC";
+                            if (currentEvent && currentEvent.timezone) {
+                                index = currentEvent.timezone;
+                            }
+                            Server.getTimezoneIndex(index, array[1]);
+                        }
+
+                        onCurrentIndexChanged: {
+                            console.log(Server.getTimezoneStringFromOffset(array[1][currentIndex].offset));
+                        }
+                    }
+                }
+
             }
 
             ListView {
@@ -290,6 +380,7 @@ Item {
                             case 2: return endDatePickerComponent
 
                             case 3: return repeatorSwitcherComponent
+                            case 4: return eventTimezoneComponent
                         }
                     }
                 }
@@ -302,6 +393,7 @@ Item {
                 ListElement {index: 1}
                 ListElement {index: 2}
                 ListElement {index: 3}
+                ListElement {index: 4}
             }
 
         }
@@ -324,6 +416,32 @@ Item {
                 res;
             }
             border.color: Qt.darker("#F4F4F4", 1.2)
+
+            OldContr.TextArea {
+
+                width: parent.width-10
+                height: parent.height - 10
+                anchors.fill: parent
+                anchors.margins: 1
+
+                text: {
+                    var details = "None"
+                    if (currentEvent && typeof(currentEvent.details) == "string") {
+                        var obj = currentEvent.details
+                        details = obj;
+                    }
+                    details
+                }
+
+                font.pointSize: 14
+
+                onTextChanged: {
+                    if (currentEvent && typeof(currentEvent.details) == "string") {
+                        currentEvent.details = text;
+                    }
+                }
+
+            }
         }
     }
 
