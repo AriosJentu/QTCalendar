@@ -89,8 +89,10 @@ Item {
                         font.pixelSize: 20
 
                         onClicked: {
-                            mainStackView.push(mainPage);
-                            mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
+                            Server.postEventToServer(currentEvent, function() {
+                                mainStackView.push(mainPage);
+                                mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
+                            }, Server.basicErrorFunc, !isNewEvent)
                         }
                     }
                 }

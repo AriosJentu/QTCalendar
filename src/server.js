@@ -18,7 +18,8 @@ const ICONS = {
     today: "",
     edit_evt: "",
     share: "",
-    picker: ""
+    picker: "",
+    accept: ""
 }
 
 function encodeQueryData(data) {
@@ -290,7 +291,7 @@ function generateEmptyEvent() {
 
     event.startTime = 0;
     event.endTime = 0;
-    event.name = "Empty";
+    event.name = "";
     event.details = "";
     event.owner = "";
     event.location = "";

@@ -223,7 +223,7 @@ Item {
                     anchors.right: cancelDateButton.left
                     anchors.margins: 5
 
-                    text: Server.ICONS.save
+                    text: Server.ICONS.accept
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
