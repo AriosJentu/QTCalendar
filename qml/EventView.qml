@@ -35,7 +35,7 @@ Item {
             }
 
             height: {
-                var res = parent.height*0.4 - parent.spacing;
+                var res = parent.height*0.5 - parent.spacing;
                 if (parent.width > parent.height) {
                     res = parent.height;
                 }
@@ -301,7 +301,7 @@ Item {
             }
 
             height: {
-                var res = parent.height*0.6;
+                var res = parent.height*0.5;
                 if (parent.width > parent.height) {
                     res = parent.height;
                 }
