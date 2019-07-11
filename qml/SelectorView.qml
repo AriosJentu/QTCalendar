@@ -25,8 +25,6 @@ Item {
         selectorcalendar.selectedDate = isStart ? startTime : endTime;
         selectHourCombo.currentIndex = isStart ? startTime.getHours() : endTime.getHours();
         selectMinuteCombo.currentIndex = isStart ? startTime.getMinutes() : endTime.getMinutes();
-
-        console.log(startTime, endTime, isStart);
     }
 
     function setEventDateTime(date, time) {
