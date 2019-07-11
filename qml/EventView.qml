@@ -205,40 +205,53 @@ Item {
                             text: {
                                 if (currentEvent) {
 
+                                    var localtz = -(new Date()).getTimezoneOffset()/60;
+                                    var tz = " "+Server.getTimezoneStringFromOffset(Server.getTimezoneOffset(currentEvent.timezone));
+                                    var localStartTime = "<br/>&nbsp;&nbsp;" + "<i>" + currentEvent.startTime.toLocaleString(Qt.locale(), dateFormat) + " (Local Time)</i>";
+                                    var localEndTime = "<br/>&nbsp;&nbsp;" + "<i>" + currentEvent.endTime.toLocaleString(Qt.locale(), dateFormat) + " (Local Time)</i>";
+
+                                    if (Server.getTimezoneOffset(currentEvent.timezone) === localtz) {
+                                        tz = "";
+                                        localStartTime = "";
+                                        localEndTime = "";
+                                    }
+
                                     switch (index) {
                                     case 0:
-                                        currentEvent.name;
+                                        "&nbsp;&nbsp;<b></b>" + currentEvent.name;
                                         break;
                                     case 1:
-                                        currentEvent.startTime.toLocaleString(Qt.locale(), dateFormat);
+                                        var startTime = Server.convertDateFromToTimezone(currentEvent.startTime, localtz, currentEvent.timezone);
+                                        "&nbsp;&nbsp;" + startTime.toLocaleString(Qt.locale(), dateFormat) + tz + localStartTime;
                                         break;
                                     case 2:
-                                        currentEvent.endTime.toLocaleString(Qt.locale(), dateFormat);
+                                        var endTime = Server.convertDateFromToTimezone(currentEvent.endTime, localtz, currentEvent.timezone);
+                                        "&nbsp;&nbsp;" + endTime.toLocaleString(Qt.locale(), dateFormat) + tz + localEndTime;
                                         break;
                                     case 3:
                                         var repeats = "None"
                                         if (currentEvent && currentEvent.reprule) {
                                             repeats = currentEvent.reprule;
                                         }
-                                        repeats;
+                                        "&nbsp;&nbsp;<b></b>" + repeats;
                                         break;
                                     case 4:
                                         var array = Server.getListOfTimezones();
                                         var tzindex = Server.getTimezoneIndex(currentEvent.timezone);
-                                        array[0][tzindex] + " ("+currentEvent.timezone+")";
+                                        "&nbsp;&nbsp;<b></b>" + array[0][tzindex] + " ("+currentEvent.timezone+")";
                                         break;
                                     case 5:
                                         var location = "Unknown";
                                         if (currentEvent && currentEvent.location) {
                                             location = currentEvent.location;
                                         }
-                                        location;
+                                        "&nbsp;&nbsp;<b></b>" + location;
                                         break;
                                     case 6:
-                                        currentEvent.id;
+                                        "&nbsp;&nbsp;<b></b>" + currentEvent.id;
                                         break;
                                     default:
-                                        "Event"
+                                        "&nbsp;&nbsp;<b></b>" + "Event"
                                         break;
                                     }
                                 } else {
@@ -309,14 +322,19 @@ Item {
             }
             border.color: Qt.darker("#F4F4F4", 1.2)
 
-            Label {
-                id: eventInfoLabel
+            ScrollView {
                 width: parent.width
-                wrapMode: Text.Wrap
-                text: currentEvent ? currentEvent.details : "None"
-                anchors.fill: parent
                 anchors.margins: 10
+                anchors.fill: parent
+                clip: true
+
+                Label {
+                    id: eventInfoLabel
+                    wrapMode: Text.Wrap
+                    text: currentEvent ? currentEvent.details : "None"
+                }
             }
+
 
         }
 

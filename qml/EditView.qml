@@ -9,6 +9,8 @@ Item {
     id: editWindow
     property var currentEvent
     property bool isNewEvent: false
+    property string startDateString: ""
+    property string endDateString: ""
 
     Flow {
 
@@ -37,6 +39,22 @@ Item {
                 res;
             }
             border.color: Qt.darker("#F4F4F4", 1.2)
+
+            function getDateString(fromdate) {
+                var date = "None"
+                if (currentEvent) {
+                    var obj = fromdate;
+
+                    if (obj) {
+                        var localtz = -(new Date()).getTimezoneOffset()/60;
+                        var convTime = Server.convertDateFromToTimezone(obj, localtz, currentEvent.timezone);
+                        var tz = Server.getTimezoneStringFromOffset(Server.getTimezoneOffset(currentEvent.timezone))
+
+                        date = convTime.toLocaleString(Qt.locale(), "yyyy-MM-dd HH:mm") + " " + tz;
+                    }
+                }
+                return date;
+            }
 
             Component {
                 id: viewEditEventListHeader
@@ -103,39 +121,30 @@ Item {
 
                 Rectangle {
                     width: startDatePickerComponent.width
-                    height: eventObjectLabel.height + 10
+                    height: eventStartObjectLabel.height + 10
 
                     Label {
 
                         TextMetrics {
                             id: metricElement
-                            font: eventObjectLabel.font
-                            text: eventObjectLabel.text
+                            font: eventStartObjectLabel.font
+                            text: eventStartObjectLabel.text
                         }
 
-                        id: eventObjectLabel
+                        id: eventStartObjectLabel
                         verticalAlignment: Text.AlignVCenter;
                         height: metricElement.height*1.5
 
                         text: {
-                            var date = "None"
-                            if (currentEvent) {
-                                var obj = currentEvent.startTime
-
-                                if (obj) {
-                                    date = obj.toLocaleString(Qt.locale(), "yyyy-MM-dd HH:mm");
-                                }
-                            }
-
-                            "<b>Start event at:</b> " + date;
+                            "<b>Start event at:</b> " + startDateString;
                         }
                     }
 
                     RoundButton {
                         id: eventPickerButton
 
-                        width: eventObjectLabel.height
-                        height: eventObjectLabel.height
+                        width: eventStartObjectLabel.height
+                        height: eventStartObjectLabel.height
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 
@@ -156,39 +165,30 @@ Item {
 
                 Rectangle {
                     width: endDatePickerComponent.width
-                    height: eventObjectLabel.height + 10
+                    height: eventEndObjectLabel.height + 10
 
                     Label {
 
                         TextMetrics {
                             id: metricElement
-                            font: eventObjectLabel.font
-                            text: eventObjectLabel.text
+                            font: eventEndObjectLabel.font
+                            text: eventEndObjectLabel.text
                         }
 
-                        id: eventObjectLabel
+                        id: eventEndObjectLabel
                         verticalAlignment: Text.AlignVCenter;
                         height: metricElement.height*1.5
 
                         text: {
-                            var date = "None"
-                            if (currentEvent) {
-                                var obj = currentEvent.endTime
-
-                                if (obj.toString() !== "Invalid Date") {
-                                    date = obj.toLocaleString(Qt.locale(), "yyyy-MM-dd HH:mm");
-                                }
-                            }
-
-                            "<b>End event at:</b> " + date;
+                            "<b>End event at:</b> " + endDateString;
                         }
                     }
 
                     RoundButton {
                         id: eventPickerButton
 
-                        width: eventObjectLabel.height
-                        height: eventObjectLabel.height
+                        width: eventEndObjectLabel.height
+                        height: eventEndObjectLabel.height
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 
@@ -353,6 +353,8 @@ Item {
 
                         onCurrentIndexChanged: {
                             currentEvent.timezone = Server.getTimezoneStringFromOffset(array[1][currentIndex].offset)
+                            startDateString = test.getDateString(currentEvent.startTime);
+                            endDateString = test.getDateString(currentEvent.endTime);
                         }
                     }
                 }
@@ -421,12 +423,6 @@ Item {
                     height: eventObjectLoader.height + 5
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.topMargin: 10
-
-                    /*Rectangle {
-                        width: parent.width
-                        height: 1
-                        color: "#EEEEEE"
-                    }*/
 
                     Loader {
                         id: eventObjectLoader
@@ -511,6 +507,9 @@ Item {
     function setEvent(modelobj) {
         isNewEvent = false;
         currentEvent = modelobj;
+
+        startDateString = test.getDateString(currentEvent.startTime);
+        endDateString = test.getDateString(currentEvent.endTime);
     }
 
     function setNewEvent(date) {
@@ -521,12 +520,20 @@ Item {
         currentEvent.id = 0;
         currentEvent.patrnid = 0;
 
-        currentEvent.startTime = date;
-        currentEvent.endTime = date;
+        currentEvent.startTime = new Date(date);
+        currentEvent.endTime = new Date(date);
+
+        startDateString = test.getDateString(currentEvent.startTime);
+        endDateString = test.getDateString(currentEvent.endTime);
+
+        currentEvent.timezone = Server.getTimezoneStringFromOffset(-(new Date()).getTimezoneOffset()/60);
     }
 
     function setNewUpdatableEvent(modelobj) {
         isNewEvent = true;
         currentEvent = modelobj;
+
+        startDateString = test.getDateString(currentEvent.startTime);
+        endDateString = test.getDateString(currentEvent.endTime);
     }
 }

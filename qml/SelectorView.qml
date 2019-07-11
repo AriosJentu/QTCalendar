@@ -18,9 +18,15 @@ Item {
         isNewEvent = isNew;
         currentEvent = event;
 
-        selectorcalendar.selectedDate = isStart ? event.startTime : event.endTime;
-        selectHourCombo.currentIndex = isStart ? event.startTime.getHours() : event.endTime.getHours();
-        selectMinuteCombo.currentIndex = isStart ? event.startTime.getMinutes() : event.endTime.getMinutes();
+        var localtz = -(new Date()).getTimezoneOffset()/60;
+        var startTime = Server.convertDateFromToTimezone(event.startTime, localtz, event.timezone);
+        var endTime = Server.convertDateFromToTimezone(event.endTime, localtz, event.timezone);
+
+        selectorcalendar.selectedDate = isStart ? startTime : endTime;
+        selectHourCombo.currentIndex = isStart ? startTime.getHours() : endTime.getHours();
+        selectMinuteCombo.currentIndex = isStart ? startTime.getMinutes() : endTime.getMinutes();
+
+        console.log(startTime, endTime, isStart);
     }
 
     function setEventDateTime(date, time) {
@@ -34,6 +40,17 @@ Item {
             currentEvent.endTime.setHours(selectHourCombo.currentIndex)
             currentEvent.endTime.setMinutes(selectMinuteCombo.currentIndex)
         }
+        convertDatesBack();
+    }
+
+    function convertDatesBack() {
+        var localtz = -(new Date()).getTimezoneOffset()/60;
+        if (isStartDate) {
+            currentEvent.startTime = Server.convertDateFromToTimezone(currentEvent.startTime, currentEvent.timezone, localtz);
+        } else {
+            currentEvent.endTime = Server.convertDateFromToTimezone(currentEvent.endTime, currentEvent.timezone, localtz);
+        }
+
     }
 
     function pushInfo() {
@@ -213,7 +230,6 @@ Item {
                     font.pixelSize: 20
 
                     onClicked: pushInfo()
-
                 }
 
                 RoundButton {

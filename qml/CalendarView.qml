@@ -318,10 +318,21 @@ Item {
                                 width: parent.width
                                 wrapMode: Text.Wrap
                                 text: {
-                                    "Start: " + modelData.startTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:mm") + "\t" +
-                                    "End: " + modelData.endTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:mm");
+
+                                    var localtz = -(new Date()).getTimezoneOffset()/60;
+                                    var startTime = Server.convertDateFromToTimezone(modelData.startTime, localtz, modelData.timezone);
+                                    var endTime = Server.convertDateFromToTimezone(modelData.endTime, localtz, modelData.timezone);
+                                    var tz = " "+Server.getTimezoneStringFromOffset(Server.getTimezoneOffset(modelData.timezone));
+
+                                    if (Server.getTimezoneOffset(modelData.timezone) === localtz) {
+                                        tz = "";
+                                    }
+
+                                    "&nbsp;&nbsp;<b>From:</b> " + startTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:mm") + tz + "<br/>" +
+                                    "&nbsp;&nbsp;<b>To:</b> " + endTime.toLocaleString(maincalendar.locale, "yyyy-MM-dd HH:mm") + tz;
                                 }
                                 font.italic: true
+                                font.pointSize: 11
                             }
                         }
 
