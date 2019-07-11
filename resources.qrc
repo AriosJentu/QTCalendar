@@ -9,5 +9,6 @@
         <file>qml/SelectorView.qml</file>
         <file>src/server.js</file>
         <file>assets/miregular.ttf</file>
+        <file>qml/EditRuleView.qml</file>
     </qresource>
 </RCC>

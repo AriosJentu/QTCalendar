@@ -32,6 +32,7 @@ DISTFILES += \
     android/res/values/libs.xml \
     qml/Calendar.qml \
     qml/CalendarView.qml \
+    qml/EditRuleView.qml \
     qml/EditView.qml \
     qml/EventView.qml \
     qml/SelectorView.qml \
