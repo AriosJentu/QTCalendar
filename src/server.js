@@ -421,9 +421,9 @@ function getStringOffset(offset) {
     return offst
 }
 
-function getIntArray(size) {
+function getIntArray(size, ispad=true, offset=0) {
     var array = []
-    for (var i = 0; i < size; i++) {array[i] = i.toString().padStart(2, "0");}
+    for (var i = 0; i < size; i++) {array[i] = (ispad ? i.toString().padStart(2, "0") : i+offset);}
     return array
 }
 
@@ -435,4 +435,44 @@ function convertDateFromToTimezone(date, timezoneFrom, timezoneTo) {
     var ndate = new Date(date);
     ndate.setHours(ndate.getHours() - (array[indexF].offset - array[indexT].offset));
     return ndate
+}
+
+function getRepeatTypes() {
+    return [
+        ["Yearly", "Monthly", "Weekly", "Daily", "Hourly"],
+        ["YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY"]
+    ];
+}
+
+function getMonthes() {
+    return [
+        ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        getIntArray(12, false, 1)
+    ];
+}
+
+const weekdaysarr = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"]
+function getWeeks() {
+    var arrvdays = weekdaysarr
+
+    var wdays = weekdaysarr.join(",")
+    arrvdays.push(wdays);
+
+    var wweekdays = weekdaysarr.slice(0, 5).join(",")
+    arrvdays.push(wweekdays);
+
+    var weekenddays = weekdaysarr.slice(5, 7).join(",")
+    arrvdays.push(weekenddays);
+
+    return [
+        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Day", "Weekday", "Weekend day"],
+        arrvdays
+    ];
+}
+
+function getEnding(number) {
+    if (number === 1) {
+       return "";
+    }
+    return "s";
 }
