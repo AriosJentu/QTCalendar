@@ -39,4 +39,9 @@ Window {
         SelectorView {}
     }
 
+    Component {
+        id: editRuleView
+        EditRuleView {}
+    }
+
 }
