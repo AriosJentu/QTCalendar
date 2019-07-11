@@ -222,11 +222,11 @@ Item {
                                         break;
                                     case 1:
                                         var startTime = Server.convertDateFromToTimezone(currentEvent.startTime, localtz, currentEvent.timezone);
-                                        "&nbsp;&nbsp;" + startTime.toLocaleString(Qt.locale(), dateFormat) + tz + localStartTime;
+                                        "&nbsp;&nbsp;<b></b>" + startTime.toLocaleString(Qt.locale(), dateFormat) + tz + localStartTime;
                                         break;
                                     case 2:
                                         var endTime = Server.convertDateFromToTimezone(currentEvent.endTime, localtz, currentEvent.timezone);
-                                        "&nbsp;&nbsp;" + endTime.toLocaleString(Qt.locale(), dateFormat) + tz + localEndTime;
+                                        "&nbsp;&nbsp;<b></b>" + endTime.toLocaleString(Qt.locale(), dateFormat) + tz + localEndTime;
                                         break;
                                     case 3:
                                         var repeats = "None"
