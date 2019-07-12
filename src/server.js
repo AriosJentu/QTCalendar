@@ -475,6 +475,11 @@ function getWeeks() {
     ];
 }
 
+const ordinals = {"First": 1, "Second": 2, "Third":3, "Fourth": 4, "Last":-1}
+function getOrdinals() {
+    return Object.keys(ordinals)
+}
+
 function getEnding(number) {
     if (number === 1) {
        return "";
@@ -505,7 +510,7 @@ function parseDate(isostr) {
 }
 
 function generateBuilderArray() {
-    return {type:"", byday:[], bysetpos:0, bymonth:"", bymonthday:0, interval:0, count:0, until: 0}
+    return {type:"", byday:[], bysetpos:"", bymonth:"", bymonthday:0, interval:0, count:0, until: 0}
 }
 
 function buildRRule(bArray) {
@@ -526,8 +531,8 @@ function buildRRule(bArray) {
     if (bArray.type === "Monthly") {
         if (bArray.bymonthday > 0) {
             str += ";BYMONTHDAY="+bArray.bymonthday;
-        } else if (bArray.bysetpos !== 0) {
-            str += ";BYSETPOS="+bArray.bysetpos + ";BYDAY="+getWeeks()[2][bArray.byday[0]];
+        } else if (bArray.bysetpos) {
+            str += ";BYSETPOS="+ordinals[bArray.bysetpos] + ";BYDAY="+getWeeks()[2][bArray.byday[0]];
         }
     }
 
@@ -537,7 +542,7 @@ function buildRRule(bArray) {
             str += ";BYMONTH=" + (monthes.indexOf(bArray.bymonth)+1);
             str += ";BYMONTHDAY="+bArray.bymonthday;
 
-        } else if (bArray.bysetpos !== 0) {
+        } else if (bArray.bysetpos) {
 
             str += ";BYDAY="
             var darr = [];
@@ -546,7 +551,7 @@ function buildRRule(bArray) {
             }
             str += darr.join(",");
 
-            str += ";BYSETPOS="+bArray.bysetpos + ";BYMONTH=" + (monthes.indexOf(bArray.bymonth)+1);
+            str += ";BYSETPOS="+ordinals[bArray.bysetpos] + ";BYMONTH=" + (monthes.indexOf(bArray.bymonth)+1);
         }
     }
 
@@ -577,7 +582,7 @@ const availableprops = {
     "FREQ": ["type", function(str) {return Object.keys(types)[Object.values(types).indexOf(str)]}],
     "BYDAY": ["byday", parseDays],
     "BYMONTHDAY": ["bymonthday", function(str) {return Number(str)}],
-    "BYSETPOS": ["bysetpos", function(str) {return Number(str)}],
+    "BYSETPOS": ["bysetpos", function(str) {return Object.keys(ordinals)[Object.values(ordinals).indexOf(Number(str))]}],
     "BYMONTH": ["bymonth", function(str) {return monthes[Number(str)-1]}],
     "INTERVAL": ["interval", function(str) {return Number(str)}],
     "COUNT": ["count", function(str) {return Number(str)}],
