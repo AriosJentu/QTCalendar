@@ -229,10 +229,11 @@ Item {
                                 repeats = currentEvent.reprule;
                             }
 
-                            "<b>Repeat event:</b> " + repeats
+                            "<b>Repeat event:</b> " + Server.convertRRuleToReadableString(repeats);
                         }
 
                         verticalAlignment: Text.AlignVCenter;
+                        wrapMode: Label.WordWrap
                     }
 
                     RoundButton {

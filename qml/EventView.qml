@@ -201,7 +201,7 @@ Item {
                         Label {
                             id: eventTypeValueLabel
                             width: parent.width
-                            wrapMode: Text.Wrap
+                            wrapMode: Label.Wrap
                             text: {
                                 if (currentEvent) {
 
@@ -233,7 +233,7 @@ Item {
                                         if (currentEvent && currentEvent.reprule) {
                                             repeats = currentEvent.reprule;
                                         }
-                                        "&nbsp;&nbsp;<b></b>" + repeats;
+                                        "&nbsp;&nbsp;<b></b>" + Server.convertRRuleToReadableString(repeats);
                                         break;
                                     case 4:
                                         var array = Server.getListOfTimezones();
