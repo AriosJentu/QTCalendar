@@ -92,12 +92,6 @@ Item {
 
             Rectangle {
                 id: loaderWeeklyRectangle
-                //anchors.fill: parent
-                //anchors.top: parent.bottom
-                height: {
-                    console.log(gboxWDItems.height, gboxWDItems.implicitContentHeight, gboxWDItems.implicitHeight);
-                    console.log(loaderWeekly.height, loaderWeekly.implicitContentHeight, loaderWeekly.implicitHeight);
-                }
 
                 GroupBox {
                     id: gboxWDItems
@@ -256,6 +250,8 @@ Item {
                                     case "Hourly":
                                         singleTypeRepeatString = "hour";
                                         return repeatEveryComponent
+                                    case "Never":
+                                        return
                                     default:
                                         singleTypeRepeatString = "";
                                         return repeatEveryComponent
