@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
 import QtQuick.Controls 1.5 as OldContr
-import "qrc:/src/server.js" as Server;
+import "qrc:/src/server.js" as Server
 
 Item {
 
@@ -221,7 +221,7 @@ Item {
                         height: metricElement.height*3 - 20
                         anchors.left: editRuleRepeatLabel.right
                         y: 10
-                        model: Server.getRepeatTypes()[0]
+                        model: Server.getRepeatTypes()
                     }
 
                     ScrollView {
@@ -237,7 +237,7 @@ Item {
                             sourceComponent: getCurrentComponent()
 
                             function getCurrentComponent() {
-                                switch(Server.getRepeatTypes()[0][repeatTypeCombobox.currentIndex]) {
+                                switch(Server.getRepeatTypes()[repeatTypeCombobox.currentIndex]) {
                                      case "Monthly":
                                          singleTypeRepeatString = "month";
                                          return repeatEveryComponent
@@ -250,11 +250,8 @@ Item {
                                     case "Hourly":
                                         singleTypeRepeatString = "hour";
                                         return repeatEveryComponent
-                                    case "Never":
-                                        return
                                     default:
-                                        singleTypeRepeatString = "";
-                                        return repeatEveryComponent
+                                        return
                                 }
                             }
                         }
@@ -285,10 +282,7 @@ Item {
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
-                        onClicked: {
-                            setEventDateTime(selectorcalendar.selectedDate);
-                            pushInfo();
-                        }
+                        onClicked: pushInfo()
                     }
                 }
 
