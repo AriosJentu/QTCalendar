@@ -235,6 +235,54 @@ Item {
 
         Rectangle {
 
+            RadioButton {
+                id: radioButtonOnYearDay
+                text: "On"
+                checked: true
+                anchors.margins: 5
+            }
+
+            ComboBox {
+                id: selectorMonthOnYearlyDay
+                anchors.left: radioButtonOnYearDay.right
+                model: Server.getMonthes();
+                width: radioButtonOnYearDay.width*2
+                anchors.margins: 5
+            }
+
+            ComboBox {
+                id: selectorDayOfMonthOnYearlyDay
+                anchors.left: selectorMonthOnYearlyDay.right
+                model: Server.getIntArray(31, false, 1);
+                width: radioButtonOnYearDay.width*1.1
+                anchors.margins: 5
+            }
+
+            RadioButton {
+                id: radioButtonOnSpecialYearDay
+                text: "On the"
+                anchors.top: radioButtonOnYearDay.bottom
+                anchors.margins: 5
+            }
+
+            ComboBox {
+                id: selectorOrdinalOnYearDay
+                anchors.left: radioButtonOnSpecialYearDay.right
+                anchors.top: radioButtonOnYearDay.bottom
+                model: Server.getOrdinals();
+                width: radioButtonOnSpecialYearDay.width*1.1
+                anchors.margins: 5
+            }
+
+            ComboBox {
+                id: selectorDayTypeOnYearDay
+                anchors.left: selectorOrdinalOnYearDay.right
+                anchors.top: radioButtonOnYearDay.bottom
+                model: Server.getWeeks()[0];
+                width: radioButtonOnSpecialYearDay.width*1.6
+                anchors.margins: 5
+            }
+
         }
     }
 
@@ -298,10 +346,12 @@ Item {
 
                             function getCurrentComponent() {
                                 switch(Server.getRepeatTypes()[repeatTypeCombobox.currentIndex]) {
-                                     case "Monthly":
+                                    case "Yearly":
+                                        return ruleYearlyComponent
+                                    case "Monthly":
                                          singleTypeRepeatString = "month";
                                          return ruleMonthlyComponent
-                                     case "Weekly":
+                                    case "Weekly":
                                          singleTypeRepeatString = "week";
                                          return ruleWeeklyComponent
                                     case "Daily":
