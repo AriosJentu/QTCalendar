@@ -81,6 +81,11 @@ Item {
                 anchors.leftMargin: 10
                 verticalAlignment: Text.AlignVCenter;
             }
+
+            function buildRRule(arr) {
+                arr.interval = Math.max(Number(repeatEveryTextBox.text), 1);
+                return arr;
+            }
         }
     }
 
@@ -171,6 +176,21 @@ Item {
                 sourceComponent: repeatEveryComponent
                 anchors.top: gboxWDItems.bottom
             }
+
+            function buildRRule(arr) {
+
+                var comps = [mondayCheckBox, tuesdayCheckBox, wednesdayCheckBox, thursdayCheckBox, fridayCheckBox, saturdayCheckBox, sundayCheckBox]
+
+                for (var k in comps) {
+                    if (comps[k].checked) {
+                        arr.byday.append(comps[k].text);
+                    }
+                }
+
+                arr = loaderWeekly.item.buildRRule(arr);
+
+                return arr;
+            }
         }
     }
 
@@ -221,10 +241,24 @@ Item {
             }
 
             Loader {
-                id: loaderWeekly
+                id: loaderMonthly
                 sourceComponent: repeatEveryComponent
                 anchors.top: radioButtonOnWeekDay.bottom
                 anchors.margins: 5
+            }
+
+            function buildRRule(arr) {
+
+                if (radioButtonOnMonthDay.checked) {
+                    arr.bymonthday = selectorDayOnMonthDay.model[selectorDayOnMonthDay.currentIndex];
+                } else {
+                    arr.bysetpos = selectorOrdinalOnWeekDay.model[selectorOrdinalOnWeekDay.currentIndex];
+                    arr.byday = [selectorDaysOnWeekDay.model[selectorDaysOnWeekDay.currentIndex]];
+                }
+
+                arr = loaderMonthly.item.buildRRule(arr);
+
+                return arr;
             }
         }
     }
@@ -234,6 +268,7 @@ Item {
         id: ruleYearlyComponent
 
         Rectangle {
+            id: ruleYearlyRectangle
 
             RadioButton {
                 id: radioButtonOnYearDay
@@ -283,7 +318,30 @@ Item {
                 anchors.margins: 5
             }
 
+            ComboBox {
+                id: selectorMonthOnYearDay
+                anchors.left: selectorDayTypeOnYearDay.right
+                anchors.top: radioButtonOnYearDay.bottom
+                model: Server.getMonthes();
+                width: radioButtonOnSpecialYearDay.width*1.6
+                anchors.margins: 5
+            }
+
+            function buildRRule(arr) {
+
+                if (radioButtonOnYearDay.checked) {
+                    arr.bymonth = selectorMonthOnYearlyDay.model[selectorMonthOnYearlyDay.currentIndex];
+                    arr.bymonthday = Number(selectorDayOfMonthOnYearlyDay.model[selectorDayOfMonthOnYearlyDay.currentIndex]);
+                } else {
+                    arr.bysetpos = selectorOrdinalOnYearDay.model[selectorOrdinalOnYearDay.currentIndex];
+                    arr.byday = [selectorDayTypeOnYearDay.model[selectorDayTypeOnYearDay.currentIndex]];
+                    arr.bymonth = selectorMonthOnYearDay.model[selectorMonthOnYearDay.currentIndex];
+                }
+
+                return arr;
+            }
         }
+
     }
 
     Rectangle {
@@ -306,6 +364,7 @@ Item {
                 clip: true
 
                 Rectangle {
+                    id: mainRectangleForRules
                     anchors.fill: parent
                     anchors.margins: 5
 
@@ -362,7 +421,7 @@ Item {
                                         return repeatEveryComponent
                                     default:
                                         return
-                                }
+                                }                                
                             }
                         }
                     }
@@ -392,12 +451,22 @@ Item {
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
-                        onClicked: pushInfo()
+                        onClicked: {
+                            mainRectangleForRules.buildRRuleString();
+                            //pushInfo()
+                        }
+                    }
+
+                    function buildRRuleString() {
+                        var arr = Server.generateBuilderArray();
+                        arr.type = repeatTypeCombobox.model[repeatTypeCombobox.currentIndex];
+                        arr = ruleLoaderComponent.item.buildRRule(arr);
+                        var res = Server.buildRRule(arr);
+                        console.log(res)
+                        return res;
                     }
                 }
-
             }
-
         }
 
         Label {
