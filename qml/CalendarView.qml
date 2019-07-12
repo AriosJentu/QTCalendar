@@ -178,11 +178,6 @@ Item {
                     font.pixelSize: 20
 
                     onClicked: {
-                        /*Server.postEventToServer(Server.generateRandomEvent(maincalendar.selectedDate), function() {
-                            console.log("Event successfully added");
-                            eventsListView.getEventsForCurrentDate();
-                        }, Server.basicErrorFunc)*/
-
                         mainStackView.push(editPage);
                         mainStackView.currentItem.setNewEvent(maincalendar.selectedDate);
                     }
