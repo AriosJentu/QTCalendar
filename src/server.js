@@ -671,9 +671,7 @@ function convertRRuleToReadableString(rrule) {
     }
 
     if (arr.bysetpos) {
-        //"every first monday of january";
-        var setpos = Object.keys(ordinals)[Object.values(ordinals).indexOf(arr.bysetpos)]
-        str += "every " + setpos.toLowerCase() + " " + arr.byday[0] + " of ";
+        str += "every " + arr.bysetpos.toLowerCase() + " " + arr.byday[0] + " of ";
         if (arr.type === "Monthly") {
             str += "month "
         } else {
