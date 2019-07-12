@@ -439,8 +439,8 @@ function convertDateFromToTimezone(date, timezoneFrom, timezoneTo) {
 
 function getRepeatTypes() {
     return [
-        ["Yearly", "Monthly", "Weekly", "Daily", "Hourly"],
-        ["YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY"]
+        ["Yearly", "Monthly", "Weekly", "Daily", "Hourly", "Never"],
+        ["YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY", "None"]
     ];
 }
 
