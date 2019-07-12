@@ -438,6 +438,7 @@ function convertDateFromToTimezone(date, timezoneFrom, timezoneTo) {
 }
 
 const types = {"Yearly": "YEARLY", "Monthly": "MONTHLY", "Weekly": "WEEKLY", "Daily": "DAILY", "Hourly":"HOURLY", "Never":""}
+const formattypes = {"Yearly": "year", "Monthly": "month", "Weekly": "week", "Daily": "day", "Hourly":"hour", "Never":""}
 function getRepeatTypes() {
     return Object.keys(types);
 }
@@ -575,7 +576,7 @@ function parseDays(str) {
     for (var k in days) {
         days[k] = Object.keys(weekdaysarr)[Object.values(weekdaysarr).indexOf(days[k])];
     }
-    return days
+    return days;
 }
 
 const availableprops = {
@@ -592,9 +593,9 @@ const availableprops = {
 function convertRRuleToBuilderArray(rrule) {
 
     var arr = generateBuilderArray();
-    var str = rrule
+    var str = rrule;
 
-    var whilestatement = true
+    var whilestatement = true;
     while (whilestatement) {
 
         var indx = str.search("=");
@@ -619,7 +620,7 @@ function convertRRuleToBuilderArray(rrule) {
     }
 
     if (!arr.type) {
-        arr.type = Object.keys(types)[Object.values(types).indexOf("")]
+        arr.type = Object.keys(types)[Object.values(types).indexOf("")];
     }
 
     if (arr.type === "Monthly" && arr.byday.length > 1) {
@@ -639,4 +640,55 @@ function convertRRuleToBuilderArray(rrule) {
     }
 
     return arr
+}
+
+function convertRRuleToReadableString(rrule) {
+    var arr = convertRRuleToBuilderArray(rrule)
+
+    if (arr.type === "Never") {
+        return "";
+    }
+
+    var str = "Every ";
+
+    if (arr.interval > 1) {
+        str += arr.interval + " ";
+    }
+
+    str += formattypes[arr.type] + getEnding(arr.interval) + " ";
+
+    if (arr.byday.length > 0 && !arr.bysetpos) {
+
+        if (arr.byday.length === 7) {
+            str += "every day ";
+        } else if (arr.byday.length === 2 && arr.byday.indexOf("Saturday") >= 0 && arr.byday.indexOf("Sunday") >= 0) {
+            str += "on weekend days";
+        } else if (arr.byday.length === 5 && arr.byday.indexOf("Monday") >= 0 && arr.byday.indexOf("Tuesday") >= 0 && arr.byday.indexOf("Wednesday") >= 0 && arr.byday.indexOf("Thursday") >= 0  && arr.byday.indexOf("Friday") >= 0) {
+            str += "on weekdays";
+        } else {
+            str += "on " + arr.byday.join(", ") + " ";
+        }
+    }
+
+    if (arr.bysetpos) {
+        //"every first monday of january";
+        var setpos = Object.keys(ordinals)[Object.values(ordinals).indexOf(arr.bysetpos)]
+        str += "every " + setpos.toLowerCase() + " " + arr.byday[0] + " of ";
+        if (arr.type === "Monthly") {
+            str += "month "
+        } else {
+            str += arr.bymonth + " ";
+        }
+    }
+
+    if (arr.count > 0) {
+        str += "for " + arr.count + " time" + getEnding(arr.count) + " "
+    }
+
+    if (arr.until !== 0) {
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        str += "until " + arr.until.toLocaleString(Qt.locale(), options);
+    }
+
+    return str;
 }
