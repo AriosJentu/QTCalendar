@@ -350,7 +350,7 @@ function basicErrorFunc(request) {
     console.log("HTTP Request failed", request.readyState, request.status);
 }
 
-var jsondata = JSON.parse('[{"offset": -11, "value": "(GMT-11:00) Pago Pago", "timezones": ["Pacific/Niue", "Pacific/Pago_Pago"]}, {"offset": -10, "value": "(GMT-10:00) Tahiti", "timezones": ["Pacific/Honolulu", "Pacific/Rarotonga", "Pacific/Tahiti"]}, {"offset": -9, "value": "(GMT-09:00) Gambier", "timezones": ["Pacific/Marquesas", "America/Anchorage", "Pacific/Gambier"]}, {"offset": -8, "value": "(GMT-08:00) Pitcairn", "timezones": ["America/Los_Angeles", "America/Tijuana", "America/Vancouver", "America/Whitehorse", "Pacific/Pitcairn"]}, {"offset": -7, "value": "(GMT-07:00) Mountain Time - Yellowknife", "timezones": ["America/Dawson_Creek", "America/Denver", "America/Edmonton", "America/Hermosillo", "America/Mazatlan", "America/Phoenix", "America/Yellowknife"]}, {"offset": -6, "value": "(GMT-06:00) Galapagos", "timezones": ["America/Belize", "America/Chicago", "America/Costa_Rica", "America/El_Salvador", "America/Guatemala", "America/Managua", "America/Mexico_City", "America/Regina", "America/Tegucigalpa", "America/Winnipeg", "Pacific/Galapagos"]}, {"offset": -5, "value": "(GMT-05:00) Easter Island", "timezones": ["America/Bogota", "America/Cancun", "America/Cayman", "America/Guayaquil", "America/Havana", "America/Iqaluit", "America/Jamaica", "America/Lima", "America/Nassau", "America/New_York", "America/Panama", "America/Port-au-Prince", "America/Rio_Branco", "America/Toronto", "Pacific/Easter"]}, {"offset": -4, "value": "(GMT-04:00) Bermuda", "timezones": ["America/Caracas", "America/Barbados", "America/Boa_Vista", "America/Curacao", "America/Grand_Turk", "America/Guyana", "America/Halifax", "America/La_Paz", "America/Manaus", "America/Martinique", "America/Port_of_Spain", "America/Porto_Velho", "America/Puerto_Rico", "America/Santo_Domingo", "America/Thule", "Atlantic/Bermuda"]}, {"offset": -3, "value": "(GMT-03:00) Stanley", "timezones": ["America/Asuncion", "America/Campo_Grande", "America/Cuiaba", "America/St_Johns", "America/Araguaina", "America/Argentina/Buenos_Aires", "America/Bahia", "America/Belem", "America/Cayenne", "America/Fortaleza", "America/Godthab", "America/Maceio", "America/Miquelon", "America/Montevideo", "America/Paramaribo", "America/Recife", "America/Santiago", "Antarctica/Palmer", "Antarctica/Rothera", "Atlantic/Stanley"]}, {"offset": -2, "value": "(GMT-02:00) South Georgia", "timezones": ["America/Sao_Paulo", "America/Noronha", "Atlantic/South_Georgia"]}, {"offset": -1, "value": "(GMT-01:00) Cape Verde", "timezones": ["America/Scoresbysund", "Atlantic/Azores", "Atlantic/Cape_Verde"]}, {"offset": 0, "value": "(GMT+00:00) London", "timezones": ["Africa/Abidjan", "Africa/Accra", "Africa/Bissau", "Africa/Casablanca", "Africa/El_Aaiun", "Africa/Monrovia", "America/Danmarkshavn", "Atlantic/Canary", "Atlantic/Faroe", "Atlantic/Reykjavik", "Etc/GMT", "Europe/Dublin", "Europe/Lisbon", "Europe/London"]}, {"offset": 1, "value": "(GMT+01:00) Zurich", "timezones": ["Africa/Algiers", "Africa/Ceuta", "Africa/Lagos", "Africa/Ndjamena", "Africa/Tunis", "Europe/Amsterdam", "Europe/Andorra", "Europe/Belgrade", "Europe/Berlin", "Europe/Brussels", "Europe/Budapest", "Europe/Copenhagen", "Europe/Gibraltar", "Europe/Luxembourg", "Europe/Madrid", "Europe/Malta", "Europe/Monaco", "Europe/Oslo", "Europe/Paris", "Europe/Prague", "Europe/Rome", "Europe/Stockholm", "Europe/Tirane", "Europe/Vienna", "Europe/Warsaw", "Europe/Zurich"]}, {"offset": 2, "value": "(GMT+02:00) Vilnius", "timezones": ["Africa/Windhoek", "Africa/Cairo", "Africa/Johannesburg", "Africa/Maputo", "Africa/Tripoli", "Asia/Amman", "Asia/Beirut", "Asia/Damascus", "Asia/Gaza", "Asia/Jerusalem", "Asia/Nicosia", "Europe/Athens", "Europe/Bucharest", "Europe/Chisinau", "Europe/Helsinki", "Europe/Istanbul", "Europe/Kaliningrad", "Europe/Kiev", "Europe/Riga", "Europe/Sofia", "Europe/Tallinn", "Europe/Vilnius"]}, {"offset": 3, "value": "(GMT+03:30) Tehran", "timezones": ["Africa/Khartoum", "Africa/Nairobi", "Antarctica/Syowa", "Asia/Baghdad", "Asia/Qatar", "Asia/Riyadh", "Europe/Minsk", "Europe/Moscow", "Asia/Tehran"]}, {"offset": 4, "value": "(GMT+04:30) Kabul", "timezones": ["Asia/Baku", "Asia/Dubai", "Asia/Tbilisi", "Asia/Yerevan", "Europe/Samara", "Indian/Mahe", "Indian/Mauritius", "Indian/Reunion", "Asia/Kabul"]}, {"offset": 5, "value": "(GMT+05:45) Katmandu", "timezones": ["Antarctica/Mawson", "Asia/Aqtau", "Asia/Aqtobe", "Asia/Ashgabat", "Asia/Dushanbe", "Asia/Karachi", "Asia/Tashkent", "Asia/Yekaterinburg", "Indian/Kerguelen", "Indian/Maldives", "Asia/Calcutta", "Asia/Colombo", "Asia/Katmandu"]}, {"offset": 6, "value": "(GMT+06:30) Cocos", "timezones": ["Antarctica/Vostok", "Asia/Almaty", "Asia/Bishkek", "Asia/Dhaka", "Asia/Omsk", "Asia/Thimphu", "Indian/Chagos", "Asia/Rangoon", "Indian/Cocos"]}, {"offset": 7, "value": "(GMT+07:00) Christmas", "timezones": ["Antarctica/Davis", "Asia/Bangkok", "Asia/Hovd", "Asia/Jakarta", "Asia/Krasnoyarsk", "Asia/Saigon", "Asia/Ho_Chi_Minh", "Indian/Christmas"]}, {"offset": 8, "value": "(GMT+08:30) Pyongyang", "timezones": ["Antarctica/Casey", "Asia/Brunei", "Asia/Choibalsan", "Asia/Hong_Kong", "Asia/Irkutsk", "Asia/Kuala_Lumpur", "Asia/Macau", "Asia/Makassar", "Asia/Manila", "Asia/Shanghai", "Asia/Singapore", "Asia/Taipei", "Asia/Ulaanbaatar", "Australia/Perth", "Asia/Pyongyang"]}, {"offset": 9, "value": "(GMT+09:30) Central Time - Darwin", "timezones": ["Asia/Dili", "Asia/Jayapura", "Asia/Seoul", "Asia/Tokyo", "Asia/Yakutsk", "Pacific/Palau", "Australia/Darwin"]}, {"offset": 10, "value": "(GMT+10:00) Port Moresby", "timezones": ["Australia/Adelaide", "Antarctica/Dumont D\'Urville", "Asia/Magadan", "Asia/Vladivostok", "Australia/Brisbane", "Pacific/Chuuk", "Pacific/Guam", "Pacific/Port_Moresby"]}, {"offset": 11, "value": "(GMT+11:00) Ponape", "timezones": ["Australia/Hobart", "Australia/Sydney", "Pacific/Efate", "Pacific/Guadalcanal", "Pacific/Kosrae", "Pacific/Norfolk", "Pacific/Noumea", "Pacific/Pohnpei"]}, {"offset": 12, "value": "(GMT+12:00) Wallis", "timezones": ["Asia/Kamchatka", "Pacific/Funafuti", "Pacific/Kwajalein", "Pacific/Majuro", "Pacific/Nauru", "Pacific/Tarawa", "Pacific/Wake", "Pacific/Wallis"]}, {"offset": 13, "value": "(GMT+13:00) Tongatapu", "timezones": ["Pacific/Auckland", "Pacific/Fiji", "Pacific/Enderbury", "Pacific/Fakaofo", "Pacific/Tongatapu"]}, {"offset": 14, "value": "(GMT+14:00) Kiritimati", "timezones": ["Pacific/Apia", "Pacific/Kiritimati"]}]');
+const jsondata = JSON.parse('[{"offset": -11, "value": "(GMT-11:00) Pago Pago", "timezones": ["Pacific/Niue", "Pacific/Pago_Pago"]}, {"offset": -10, "value": "(GMT-10:00) Tahiti", "timezones": ["Pacific/Honolulu", "Pacific/Rarotonga", "Pacific/Tahiti"]}, {"offset": -9, "value": "(GMT-09:00) Gambier", "timezones": ["Pacific/Marquesas", "America/Anchorage", "Pacific/Gambier"]}, {"offset": -8, "value": "(GMT-08:00) Pitcairn", "timezones": ["America/Los_Angeles", "America/Tijuana", "America/Vancouver", "America/Whitehorse", "Pacific/Pitcairn"]}, {"offset": -7, "value": "(GMT-07:00) Mountain Time - Yellowknife", "timezones": ["America/Dawson_Creek", "America/Denver", "America/Edmonton", "America/Hermosillo", "America/Mazatlan", "America/Phoenix", "America/Yellowknife"]}, {"offset": -6, "value": "(GMT-06:00) Galapagos", "timezones": ["America/Belize", "America/Chicago", "America/Costa_Rica", "America/El_Salvador", "America/Guatemala", "America/Managua", "America/Mexico_City", "America/Regina", "America/Tegucigalpa", "America/Winnipeg", "Pacific/Galapagos"]}, {"offset": -5, "value": "(GMT-05:00) Easter Island", "timezones": ["America/Bogota", "America/Cancun", "America/Cayman", "America/Guayaquil", "America/Havana", "America/Iqaluit", "America/Jamaica", "America/Lima", "America/Nassau", "America/New_York", "America/Panama", "America/Port-au-Prince", "America/Rio_Branco", "America/Toronto", "Pacific/Easter"]}, {"offset": -4, "value": "(GMT-04:00) Bermuda", "timezones": ["America/Caracas", "America/Barbados", "America/Boa_Vista", "America/Curacao", "America/Grand_Turk", "America/Guyana", "America/Halifax", "America/La_Paz", "America/Manaus", "America/Martinique", "America/Port_of_Spain", "America/Porto_Velho", "America/Puerto_Rico", "America/Santo_Domingo", "America/Thule", "Atlantic/Bermuda"]}, {"offset": -3, "value": "(GMT-03:00) Stanley", "timezones": ["America/Asuncion", "America/Campo_Grande", "America/Cuiaba", "America/St_Johns", "America/Araguaina", "America/Argentina/Buenos_Aires", "America/Bahia", "America/Belem", "America/Cayenne", "America/Fortaleza", "America/Godthab", "America/Maceio", "America/Miquelon", "America/Montevideo", "America/Paramaribo", "America/Recife", "America/Santiago", "Antarctica/Palmer", "Antarctica/Rothera", "Atlantic/Stanley"]}, {"offset": -2, "value": "(GMT-02:00) South Georgia", "timezones": ["America/Sao_Paulo", "America/Noronha", "Atlantic/South_Georgia"]}, {"offset": -1, "value": "(GMT-01:00) Cape Verde", "timezones": ["America/Scoresbysund", "Atlantic/Azores", "Atlantic/Cape_Verde"]}, {"offset": 0, "value": "(GMT+00:00) London", "timezones": ["Africa/Abidjan", "Africa/Accra", "Africa/Bissau", "Africa/Casablanca", "Africa/El_Aaiun", "Africa/Monrovia", "America/Danmarkshavn", "Atlantic/Canary", "Atlantic/Faroe", "Atlantic/Reykjavik", "Etc/GMT", "Europe/Dublin", "Europe/Lisbon", "Europe/London"]}, {"offset": 1, "value": "(GMT+01:00) Zurich", "timezones": ["Africa/Algiers", "Africa/Ceuta", "Africa/Lagos", "Africa/Ndjamena", "Africa/Tunis", "Europe/Amsterdam", "Europe/Andorra", "Europe/Belgrade", "Europe/Berlin", "Europe/Brussels", "Europe/Budapest", "Europe/Copenhagen", "Europe/Gibraltar", "Europe/Luxembourg", "Europe/Madrid", "Europe/Malta", "Europe/Monaco", "Europe/Oslo", "Europe/Paris", "Europe/Prague", "Europe/Rome", "Europe/Stockholm", "Europe/Tirane", "Europe/Vienna", "Europe/Warsaw", "Europe/Zurich"]}, {"offset": 2, "value": "(GMT+02:00) Vilnius", "timezones": ["Africa/Windhoek", "Africa/Cairo", "Africa/Johannesburg", "Africa/Maputo", "Africa/Tripoli", "Asia/Amman", "Asia/Beirut", "Asia/Damascus", "Asia/Gaza", "Asia/Jerusalem", "Asia/Nicosia", "Europe/Athens", "Europe/Bucharest", "Europe/Chisinau", "Europe/Helsinki", "Europe/Istanbul", "Europe/Kaliningrad", "Europe/Kiev", "Europe/Riga", "Europe/Sofia", "Europe/Tallinn", "Europe/Vilnius"]}, {"offset": 3, "value": "(GMT+03:30) Tehran", "timezones": ["Africa/Khartoum", "Africa/Nairobi", "Antarctica/Syowa", "Asia/Baghdad", "Asia/Qatar", "Asia/Riyadh", "Europe/Minsk", "Europe/Moscow", "Asia/Tehran"]}, {"offset": 4, "value": "(GMT+04:30) Kabul", "timezones": ["Asia/Baku", "Asia/Dubai", "Asia/Tbilisi", "Asia/Yerevan", "Europe/Samara", "Indian/Mahe", "Indian/Mauritius", "Indian/Reunion", "Asia/Kabul"]}, {"offset": 5, "value": "(GMT+05:45) Katmandu", "timezones": ["Antarctica/Mawson", "Asia/Aqtau", "Asia/Aqtobe", "Asia/Ashgabat", "Asia/Dushanbe", "Asia/Karachi", "Asia/Tashkent", "Asia/Yekaterinburg", "Indian/Kerguelen", "Indian/Maldives", "Asia/Calcutta", "Asia/Colombo", "Asia/Katmandu"]}, {"offset": 6, "value": "(GMT+06:30) Cocos", "timezones": ["Antarctica/Vostok", "Asia/Almaty", "Asia/Bishkek", "Asia/Dhaka", "Asia/Omsk", "Asia/Thimphu", "Indian/Chagos", "Asia/Rangoon", "Indian/Cocos"]}, {"offset": 7, "value": "(GMT+07:00) Christmas", "timezones": ["Antarctica/Davis", "Asia/Bangkok", "Asia/Hovd", "Asia/Jakarta", "Asia/Krasnoyarsk", "Asia/Saigon", "Asia/Ho_Chi_Minh", "Indian/Christmas"]}, {"offset": 8, "value": "(GMT+08:30) Pyongyang", "timezones": ["Antarctica/Casey", "Asia/Brunei", "Asia/Choibalsan", "Asia/Hong_Kong", "Asia/Irkutsk", "Asia/Kuala_Lumpur", "Asia/Macau", "Asia/Makassar", "Asia/Manila", "Asia/Shanghai", "Asia/Singapore", "Asia/Taipei", "Asia/Ulaanbaatar", "Australia/Perth", "Asia/Pyongyang"]}, {"offset": 9, "value": "(GMT+09:30) Central Time - Darwin", "timezones": ["Asia/Dili", "Asia/Jayapura", "Asia/Seoul", "Asia/Tokyo", "Asia/Yakutsk", "Pacific/Palau", "Australia/Darwin"]}, {"offset": 10, "value": "(GMT+10:00) Port Moresby", "timezones": ["Australia/Adelaide", "Antarctica/Dumont D\'Urville", "Asia/Magadan", "Asia/Vladivostok", "Australia/Brisbane", "Pacific/Chuuk", "Pacific/Guam", "Pacific/Port_Moresby"]}, {"offset": 11, "value": "(GMT+11:00) Ponape", "timezones": ["Australia/Hobart", "Australia/Sydney", "Pacific/Efate", "Pacific/Guadalcanal", "Pacific/Kosrae", "Pacific/Norfolk", "Pacific/Noumea", "Pacific/Pohnpei"]}, {"offset": 12, "value": "(GMT+12:00) Wallis", "timezones": ["Asia/Kamchatka", "Pacific/Funafuti", "Pacific/Kwajalein", "Pacific/Majuro", "Pacific/Nauru", "Pacific/Tarawa", "Pacific/Wake", "Pacific/Wallis"]}, {"offset": 13, "value": "(GMT+13:00) Tongatapu", "timezones": ["Pacific/Auckland", "Pacific/Fiji", "Pacific/Enderbury", "Pacific/Fakaofo", "Pacific/Tongatapu"]}, {"offset": 14, "value": "(GMT+14:00) Kiritimati", "timezones": ["Pacific/Apia", "Pacific/Kiritimati"]}]');
 var array = [];
 var model = [];
 for (var i = 0; i < jsondata.length; i++) {
@@ -437,36 +437,41 @@ function convertDateFromToTimezone(date, timezoneFrom, timezoneTo) {
     return ndate
 }
 
+const types = {"Yearly": "YEARLY", "Monthly": "MONTHLY", "Weekly": "WEEKLY", "Daily": "DAILY", "Hourly":"HOURLY", "Never":""}
 function getRepeatTypes() {
-    return [
-        ["Yearly", "Monthly", "Weekly", "Daily", "Hourly", "Never"],
-        ["YEARLY", "MONTHLY", "WEEKLY", "DAILY", "HOURLY", "None"]
-    ];
+    return Object.keys(types);
 }
 
+const monthes = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 function getMonthes() {
-    return [
-        ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-        getIntArray(12, false, 1)
-    ];
+    return monthes;
 }
 
-const weekdaysarr = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"]
+const weekdaysarr = {"Monday": "MO", "Tuesday":"TU", "Wednesday":"WE", "Thursday":"TH", "Friday":"FR", "Saturday":"SA", "Sunday":"SU"}
 function getWeeks() {
-    var arrvdays = weekdaysarr
+    var arrvdays = Object.values(weekdaysarr)
 
-    var wdays = weekdaysarr.join(",")
+    var wdays = Object.values(weekdaysarr).join(",")
     arrvdays.push(wdays);
 
-    var wweekdays = weekdaysarr.slice(0, 5).join(",")
+    var wweekdays = Object.values(weekdaysarr).slice(0, 5).join(",")
     arrvdays.push(wweekdays);
 
-    var weekenddays = weekdaysarr.slice(5, 7).join(",")
+    var weekenddays = Object.values(weekdaysarr).slice(5, 7).join(",")
     arrvdays.push(weekenddays);
 
+    var fullnames = Object.keys(weekdaysarr)
+    fullnames.push("Day", "Weekday", "Weekend day")
+
+    var narr = {}
+    for (var i in fullnames) {
+        narr[fullnames[i]] = arrvdays[i];
+    }
+
     return [
-        ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday", "Day", "Weekday", "Weekend day"],
-        arrvdays
+        fullnames,
+        arrvdays,
+        narr
     ];
 }
 
@@ -475,4 +480,137 @@ function getEnding(number) {
        return "";
     }
     return "s";
+}
+
+function convertDate(date) {
+  return date.getUTCFullYear() +
+    (date.getUTCMonth() + 1).toString().padStart(2, "0") +
+    date.getUTCDate().toString().padStart(2, "0") + 'T' +
+    date.getUTCHours().toString().padStart(2, "0") +
+    date.getUTCMinutes().toString().padStart(2, "0") +
+    date.getUTCSeconds().toString().padStart(2, "0") +
+    'Z';
+};
+
+function parseDate(isostr) {
+    var year = Number(isostr.substring(0, 4));
+    var month = Number(isostr.substring(4, 6))-1;
+    var day = Number(isostr.substring(6, 8));
+    var hour = Number(isostr.substring(9, 11));
+    var minute = Number(isostr.substring(11, 13));
+    var second = Number(isostr.substring(13, 15));
+    var ndate = new Date(year, month, day, hour, minute, second)
+    ndate.setHours(ndate.getHours() - (new Date).getTimezoneOffset()/60);
+    return ndate;
+}
+
+function generateBuilderArray() {
+    return {type:"", byday:[], bysetpos:0, bymonth:"", bymonthday:0, interval:0, count:0, until: 0}
+}
+
+function buildRRule(bArray) {
+
+    var str = "FREQ="+types[bArray.type];
+
+    if (bArray.type === "Never") return "";
+
+    if (bArray.type === "Weekly") {
+        str += ";BYDAY="
+        var arr = [];
+        for (var k in bArray.byday) {
+            arr.push(getWeeks()[2][bArray.byday[k]]);
+        }
+        str += arr.join(",");
+    }
+
+    if (bArray.type === "Monthly") {
+        if (bArray.bymonthday > 0) {
+            str += ";BYMONTHDAY="+bArray.bymonthday;
+        } else if (bArray.bysetpos !== 0) {
+            str += ";BYSETPOS="+bArray.bysetpos + ";BYDAY="+getWeeks()[2][bArray.byday[0]];
+        }
+    }
+
+    if (bArray.type === "Yearly") {
+        if (bArray.bymonthday > 0) {
+
+            str += ";BYMONTH=" + (monthes.indexOf(bArray.bymonth)+1);
+            str += ";BYMONTHDAY="+bArray.bymonthday;
+
+        } else if (bArray.bysetpos !== 0) {
+
+            str += ";BYDAY="
+            var darr = [];
+            for (var s in bArray.byday) {
+                darr.push(getWeeks()[2][bArray.byday[s]]);
+            }
+            str += darr.join(",");
+
+            str += ";BYSETPOS="+bArray.bysetpos + ";BYMONTH=" + (monthes.indexOf(bArray.bymonth)+1);
+        }
+    }
+
+    if (bArray.interval > 0) {
+        str += ";INTERVAL="+Math.max(1, bArray.interval);
+    }
+
+    if (bArray.count > 0) {
+        str += ";COUNT="+bArray.count;
+    }
+
+    if (bArray.until) {
+        str += ";UNTIL="+convertDate(until);
+    }
+
+    return str;
+}
+
+function parseDays(str) {
+    var days = str.split(",");
+    for (var k in days) {
+        days[k] = Object.keys(weekdaysarr)[Object.values(weekdaysarr).indexOf(days[k])];
+    }
+    return days
+}
+
+const availableprops = {
+    "FREQ": ["type", function(str) {return Object.keys(types)[Object.values(types).indexOf(str)]}],
+    "BYDAY": ["byday", parseDays],
+    "BYMONTHDAY": ["bymonthday", function(str) {return Number(str)}],
+    "BYSETPOS": ["bysetpos", function(str) {return Number(str)}],
+    "BYMONTH": ["bymonth", function(str) {return monthes[Number(str)-1]}],
+    "INTERVAL": ["interval", function(str) {return Number(str)}],
+    "COUNT": ["count", function(str) {return Number(str)}],
+    "UNTIL": ["until", function(str) {return parseDate(str)}]
+}
+
+function convertRRuleToBuilderArray(rrule) {
+
+    var arr = generateBuilderArray();
+    var str = rrule
+
+    var whilestatement = true
+    while (whilestatement) {
+
+        var indx = str.search("=");
+        if (indx === -1) {
+            whilestatement = false;
+            break;
+        }
+
+        var prop = str.substring(0, indx);
+        str = str.substring(indx+1);
+
+        indx = str.search(";") >= 0 ? str.search(";") : str.length
+        if (Object.keys(availableprops).indexOf(prop) === -1) {
+            str = str.substring(0, indx);
+            continue;
+        }
+
+        var value = str.substring(0, indx);
+        str = str.substring(indx+1);
+
+        arr[availableprops[prop][0]] = availableprops[prop][1](value);
+    }
+    return arr
 }
