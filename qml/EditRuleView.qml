@@ -223,10 +223,9 @@ Item {
             function parseRRule(arr) {
                 var comps = [mondayCheckBox, tuesdayCheckBox, wednesdayCheckBox, thursdayCheckBox, fridayCheckBox, saturdayCheckBox, sundayCheckBox]
 
+
                 for (var k in comps) {
-                    if (arr.byday.indexOf(comps[k].text) >= 0) {
-                        comps[k].checked = true;
-                    }
+                    comps[k].checked = arr.byday.indexOf(comps[k].text) >= 0;
                 }
 
                 loaderWeekly.item.parseRRule(arr)
