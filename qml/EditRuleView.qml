@@ -41,8 +41,9 @@ Item {
 
         var arr = Server.convertRRuleToBuilderArray(currentEvent.reprule);
         repeatTypeCombobox.currentIndex = repeatTypeCombobox.model.indexOf(arr.type);
+        endRepeatingTextBox.text = arr.count.toString();
 
-        console.log(Object.keys(arr), Object.values(arr));
+        ruleLoaderComponent.item.parseRRule(arr);
     }
 
     Component {
@@ -108,6 +109,10 @@ Item {
             function buildRRule(arr) {
                 arr.interval = Math.max(Number(repeatEveryTextBox.text), 1);
                 return arr;
+            }
+
+            function parseRRule(arr) {
+                repeatEveryTextBox.text = arr.interval;
             }
         }
     }
@@ -214,6 +219,18 @@ Item {
 
                 return arr;
             }
+
+            function parseRRule(arr) {
+                var comps = [mondayCheckBox, tuesdayCheckBox, wednesdayCheckBox, thursdayCheckBox, fridayCheckBox, saturdayCheckBox, sundayCheckBox]
+
+                for (var k in comps) {
+                    if (arr.byday.indexOf(comps[k].text) >= 0) {
+                        comps[k].checked = true;
+                    }
+                }
+
+                loaderWeekly.item.parseRRule(arr)
+            }
         }
     }
 
@@ -282,6 +299,21 @@ Item {
                 arr = loaderMonthly.item.buildRRule(arr);
 
                 return arr;
+            }
+
+            function parseRRule(arr) {
+
+                radioButtonOnMonthDay.checked = (arr.byday.length === 0 && arr.bysetpos === "");
+                radioButtonOnWeekDay.checked = !radioButtonOnMonthDay.checked
+
+                if (radioButtonOnMonthDay.checked) {
+                    selectorDayOnMonthDay.currentIndex = selectorDayOnMonthDay.model.indexOf(arr.bymonthday);
+                } else {
+                    selectorOrdinalOnWeekDay.currentIndex = selectorOrdinalOnWeekDay.model.indexOf(arr.bysetpos);
+                    selectorDaysOnWeekDay.currentIndex = selectorDaysOnWeekDay.model.indexOf(arr.byday[0]);
+                }
+
+                loaderMonthly.item.parseRRule(arr)
             }
         }
     }
@@ -363,6 +395,22 @@ Item {
 
                 return arr;
             }
+
+            function parseRRule(arr) {
+
+                radioButtonOnSpecialYearDay.checked = (arr.bymonthday === 0);
+                radioButtonOnYearDay.checked = !radioButtonOnSpecialYearDay.checked;
+
+                if (radioButtonOnYearDay.checked) {
+                    selectorMonthOnYearlyDay.currentIndex = selectorMonthOnYearlyDay.model.indexOf(arr.bymonth);
+                    selectorDayOfMonthOnYearlyDay.currentIndex = selectorDayOfMonthOnYearlyDay.model.indexOf(arr.bymonthday);
+                } else {
+
+                    selectorOrdinalOnYearDay.currentIndex = selectorOrdinalOnYearDay.model.indexOf(arr.bysetpos);
+                    selectorDayTypeOnYearDay.currentIndex = selectorDayTypeOnYearDay.model.indexOf(arr.byday[0]);
+                    selectorMonthOnYearDay.currentIndex = selectorMonthOnYearDay.model.indexOf(arr.bymonth);
+                }
+            }
         }
     }
 
@@ -371,6 +419,7 @@ Item {
 
         Rectangle {
             function buildRRule(arr) {return arr;}
+            function parseRRule(arr) {}
         }
 
     }
@@ -504,6 +553,13 @@ Item {
                             id: ruleLoaderComponent
                             sourceComponent: getCurrentComponent()
 
+                            onSourceComponentChanged: {
+                                var arr = Server.convertRRuleToBuilderArray(currentEvent.reprule);
+                                if (repeatTypeCombobox.model[repeatTypeCombobox.currentIndex] === arr.type){
+                                    item.parseRRule(arr);
+                                }
+                            }
+
                             function getCurrentComponent() {
                                 switch(Server.getRepeatTypes()[repeatTypeCombobox.currentIndex]) {
                                     case "Yearly":
@@ -523,6 +579,10 @@ Item {
                                     default:
                                         return emptyComponent
                                 }                                
+                            }
+
+                            function parseRRule(arr) {
+                                ruleLoaderComponent.item.parseRRule(arr);
                             }
                         }
                     }
