@@ -88,95 +88,155 @@ Item {
         id: ruleWeeklyComponent
 
         Rectangle {
-            //anchors.fill: parent
 
-            Rectangle {
-                id: loaderWeeklyRectangle
+            id: loaderWeeklyRectangle
 
-                GroupBox {
-                    id: gboxWDItems
-                    title: "By weekdays"
+            GroupBox {
+                id: gboxWDItems
+                title: "By weekdays"
 
-                    Column {
-                        spacing: 10
+                Column {
+                    spacing: 10
 
-                        CheckBox {
-                            id: mondayCheckBox
-                            text: "Monday"
-                            checked: true
-                            onCheckedChanged: gboxWDItems.onCheckingIsEmpty(mondayCheckBox)
-                        }
-
-                        CheckBox {
-                            id: tuesdayCheckBox
-                            text: "Tuesday"
-                            checked: false
-                            onCheckedChanged: gboxWDItems.onCheckingIsEmpty(tuesdayCheckBox)
-                        }
-
-                        CheckBox {
-                            id: wednesdayCheckBox
-                            text: "Wednesday"
-                            checked: false
-                            onCheckedChanged: gboxWDItems.onCheckingIsEmpty(wednesdayCheckBox)
-                        }
-
-                        CheckBox {
-                            id: thursdayCheckBox
-                            text: "Thursday"
-                            checked: false
-                            onCheckedChanged: gboxWDItems.onCheckingIsEmpty(thursdayCheckBox)
-                        }
-
-                        CheckBox {
-                            id: fridayCheckBox
-                            text: "Friday"
-                            checked: false
-                            onCheckedChanged: gboxWDItems.onCheckingIsEmpty(fridayCheckBox)
-                        }
-
-                        CheckBox {
-                            id: saturdayCheckBox
-                            text: "Saturday"
-                            checked: false
-                            onCheckedChanged: gboxWDItems.onCheckingIsEmpty(saturdayCheckBox)
-                        }
-
-                        CheckBox {
-                            id: sundayCheckBox
-                            text: "Sunday"
-                            checked: false
-                            onCheckedChanged: gboxWDItems.onCheckingIsEmpty(sundayCheckBox)
-                        }
-
+                    CheckBox {
+                        id: mondayCheckBox
+                        text: "Monday"
+                        checked: true
+                        onCheckedChanged: gboxWDItems.onCheckingIsEmpty(mondayCheckBox)
                     }
 
-                    function isSomethingChecked() {
-                        return mondayCheckBox.checked ||
-                                tuesdayCheckBox.checked ||
-                                wednesdayCheckBox.checked ||
-                                thursdayCheckBox.checked ||
-                                fridayCheckBox.checked ||
-                                saturdayCheckBox.checked ||
-                                sundayCheckBox.checked
+                    CheckBox {
+                        id: tuesdayCheckBox
+                        text: "Tuesday"
+                        checked: false
+                        onCheckedChanged: gboxWDItems.onCheckingIsEmpty(tuesdayCheckBox)
                     }
 
-                    function onCheckingIsEmpty(checkbox) {
-                        if (!isSomethingChecked()) {
-                            checkbox.checked = true
-                        }
+                    CheckBox {
+                        id: wednesdayCheckBox
+                        text: "Wednesday"
+                        checked: false
+                        onCheckedChanged: gboxWDItems.onCheckingIsEmpty(wednesdayCheckBox)
                     }
+
+                    CheckBox {
+                        id: thursdayCheckBox
+                        text: "Thursday"
+                        checked: false
+                        onCheckedChanged: gboxWDItems.onCheckingIsEmpty(thursdayCheckBox)
+                    }
+
+                    CheckBox {
+                        id: fridayCheckBox
+                        text: "Friday"
+                        checked: false
+                        onCheckedChanged: gboxWDItems.onCheckingIsEmpty(fridayCheckBox)
+                    }
+
+                    CheckBox {
+                        id: saturdayCheckBox
+                        text: "Saturday"
+                        checked: false
+                        onCheckedChanged: gboxWDItems.onCheckingIsEmpty(saturdayCheckBox)
+                    }
+
+                    CheckBox {
+                        id: sundayCheckBox
+                        text: "Sunday"
+                        checked: false
+                        onCheckedChanged: gboxWDItems.onCheckingIsEmpty(sundayCheckBox)
+                    }
+
                 }
 
-                Loader {
-                    id: loaderWeekly
-                    sourceComponent: repeatEveryComponent
-                    anchors.top: gboxWDItems.bottom
+                function isSomethingChecked() {
+                    return mondayCheckBox.checked ||
+                            tuesdayCheckBox.checked ||
+                            wednesdayCheckBox.checked ||
+                            thursdayCheckBox.checked ||
+                            fridayCheckBox.checked ||
+                            saturdayCheckBox.checked ||
+                            sundayCheckBox.checked
                 }
+
+                function onCheckingIsEmpty(checkbox) {
+                    if (!isSomethingChecked()) {
+                        checkbox.checked = true
+                    }
+                }
+            }
+
+            Loader {
+                id: loaderWeekly
+                sourceComponent: repeatEveryComponent
+                anchors.top: gboxWDItems.bottom
             }
         }
     }
 
+    Component {
+
+        id: ruleMonthlyComponent
+
+        Rectangle {
+
+            RadioButton {
+                id: radioButtonOnMonthDay
+                text: "By month day: "
+                checked: true
+                anchors.margins: 5
+            }
+
+            ComboBox {
+                id: selectorDayOnMonthDay
+                anchors.left: radioButtonOnMonthDay.right
+                model: Server.getIntArray(31, false, 1);
+                width: radioButtonOnMonthDay.width/2
+                anchors.margins: 5
+            }
+
+            RadioButton {
+                id: radioButtonOnWeekDay
+                anchors.top: radioButtonOnMonthDay.bottom
+                text: "By week day: "
+                anchors.margins: 5
+            }
+
+            ComboBox {
+                id: selectorOrdinalOnWeekDay
+                anchors.top: radioButtonOnMonthDay.bottom
+                anchors.left: radioButtonOnWeekDay.right
+                model: Server.getOrdinals();
+                width: radioButtonOnWeekDay.width
+                anchors.margins: 5
+            }
+
+            ComboBox {
+                id: selectorDaysOnWeekDay
+                anchors.top: radioButtonOnMonthDay.bottom
+                anchors.left: selectorOrdinalOnWeekDay.right
+                model: Server.getWeeks()[0];
+                width: radioButtonOnWeekDay.width*1.2
+                anchors.margins: 5
+            }
+
+            Loader {
+                id: loaderWeekly
+                sourceComponent: repeatEveryComponent
+                anchors.top: radioButtonOnWeekDay.bottom
+                anchors.margins: 5
+            }
+        }
+    }
+
+    Component {
+
+        id: ruleYearlyComponent
+
+        Rectangle {
+
+        }
+    }
 
     Rectangle {
 
@@ -228,7 +288,7 @@ Item {
 
                         width: parent.width-10
                         height: parent.height - 10
-                        anchors.margins: 0
+                        anchors.margins: 5
                         anchors.top: repeatTypeCombobox.bottom
                         clip: true
 
@@ -240,7 +300,7 @@ Item {
                                 switch(Server.getRepeatTypes()[repeatTypeCombobox.currentIndex]) {
                                      case "Monthly":
                                          singleTypeRepeatString = "month";
-                                         return repeatEveryComponent
+                                         return ruleMonthlyComponent
                                      case "Weekly":
                                          singleTypeRepeatString = "week";
                                          return ruleWeeklyComponent
