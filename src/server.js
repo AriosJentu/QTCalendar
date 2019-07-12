@@ -488,6 +488,23 @@ function getEnding(number) {
     return "s";
 }
 
+function getOrdinalEnding(number) {
+    if (number%100 - number%10 != 10) {
+        switch (number%10) {
+            case 1:
+                return "st";
+            case 2:
+                return "nd";
+            case 3:
+                return "rd";
+            default:
+                return "th";
+        }
+    } else {
+        return "th";
+    }
+}
+
 function convertDate(date) {
   return date.getUTCFullYear() +
     (date.getUTCMonth() + 1).toString().padStart(2, "0") +
@@ -655,6 +672,10 @@ function convertRRuleToReadableString(rrule) {
         str += arr.interval + " ";
     }
 
+    if (arr.type === "Yearly") {
+        arr.interval = 1;
+    }
+
     str += formattypes[arr.type] + getEnding(arr.interval) + " ";
 
     if (arr.byday.length > 0 && !arr.bysetpos) {
@@ -677,6 +698,16 @@ function convertRRuleToReadableString(rrule) {
         } else {
             str += arr.bymonth + " ";
         }
+    }
+
+    if (arr.bymonthday > 0) {
+        str += "on " + arr.bymonthday + getOrdinalEnding(arr.bymonthday) + " day of ";
+        if (arr.type === "Monthly") {
+            str += "month "
+        } else {
+            str += arr.bymonth + " ";
+        }
+
     }
 
     if (arr.count > 0) {
