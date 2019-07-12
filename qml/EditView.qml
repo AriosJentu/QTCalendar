@@ -246,6 +246,11 @@ Item {
                         text: Server.ICONS.edit_evt
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
+
+                        onClicked: {
+                            mainStackView.push(editRuleView);
+                            mainStackView.currentItem.loadEvent(currentEvent, isNewEvent);
+                        }
                     }
                 }
             }
@@ -504,8 +509,8 @@ Item {
         }
     }
 
-    function setEvent(modelobj) {
-        isNewEvent = false;
+    function setEvent(modelobj, isnew=false) {
+        isNewEvent = isnew;
         currentEvent = modelobj;
 
         startDateString = test.getDateString(currentEvent.startTime);
@@ -527,13 +532,5 @@ Item {
         endDateString = test.getDateString(currentEvent.endTime);
 
         currentEvent.timezone = Server.getTimezoneStringFromOffset(-(new Date()).getTimezoneOffset()/60);
-    }
-
-    function setNewUpdatableEvent(modelobj) {
-        isNewEvent = true;
-        currentEvent = modelobj;
-
-        startDateString = test.getDateString(currentEvent.startTime);
-        endDateString = test.getDateString(currentEvent.endTime);
     }
 }

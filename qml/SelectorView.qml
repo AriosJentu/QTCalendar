@@ -53,11 +53,7 @@ Item {
 
     function pushInfo() {
         mainStackView.push(editPage);
-        if (isNewEvent) {
-            mainStackView.currentItem.setNewUpdatableEvent(currentEvent);
-        } else {
-            mainStackView.currentItem.setEvent(currentEvent);
-        }
+        mainStackView.currentItem.setEvent(currentEvent, isNewEvent);
     }
 
 
@@ -246,7 +242,6 @@ Item {
                         setEventDateTime(selectorcalendar.selectedDate);
                         pushInfo();
                     }
-
                 }
 
                 Rectangle {
