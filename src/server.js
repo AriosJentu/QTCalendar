@@ -646,7 +646,7 @@ function convertRRuleToReadableString(rrule) {
     var arr = convertRRuleToBuilderArray(rrule)
 
     if (arr.type === "Never") {
-        return "";
+        return "None";
     }
 
     var str = "Every ";
