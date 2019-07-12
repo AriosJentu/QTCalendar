@@ -375,11 +375,27 @@ Item {
 
             ComboBox {
                 id: selectorMonthOnYearDay
-                anchors.left: selectorDayTypeOnYearDay.right
-                anchors.top: radioButtonOnYearDay.bottom
+                anchors.left: radioButtonOnSpecialYearDay.right
+                anchors.top: selectorOrdinalOnYearDay.bottom
                 model: Server.getMonthes();
                 width: radioButtonOnSpecialYearDay.width*1.6
                 anchors.margins: 5
+            }
+
+            Label {
+                TextMetrics {
+                    id: metricElement
+                    font: editRuleOfLabel.font
+                    text: editRuleOfLabel.text
+                }
+
+                id: editRuleOfLabel
+                text: "of"
+                width: metricElement.width*1.5
+                height: metricElement.height*3
+                verticalAlignment: Text.AlignVCenter;
+                anchors.right: selectorMonthOnYearDay.left
+                anchors.top: selectorOrdinalOnYearDay.bottom
             }
 
             function buildRRule(arr) {
