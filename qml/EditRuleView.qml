@@ -15,11 +15,34 @@ Item {
     function loadEvent(event, isNew) {
         currentEvent = event;
         isNewEvent = isNew;
+        parseRRule();
     }
 
     function pushInfo() {
         mainStackView.push(editPage);
         mainStackView.currentItem.setEvent(currentEvent, isNewEvent);
+    }
+
+    function updateEvent() {
+        currentEvent.reprule = buildRRuleString()
+        pushInfo()
+    }
+
+    function buildRRuleString() {
+        var arr = Server.generateBuilderArray();
+        arr.type = repeatTypeCombobox.model[repeatTypeCombobox.currentIndex];
+        arr.count = Number(endRepeatingTextBox.text);
+        arr = ruleLoaderComponent.item.buildRRule(arr);
+        var res = Server.buildRRule(arr);
+        return res;
+    }
+
+    function parseRRule() {
+
+        var arr = Server.convertRRuleToBuilderArray(currentEvent.reprule);
+        repeatTypeCombobox.currentIndex = repeatTypeCombobox.model.indexOf(arr.type);
+
+        console.log(Object.keys(arr), Object.values(arr));
     }
 
     Component {
@@ -183,7 +206,7 @@ Item {
 
                 for (var k in comps) {
                     if (comps[k].checked) {
-                        arr.byday.append(comps[k].text);
+                        arr.byday.push(comps[k].text);
                     }
                 }
 
@@ -341,6 +364,14 @@ Item {
                 return arr;
             }
         }
+    }
+
+    Component {
+        id: emptyComponent;
+
+        Rectangle {
+            function buildRRule(arr) {return arr;}
+        }
 
     }
 
@@ -376,10 +407,11 @@ Item {
                         }
 
                         id: editRuleRepeatLabel
-                        text: " Repeat"
+                        text: "Repeat"
                         width: metricElement.width*2
                         height: metricElement.height*3
                         verticalAlignment: Text.AlignVCenter;
+                        anchors.margins: 5
                     }
 
                     ComboBox {
@@ -389,14 +421,83 @@ Item {
                         anchors.left: editRuleRepeatLabel.right
                         y: 10
                         model: Server.getRepeatTypes()
+                        anchors.margins: 5
                     }
 
+                    Label {
+
+                        TextMetrics {
+                            id: nmetricElement
+                            font: editRuleRepeatLabel.font
+                            text: editRuleRepeatLabel.text
+                        }
+
+                        id: editRuleEndLabel
+                        text: "Ends after"
+                        width: nmetricElement.width*2
+                        height: nmetricElement.height*3
+                        verticalAlignment: Text.AlignVCenter;
+                        anchors.top: repeatTypeCombobox.bottom
+                        anchors.margins: 5
+                        visible: Server.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
+                    }
+
+                    TextField {
+
+                        id: endRepeatingTextBox
+                        width: nmetricElement.width*2
+                        height: nmetricElement.height*3 - 20
+                        anchors.left: editRuleEndLabel.right
+                        anchors.top: repeatTypeCombobox.bottom
+                        text: "0"
+                        maximumLength: 3
+                        validator: RegExpValidator{regExp: /[0-9]+/}
+                        anchors.margins: 5
+                        anchors.topMargin: 10
+                        visible: Server.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
+
+                        onTextChanged: {
+
+                            if (text[0] === "0" && text.length > 1) {
+                                text = text.substring(1);
+                            }
+
+                            if (text == "") {
+                                text = "0";
+                            }
+                        }
+                    }
+
+                    Label {
+
+                        TextMetrics {
+                            id: mmetricElement
+                            font: editRuleRepeatLabel.font
+                            text: editRuleRepeatLabel.text
+                        }
+
+                        id: editRuleEndAnotherLabel
+                        text: "time" + Server.getEnding(Number(endRepeatingTextBox.text))
+                        width: nmetricElement.width*2
+                        height: nmetricElement.height*3
+                        verticalAlignment: Text.AlignVCenter;
+                        anchors.top: repeatTypeCombobox.bottom
+                        anchors.left: endRepeatingTextBox.right
+                        anchors.leftMargin: 10
+                        anchors.margins: 5
+                        visible: Server.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
+                    }
+
+
+
                     ScrollView {
+
+                        id: scrollViewElement
 
                         width: parent.width-10
                         height: parent.height - 10
                         anchors.margins: 5
-                        anchors.top: repeatTypeCombobox.bottom
+                        anchors.top: endRepeatingTextBox.bottom
                         clip: true
 
                         Loader {
@@ -420,11 +521,12 @@ Item {
                                         singleTypeRepeatString = "hour";
                                         return repeatEveryComponent
                                     default:
-                                        return
+                                        return emptyComponent
                                 }                                
                             }
                         }
                     }
+
 
                     RoundButton {
                         id: cancelRuleButton
@@ -441,6 +543,7 @@ Item {
                     }
 
                     RoundButton {
+
                         id: acceptRuleButton
                         width: ruleViewTextForButtonSizes.height-10
                         height: ruleViewTextForButtonSizes.height-10
@@ -451,19 +554,7 @@ Item {
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
-                        onClicked: {
-                            mainRectangleForRules.buildRRuleString();
-                            //pushInfo()
-                        }
-                    }
-
-                    function buildRRuleString() {
-                        var arr = Server.generateBuilderArray();
-                        arr.type = repeatTypeCombobox.model[repeatTypeCombobox.currentIndex];
-                        arr = ruleLoaderComponent.item.buildRRule(arr);
-                        var res = Server.buildRRule(arr);
-                        console.log(res)
-                        return res;
+                        onClicked: updateEvent()
                     }
                 }
             }
