@@ -617,5 +617,26 @@ function convertRRuleToBuilderArray(rrule) {
 
         arr[availableprops[prop][0]] = availableprops[prop][1](value);
     }
+
+    if (!arr.type) {
+        arr.type = Object.keys(types)[Object.values(types).indexOf("")]
+    }
+
+    if (arr.type === "Monthly" && arr.byday.length > 1) {
+        switch (arr.byday.length) {
+            case 2:
+                arr.byday = ["Weekend day"];
+                break;
+            case 5:
+                arr.byday = ["Weekday"];
+                break;
+            case 7:
+                arr.byday = ["Day"];
+                break;
+            default:
+                break;
+        }
+    }
+
     return arr
 }
