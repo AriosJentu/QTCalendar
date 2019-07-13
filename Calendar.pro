@@ -1,4 +1,4 @@
-QT += qml quick sql network networkauth
+QT += qml quick sql network networkauth location
 CONFIG += c++11
 TARGER = Calendar
 
@@ -35,6 +35,7 @@ DISTFILES += \
     qml/EditRuleView.qml \
     qml/EditView.qml \
     qml/EventView.qml \
+    qml/MapView.qml \
     qml/SelectorView.qml \
     qml/TestView.qml \
     qml/main.qml \

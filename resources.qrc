@@ -10,5 +10,6 @@
         <file>src/server.js</file>
         <file>assets/miregular.ttf</file>
         <file>qml/EditRuleView.qml</file>
+        <file>qml/MapView.qml</file>
     </qresource>
 </RCC>

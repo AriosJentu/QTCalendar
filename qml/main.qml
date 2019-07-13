@@ -16,7 +16,7 @@ Window {
     StackView {
         id: mainStackView;
         anchors.fill: parent
-        initialItem: mainPage
+        initialItem: mapView//mainPage
     }
 
     Component {
@@ -42,6 +42,11 @@ Window {
     Component {
         id: editRuleView
         EditRuleView {}
+    }
+
+    Component {
+        id: mapView
+        MapView {}
     }
 
 }

@@ -19,7 +19,9 @@ const ICONS = {
     edit_evt: "",
     share: "",
     picker: "",
-    accept: ""
+    accept: "",
+    userlocation: "",
+    selectedlocation: ""
 }
 
 function encodeQueryData(data) {
