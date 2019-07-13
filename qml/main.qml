@@ -16,7 +16,7 @@ Window {
     StackView {
         id: mainStackView;
         anchors.fill: parent
-        initialItem: mapView//mainPage
+        initialItem: mainPage
     }
 
     Component {
