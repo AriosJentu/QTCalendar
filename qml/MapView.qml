@@ -11,6 +11,44 @@ Item {
 
     id: mapWindow
     property var currentEvent
+    property bool isNewEvent: false
+    property bool isViewEvent: false
+    property var selectedCoordinate
+
+
+    function loadEvent(event, isView, isNew) {
+        currentEvent = event;
+        isNewEvent = isNew;
+        isViewEvent = isView;
+        getEventCoordinate()
+    }
+
+    function getEventCoordinate() {
+        if (currentEvent.location !== "") {
+            var arr = currentEvent.location.split(", ");
+            setEventCoordinateOnMap(QtPositioning.coordinate(Number(arr[0]), Number(arr[1])))
+        }
+    }
+
+    function setEventCoordinateOnMap(coord) {
+        mainMap.center = coord
+        eventLocation.coordinate = coord
+        mainMap.zoomLevel = 18
+    }
+
+    function saveCoordinates() {
+        currentEvent.location = eventLocation.coordinate.latitude + ", " + eventLocation.coordinate.longitude
+    }
+
+    function pushInfo() {
+        if (!isViewEvent) {
+            mainStackView.push(editPage);
+            mainStackView.currentItem.setEvent(currentEvent, isNewEvent);
+        } else {
+            mainStackView.push(viewPage);
+            mainStackView.currentItem.setEvent(currentEvent);
+        }
+    }
 
     Rectangle {
 
@@ -26,39 +64,13 @@ Item {
             height: parent.height
             border.color: Qt.darker("#F4F4F4", 1.2)
 
-            /*Plugin {
-                id: mapPlugin
-                name: "osm"
-
-
-                required: Plugin.AnyMappingFeatures | Plugin.AnyGeocodingFeatures
-                PluginParameter { name: "osm.mapping.host"; value: "https://tile.openstreetmap.org/" }
-                PluginParameter { name: "osm.geocoding.host"; value: "https://nominatim.openstreetmap.org" }
-                PluginParameter { name: "osm.routing.host"; value: "https://router.project-osrm.org/viaroute" }
-                PluginParameter { name: "osm.places.host"; value: "https://nominatim.openstreetmap.org/search" }
-                PluginParameter { name: "osm.mapping.highdpi_tiles"; value: true }
-
-            }
-
-            GeocodeModel {
-                id: geocodeModel
-                plugin: mapPlugin
-                onStatusChanged: {
-                    if ((status == GeocodeModel.Ready) || (status == GeocodeModel.Error))
-                        mainMap.geocodeFinished()
-                }
-                onLocationsChanged:
-                {
-                    if (count == 1) {
-                        mainMap.center.latitude = get(0).coordinate.latitude
-                        mainMap.center.longitude = get(0).coordinate.longitude
-                    }
-                }
-            }*/
-
             Plugin {
                 id: mapPlugin
                 name: "osm"
+                PluginParameter {
+                     name: "osm.mapping.host";
+                     value: "http://a.tile.openstreetmap.org/"
+                 }
             }
 
             Map {
@@ -72,7 +84,6 @@ Item {
                     id: userLocation
                     sourceItem: Text {
 
-
                         TextMetrics {
                             id: metricElement
                             font: userLocationIcon.font
@@ -82,7 +93,8 @@ Item {
                         id: userLocationIcon
                         text: Server.ICONS.userlocation
                         font.family: root.fontAwesome.name
-                        font.pixelSize: 30
+                        font.pixelSize: 50
+                        color: "blue"
                         x: -metricElement.width*3/4
                         y: -metricElement.height*2/5
                     }
@@ -91,7 +103,6 @@ Item {
                 MapQuickItem {
                     id: eventLocation
                     sourceItem: Text {
-
 
                         TextMetrics {
                             id: imetricElement
@@ -102,25 +113,76 @@ Item {
                         id: eventLocationIcon
                         text: Server.ICONS.selectedlocation
                         font.family: root.fontAwesome.name
-                        font.pixelSize: 30
+                        font.pixelSize: 50
+                        color: "red"
                         x: -imetricElement.width*3/4
-                        y: -imetricElement.height*2/5
+                        y: -imetricElement.height*0.9
                     }
                 }
 
                 PositionSource {
-
                     id: src
-
                     onPositionChanged: {
-                        //var coord = src.position.coordinate;
-                        //mainMap.center = coord
-                        //mainMap.zoomLevel = 18
+                        mainMap.center = src.position.coordinate
+                        mainMap.zoomLevel = 18
                         userLocation.coordinate = src.position.coordinate
+                    }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        if (!isViewEvent) {
+                            eventLocation.coordinate = mainMap.toCoordinate(Qt.point(mouse.x,mouse.y))
+                        }
                     }
                 }
             }
 
+            Rectangle {
+
+                anchors.margins: 5
+                anchors.right: parent.right
+                anchors.top: parent.top
+
+                RoundButton {
+                    id: cancelLocationButton
+                    width: locationViewTextForButtonSizes.height-10
+                    height: locationViewTextForButtonSizes.height-10
+                    anchors.right: parent.right
+                    anchors.margins: 5
+
+                    text: Server.ICONS.back
+                    font.family: root.fontAwesome.name
+                    font.pixelSize: 20
+
+                    onClicked: pushInfo()
+                }
+
+                RoundButton {
+
+                    id: acceptLocationButton
+                    width: locationViewTextForButtonSizes.height-10
+                    height: locationViewTextForButtonSizes.height-10
+                    anchors.right: cancelLocationButton.left
+                    anchors.margins: 5
+
+                    text: Server.ICONS.accept
+                    font.family: root.fontAwesome.name
+                    font.pixelSize: 20
+
+                    onClicked: {
+                        saveCoordinates();
+                        pushInfo();
+                    }
+                }
+            }
+
+            Label {
+                id: locationViewTextForButtonSizes
+                text: ""
+                font.pointSize: 32
+            }
         }
     }
 }
