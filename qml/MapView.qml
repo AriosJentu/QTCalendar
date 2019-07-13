@@ -115,7 +115,7 @@ Item {
                         }
 
                         id: eventLocationIcon
-                        text: Server.ICONS.selectedlocation
+                        text: Server.ICONS.map
                         font.family: root.fontAwesome.name
                         font.pixelSize: 50
                         color: "red"
@@ -178,6 +178,44 @@ Item {
                     onClicked: {
                         saveCoordinates();
                         pushInfo();
+                    }
+                }
+
+                RoundButton {
+
+                    id: moveToUserLocationButton
+                    width: locationViewTextForButtonSizes.height-10
+                    height: locationViewTextForButtonSizes.height-10
+                    anchors.right: acceptLocationButton.left
+                    anchors.margins: 5
+
+                    text: Server.ICONS.userpos
+                    font.family: root.fontAwesome.name
+                    font.pixelSize: 20
+                    enabled: src.position.coordinate.longitude.toString() !== "NaN"
+
+                    onClicked: {
+                        mainMap.center = src.position.coordinate
+                        mainMap.zoomLevel = 18
+                    }
+                }
+
+                RoundButton {
+
+                    id: moveToSelectedLocationButton
+                    width: locationViewTextForButtonSizes.height-10
+                    height: locationViewTextForButtonSizes.height-10
+                    anchors.right: moveToUserLocationButton.left
+                    anchors.margins: 5
+
+                    text: Server.ICONS.map
+                    font.family: root.fontAwesome.name
+                    font.pixelSize: 20
+                    enabled: eventLocation.coordinate.longitude.toString() !== "NaN"
+
+                    onClicked: {
+                        mainMap.center = eventLocation.coordinate
+                        mainMap.zoomLevel = 18
                     }
                 }
             }
