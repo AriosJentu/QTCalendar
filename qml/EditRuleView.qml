@@ -603,33 +603,40 @@ Item {
                     }
 
 
-                    RoundButton {
-                        id: cancelRuleButton
-                        width: ruleViewTextForButtonSizes.height-10
-                        height: ruleViewTextForButtonSizes.height-10
+                    Rectangle {
+
+                        anchors.margins: 5
                         anchors.right: parent.right
-                        anchors.margins: 5
+                        anchors.top: parent.top
 
-                        text: Server.ICONS.back
-                        font.family: root.fontAwesome.name
-                        font.pixelSize: 20
+                        RoundButton {
+                            id: cancelRuleButton
+                            width: ruleViewTextForButtonSizes.height-10
+                            height: ruleViewTextForButtonSizes.height-10
+                            anchors.right: parent.right
+                            anchors.margins: 5
 
-                        onClicked: pushInfo()
-                    }
+                            text: Server.ICONS.back
+                            font.family: root.fontAwesome.name
+                            font.pixelSize: 20
 
-                    RoundButton {
+                            onClicked: pushInfo()
+                        }
 
-                        id: acceptRuleButton
-                        width: ruleViewTextForButtonSizes.height-10
-                        height: ruleViewTextForButtonSizes.height-10
-                        anchors.right: cancelRuleButton.left
-                        anchors.margins: 5
+                        RoundButton {
 
-                        text: Server.ICONS.accept
-                        font.family: root.fontAwesome.name
-                        font.pixelSize: 20
+                            id: acceptRuleButton
+                            width: ruleViewTextForButtonSizes.height-10
+                            height: ruleViewTextForButtonSizes.height-10
+                            anchors.right: cancelRuleButton.left
+                            anchors.margins: 5
 
-                        onClicked: updateEvent()
+                            text: Server.ICONS.accept
+                            font.family: root.fontAwesome.name
+                            font.pixelSize: 20
+
+                            onClicked: updateEvent()
+                        }
                     }
                 }
             }
