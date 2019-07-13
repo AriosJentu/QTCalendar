@@ -409,6 +409,11 @@ Item {
                         text: Server.ICONS.map
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
+
+                        onClicked: {
+                            mainStackView.push(mapView);
+                            mainStackView.currentItem.loadEvent(currentEvent, false, isNewEvent);
+                        }
                     }
                 }
             }

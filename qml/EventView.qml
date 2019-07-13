@@ -155,7 +155,10 @@ Item {
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
-                        //onClicked: {}
+                        onClicked: {
+                            mainStackView.push(mapView);
+                            mainStackView.currentItem.loadEvent(currentEvent, true, false);
+                        }
                     }
                 }
             }
