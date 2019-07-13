@@ -1,4 +1,4 @@
-QT += qml quick sql network networkauth location
+QT += qml quick sql network networkauth location positioning
 CONFIG += c++11
 TARGER = Calendar
 
