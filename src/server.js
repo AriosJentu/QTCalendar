@@ -21,7 +21,7 @@ const ICONS = {
     picker: "",
     accept: "",
     userlocation: "",
-    selectedlocation: ""
+    userpos: ""
 }
 
 function encodeQueryData(data) {
