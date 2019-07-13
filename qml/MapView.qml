@@ -174,6 +174,7 @@ Item {
                     text: Server.ICONS.accept
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
+                    visible: !isViewEvent
 
                     onClicked: {
                         saveCoordinates();
@@ -186,7 +187,7 @@ Item {
                     id: moveToUserLocationButton
                     width: locationViewTextForButtonSizes.height-10
                     height: locationViewTextForButtonSizes.height-10
-                    anchors.right: acceptLocationButton.left
+                    anchors.right: isViewEvent ? cancelLocationButton.left : acceptLocationButton.left
                     anchors.margins: 5
 
                     text: Server.ICONS.userpos

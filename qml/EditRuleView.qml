@@ -480,7 +480,7 @@ Item {
 
                     ComboBox {
                         id: repeatTypeCombobox
-                        width: metricElement.width*5
+                        width: metricElement.width*4
                         height: metricElement.height*3 - 20
                         anchors.left: editRuleRepeatLabel.right
                         y: 10
