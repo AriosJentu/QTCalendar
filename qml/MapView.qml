@@ -27,6 +27,9 @@ Item {
         if (currentEvent.location !== "") {
             var arr = currentEvent.location.split(", ");
             setEventCoordinateOnMap(QtPositioning.coordinate(Number(arr[0]), Number(arr[1])))
+        } else {
+            mainMap.center = src.position.coordinate
+            mainMap.zoomLevel = 18
         }
     }
 
@@ -79,6 +82,7 @@ Item {
                 plugin: mapPlugin
                 anchors.fill: parent
                 anchors.margins: 2
+                activeMapType: mainMap.supportedMapTypes[6]
 
                 MapQuickItem {
                     id: userLocation
@@ -122,9 +126,9 @@ Item {
 
                 PositionSource {
                     id: src
+                    active: true
                     onPositionChanged: {
-                        mainMap.center = src.position.coordinate
-                        mainMap.zoomLevel = 18
+                        src.start()
                         userLocation.coordinate = src.position.coordinate
                     }
                 }
