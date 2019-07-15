@@ -132,8 +132,8 @@ Item {
                         }
 
                         id: eventStartObjectLabel
-                        verticalAlignment: Text.AlignVCenter;
                         height: metricElement.height*1.5
+                        wrapMode: Label.Wrap
 
                         text: {
                             "<b>Start event at:</b> " + startDateString;
@@ -176,8 +176,8 @@ Item {
                         }
 
                         id: eventEndObjectLabel
-                        verticalAlignment: Text.AlignVCenter;
                         height: metricElement.height*1.5
+                        wrapMode: Label.Wrap
 
                         text: {
                             "<b>End event at:</b> " + endDateString;
@@ -221,6 +221,7 @@ Item {
 
                         id: repeatEventLabel
                         height: metricElement.height*1.5
+                        wrapMode: Label.Wrap
 
                         text: {
                             var repeats = "None"
@@ -231,9 +232,6 @@ Item {
 
                             "<b>Repeat event:</b> " + Server.convertRRuleToReadableString(repeats);
                         }
-
-                        verticalAlignment: Text.AlignVCenter;
-                        wrapMode: Label.WordWrap
                     }
 
                     RoundButton {
@@ -276,8 +274,6 @@ Item {
                         height: metricElement.height
 
                         text: "<b>Name:</b>"
-
-                        verticalAlignment: Text.AlignVCenter
                     }
 
                     Rectangle {
@@ -333,7 +329,6 @@ Item {
                         height: metricElement.height*1.5
 
                         text: "<b>Time Zone:</b>"
-                        verticalAlignment: Text.AlignVCenter
                     }
 
                     ComboBox {
@@ -384,6 +379,7 @@ Item {
                         id: eventOnMapLabel
                         width: metricElement.width*0.7
                         height: metricElement.height*1.5
+                        wrapMode: Label.Wrap
 
                         text: {
 
@@ -394,7 +390,6 @@ Item {
 
                             "<b>Location:</b> " + location;
                         }
-                        verticalAlignment: Text.AlignVCenter
                     }
 
 
