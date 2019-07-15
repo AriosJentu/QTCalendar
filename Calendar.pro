@@ -46,5 +46,5 @@ contains(ANDROID_TARGET_ARCH,arm64-v8a) {
         $$PWD/android
 }
 
-QTFIREBASE_CONFIG += authentication
-include(../QtExtensions/QtFirebase/qtfirebase.pri)
+#QTFIREBASE_CONFIG += auth
+#include(/home/arios/QtExtensions/QtFirebase/qtfirebase.pri)
