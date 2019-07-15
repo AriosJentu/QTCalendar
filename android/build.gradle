@@ -55,29 +55,19 @@ android {
     lintOptions {
         abortOnError false
     }
+
+    defaultConfig {
+        applicationId "org.ariosjentu.calendar"
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled = true
+
+    }
 }
 
-/*project.ext {
+project.ext {
     // Configure the Firebase C++ SDK location.
-    firebase_cpp_sdk_dir = System.getProperty('firebase_cpp_sdk.dir')
+    firebase_cpp_sdk_dir = '/home/arios/QtExtensions/QtFirebase/firebase_cpp_sdk'
     firebaseSdkUsed = 'system property firebase_cpp_sdk.dir'
-
-    if (firebase_cpp_sdk_dir == null || firebase_cpp_sdk_dir.isEmpty()) {
-        firebase_cpp_sdk_dir = System.getenv('FIREBASE_CPP_SDK_DIR')
-        firebaseSdkUsed = 'system env variable FIREBASE_CPP_SDK_DIR'
-        if (firebase_cpp_sdk_dir == null || firebase_cpp_sdk_dir.isEmpty()) {
-            if ((new File('firebase_cpp_sdk')).exists()) {
-                firebase_cpp_sdk_dir = 'firebase_cpp_sdk'
-            } else {
-                throw new StopActionException(
-                    'firebase_cpp_sdk.dir property or the FIREBASE_CPP_SDK_DIR ' +
-                    'environment variable must be set to reference the Firebase C++ ' +
-                    'SDK install directory.  This is used to configure static library ' +
-                    'and C/C++ include paths for the SDK.'
-                )
-            }
-        }
-    }
 
     if (!(new File(firebase_cpp_sdk_dir)).exists()) {
         throw new StopActionException(
@@ -111,20 +101,22 @@ android {
 
 repositories {
     flatDir {
-        dirs project.ext.firebase_cpp_sdk_dir + "/libs/android"
+        dirs "/home/arios/QtExtensions/QtFirebase/firebase_cpp_sdk/libs/android"
     }
 }
 
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'src', include: ['*.jar'])
+
+    //For auth support
+    implementation 'com.google.firebase:firebase-auth:16.0.2'
+}
 
 
-apply from: "$gradle.firebase_cpp_sdk_dir/Android/firebase_dependencies.gradle"
+apply from: "/home/arios/QtExtensions/QtFirebase/firebase_cpp_sdk/Android/firebase_dependencies.gradle"
 firebaseCpp.dependencies {
-  admob
-  analytics
   auth // auth / database
-  database
-  remoteConfig
-  messaging
-}*/
+}
 
 apply plugin: 'com.google.gms.google-services'

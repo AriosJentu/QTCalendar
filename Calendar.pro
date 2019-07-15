@@ -25,6 +25,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 DISTFILES += \
     android/AndroidManifest.xml \
     android/build.gradle \
+    android/google-services.json \
     android/gradle/wrapper/gradle-wrapper.jar \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew \
@@ -46,5 +47,7 @@ contains(ANDROID_TARGET_ARCH,arm64-v8a) {
         $$PWD/android
 }
 
-#QTFIREBASE_CONFIG += auth
-#include(/home/arios/QtExtensions/QtFirebase/qtfirebase.pri)
+#FIREBASE_CPP_SDK_DIR = /home/arios/QtExtensions/QtFirebase/firebase_cpp_sdk
+
+QTFIREBASE_CONFIG += auth
+include(/home/arios/QtExtensions/QtFirebase/qtfirebase.pri)
