@@ -569,6 +569,10 @@ Item {
                             sourceComponent: getCurrentComponent()
 
                             onSourceComponentChanged: {
+                                if (!currentEvent) {
+                                    return;
+                                }
+
                                 var arr = Server.convertRRuleToBuilderArray(currentEvent.reprule);
                                 if (repeatTypeCombobox.model[repeatTypeCombobox.currentIndex] === arr.type){
                                     item.parseRRule(arr);
