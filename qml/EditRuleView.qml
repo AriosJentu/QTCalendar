@@ -611,8 +611,8 @@ Item {
 
                         RoundButton {
                             id: cancelRuleButton
-                            width: ruleViewTextForButtonSizes.height-10
-                            height: ruleViewTextForButtonSizes.height-10
+                            width: ruleViewTextForButtonSizes.height*1.2-10
+                            height: ruleViewTextForButtonSizes.height*1.2-10
                             anchors.right: parent.right
                             anchors.margins: 5
 
@@ -626,8 +626,8 @@ Item {
                         RoundButton {
 
                             id: acceptRuleButton
-                            width: ruleViewTextForButtonSizes.height-10
-                            height: ruleViewTextForButtonSizes.height-10
+                            width: ruleViewTextForButtonSizes.height*1.2-10
+                            height: ruleViewTextForButtonSizes.height*1.2-10
                             anchors.right: cancelRuleButton.left
                             anchors.margins: 5
 

@@ -168,8 +168,8 @@ Item {
 
                 RoundButton {
                     id: addEventButton
-                    width: parent.height-10
-                    height: parent.height-10
+                    width: parent.height*1.2-10
+                    height: parent.height*1.2-10
                     anchors.right: parent.right
                     anchors.margins: 5
 
@@ -185,8 +185,8 @@ Item {
 
                 RoundButton {
                     id: gotoTodayButton
-                    width: parent.height-10
-                    height: parent.height-10
+                    width: parent.height*1.2-10
+                    height: parent.height*1.2-10
                     anchors.right: addEventButton.left
                     anchors.margins: 5
 
@@ -199,8 +199,8 @@ Item {
 
                 RoundButton {
                     id: refreshDatabase
-                    width: parent.height-10
-                    height: parent.height-10
+                    width: parent.height*1.2-10
+                    height: parent.height*1.2-10
                     anchors.right: gotoTodayButton.left
                     anchors.margins: 5
 
@@ -213,8 +213,8 @@ Item {
 
                 RoundButton {
                     id: accountInfo
-                    width: parent.height-10
-                    height: parent.height-10
+                    width: parent.height*1.2-10
+                    height: parent.height*1.2-10
                     anchors.right: refreshDatabase.left
                     anchors.margins: 5
 
@@ -338,17 +338,11 @@ Item {
                             height: parent.height
                             hoverEnabled: true
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
-                            onEntered: {
-                                currentEventRectangle.hoverColor = "#EEEEEE";
-                            }
-                            onExited: {
-                                currentEventRectangle.hoverColor = "transparent";
-                            }
                             onPressed: {
-                                currentEventRectangle.hoverColor = "#DDDDDD"
+                                currentEventRectangle.hoverColor = "#EEEEEE"
                             }
                             onReleased: {
-                                currentEventRectangle.hoverColor = "#EEEEEE"
+                                currentEventRectangle.hoverColor = "transparent";
                             }
                             onPressAndHold: {
                                 contextMenu.popup();
@@ -372,10 +366,6 @@ Item {
                                 MenuItem {
                                     text: "Edit"
                                     onTriggered: {
-                                        /*Server.postEventToServer(Server.generateUpdateForEvent(modelData), function() {
-                                            console.log("Event successfully updated");
-                                            eventsListView.getEventsForCurrentDate();
-                                        }, Server.basicErrorFunc, true);*/
                                         modelData.selectedDate = maincalendar.selectedDate;
                                         mainStackView.push(editPage);
                                         mainStackView.currentItem.setEvent(modelData);

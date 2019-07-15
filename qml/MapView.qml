@@ -151,8 +151,8 @@ Item {
 
                 RoundButton {
                     id: cancelLocationButton
-                    width: locationViewTextForButtonSizes.height-10
-                    height: locationViewTextForButtonSizes.height-10
+                    width: locationViewTextForButtonSizes.height*1.2-10
+                    height: locationViewTextForButtonSizes.height*1.2-10
                     anchors.right: parent.right
                     anchors.margins: 5
 
@@ -166,8 +166,8 @@ Item {
                 RoundButton {
 
                     id: acceptLocationButton
-                    width: locationViewTextForButtonSizes.height-10
-                    height: locationViewTextForButtonSizes.height-10
+                    width: locationViewTextForButtonSizes.height*1.2-10
+                    height: locationViewTextForButtonSizes.height*1.2-10
                     anchors.right: cancelLocationButton.left
                     anchors.margins: 5
 
@@ -185,8 +185,8 @@ Item {
                 RoundButton {
 
                     id: moveToUserLocationButton
-                    width: locationViewTextForButtonSizes.height-10
-                    height: locationViewTextForButtonSizes.height-10
+                    width: locationViewTextForButtonSizes.height*1.2-10
+                    height: locationViewTextForButtonSizes.height*1.2-10
                     anchors.right: isViewEvent ? cancelLocationButton.left : acceptLocationButton.left
                     anchors.margins: 5
 
@@ -204,8 +204,8 @@ Item {
                 RoundButton {
 
                     id: moveToSelectedLocationButton
-                    width: locationViewTextForButtonSizes.height-10
-                    height: locationViewTextForButtonSizes.height-10
+                    width: locationViewTextForButtonSizes.height*1.2-10
+                    height: locationViewTextForButtonSizes.height*1.2-10
                     anchors.right: moveToUserLocationButton.left
                     anchors.margins: 5
 

@@ -79,8 +79,8 @@ Item {
                     RoundButton {
 
                         id: closeEditButton
-                        width: viewEditTitle.height-10
-                        height: viewEditTitle.height-10
+                        width: viewEditTitle.height*1.2-10
+                        height: viewEditTitle.height*1.2-10
                         anchors.right: mainEditRectangle.right
                         anchors.margins: 5
 
@@ -97,8 +97,8 @@ Item {
                     RoundButton {
 
                         id: saveEditButton
-                        width: viewEditTitle.height-10
-                        height: viewEditTitle.height-10
+                        width: viewEditTitle.height*1.2-10
+                        height: viewEditTitle.height*1.2-10
                         anchors.right: closeEditButton.left
                         anchors.margins: 5
 
@@ -143,8 +143,8 @@ Item {
                     RoundButton {
                         id: eventPickerButton
 
-                        width: eventStartObjectLabel.height
-                        height: eventStartObjectLabel.height
+                        width: eventStartObjectLabel.height*1.4
+                        height: eventStartObjectLabel.height*1.4
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 
@@ -187,8 +187,8 @@ Item {
                     RoundButton {
                         id: eventPickerButton
 
-                        width: eventEndObjectLabel.height
-                        height: eventEndObjectLabel.height
+                        width: eventEndObjectLabel.height*1.4
+                        height: eventEndObjectLabel.height*1.4
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 
@@ -239,8 +239,8 @@ Item {
                     RoundButton {
                         id: eventRepeatEditorButton
 
-                        width: repeatEventLabel.height
-                        height: repeatEventLabel.height
+                        width: repeatEventLabel.height*1.4
+                        height: repeatEventLabel.height*1.4
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 
@@ -401,8 +401,8 @@ Item {
                     RoundButton {
                         id: eventOnMapButton
 
-                        width: eventOnMapLabel.height
-                        height: eventOnMapLabel.height
+                        width: eventOnMapLabel.height*1.4
+                        height: eventOnMapLabel.height*1.4
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 

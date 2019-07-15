@@ -214,8 +214,8 @@ Item {
 
                 RoundButton {
                     id: cancelDateButton
-                    width: eventDateDayLabel.height-10
-                    height: eventDateDayLabel.height-10
+                    width: eventDateDayLabel.height*1.2-10
+                    height: eventDateDayLabel.height*1.2-10
                     anchors.right: parent.right
                     anchors.margins: 5
 
@@ -228,8 +228,8 @@ Item {
 
                 RoundButton {
                     id: acceptEventDateButton
-                    width: eventDateDayLabel.height-10
-                    height: eventDateDayLabel.height-10
+                    width: eventDateDayLabel.height*1.2-10
+                    height: eventDateDayLabel.height*1.2-10
                     anchors.right: cancelDateButton.left
                     anchors.margins: 5
 

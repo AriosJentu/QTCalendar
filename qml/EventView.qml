@@ -91,8 +91,8 @@ Item {
 
                     RoundButton {
                         id: closeEventButton
-                        width: viewEventDayLabel.height-10
-                        height: viewEventDayLabel.height-10
+                        width: viewEventDayLabel.height*1.2-10
+                        height: viewEventDayLabel.height*1.2-10
                         anchors.right: viewEventDayRow.right
                         anchors.margins: 5
 
@@ -108,8 +108,8 @@ Item {
 
                     RoundButton {
                         id: editEventButton
-                        width: viewEventDayLabel.height-10
-                        height: viewEventDayLabel.height-10
+                        width: viewEventDayLabel.height*1.2-10
+                        height: viewEventDayLabel.height*1.2-10
                         anchors.right: closeEventButton.left
                         anchors.margins: 5
 
@@ -125,8 +125,8 @@ Item {
 
                     RoundButton {
                         id: deleteEventButton
-                        width: viewEventDayLabel.height-10
-                        height: viewEventDayLabel.height-10
+                        width: viewEventDayLabel.height*1.2-10
+                        height: viewEventDayLabel.height*1.2-10
                         anchors.right: editEventButton.left
                         anchors.margins: 5
 
@@ -146,8 +146,8 @@ Item {
 
                     RoundButton {
                         id: eventOnMapButton
-                        width: viewEventDayLabel.height-10
-                        height: viewEventDayLabel.height-10
+                        width: viewEventDayLabel.height*1.2-10
+                        height: viewEventDayLabel.height*1.2-10
                         anchors.right: deleteEventButton.left
                         anchors.margins: 5
 
