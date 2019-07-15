@@ -40,7 +40,12 @@ Item {
     }
 
     function saveCoordinates() {
-        currentEvent.location = eventLocation.coordinate.latitude + ", " + eventLocation.coordinate.longitude
+        if (eventLocation.coordinate.longitude.toString() === "NaN") {
+            currentEvent.location = ""
+        } else {
+            currentEvent.location = eventLocation.coordinate.latitude + ", " + eventLocation.coordinate.longitude
+        }
+
     }
 
     function pushInfo() {
@@ -217,6 +222,25 @@ Item {
                     onClicked: {
                         mainMap.center = eventLocation.coordinate
                         mainMap.zoomLevel = 18
+                    }
+                }
+
+                RoundButton {
+
+                    id: clearLocationButton
+                    width: locationViewTextForButtonSizes.height*1.2-10
+                    height: locationViewTextForButtonSizes.height*1.2-10
+                    anchors.right: moveToSelectedLocationButton.left
+                    anchors.margins: 5
+
+                    text: Server.ICONS.remove_evt
+                    font.family: root.fontAwesome.name
+                    font.pixelSize: 20
+                    enabled: eventLocation.coordinate.longitude.toString() !== "NaN"
+                    visible: !isViewEvent
+
+                    onClicked: {
+                        eventLocation.coordinate.longitude = Number("NaN");
                     }
                 }
             }
