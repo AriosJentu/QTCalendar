@@ -129,8 +129,14 @@ function getEventsForDate(inputdate, updatefunc, errorfunc) {
 
                                             var eventData = {};
 
-                                            eventData.id = eventElement.id;
-                                            eventData.patrnid = patternElement.id;
+                                            if (eventElement.id) {
+                                                eventData.id = eventElement.id;
+                                            }
+
+                                            if (patternElement.id) {
+                                                eventData.patrnid = patternElement.id;
+                                            }
+
 
                                             eventData.startTime = new Date(starttime);
                                             eventData.endTime = new Date(endtime);
@@ -229,7 +235,8 @@ function postEventToServer(event, afterfunc, errorfunc, evtupdate = false) {
                 jsonForPattern.rrule = event.reprule;
                 var patJsonString = JSON.stringify(jsonForPattern);
 
-                console.log(jsonForPattern.started_at, jsonForPattern.ended_at)
+                console.log(jsonForPattern.started_at, jsonForPattern.ended_at);
+                console.log(event.startTime.getDate(), event.endTime.getDate());
 
                 var url = S_PATTERNS+encodeQueryData({"event_id": createdEventID});
                 if (evtupdate) {
