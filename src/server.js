@@ -403,7 +403,7 @@ function deleteEventFromServer(event, afterfunc, errorfunc) {
 }
 
 function deleteTaskForEventFromServer(task, afterfunc, errorfunc) {
-    return deleteFromServer(event, afterfunc, errorfunc, "Task", S_TASK_ID+task.id);
+    return deleteFromServer(task, afterfunc, errorfunc, "Task", S_TASK_ID+task.id);
 }
 
 function generateEmptyEvent() {
