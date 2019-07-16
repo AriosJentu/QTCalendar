@@ -2,6 +2,8 @@ const SERVER_LOCATION = "http://planner.skillmasters.ga/api/v1/";
 const S_EVENTS = SERVER_LOCATION+"events";
 const S_EVENT_ID = S_EVENTS+"/";
 const S_INSTANCES = S_EVENTS+"/instances";
+const S_TASKS = SERVER_LOCATION+"tasks";
+const S_TASK_ID = S_TASKS+"/";
 const S_PATTERNS = SERVER_LOCATION+"patterns";
 const S_PATTERN_ID = S_PATTERNS+"/";
 const AUTH_NAME = "X-Firebase-Auth";
@@ -196,6 +198,59 @@ function getEventsForDate(inputdate, updatefunc, errorfunc) {
     request.send();
 }
 
+function getListOfTasksForEvent(event, updatefunc, errorfunc) {
+
+    var array = [];
+    updatefunc(array);
+
+    var request = new XMLHttpRequest();
+
+    var dat = encodeQueryData({"event_id": event.id});
+    var url = S_TASKS+dat;
+
+    request.onreadystatechange = function() {
+
+        if (request.readyState === 4) {
+            if (request.status === 200) {
+
+                var jsonTasksData = JSON.parse(request.responseText).data;
+
+                for (let i = 0; i < jsonTasksData.length; i++) {
+
+                    var taskElement = jsonTasksData[i];
+                    var taskData = {};
+
+                    if (taskElement.id) {
+                        taskData.id = taskElement.id;
+                    }
+
+                    if (taskElement.parent_id) {
+                        taskData.parentid = taskElement.parent_id;
+                    }
+
+                    taskData.deadline = new Date(taskElement.deadline_at);
+                    taskData.name = taskElement.name;
+                    taskData.details = taskElement.details;
+                    taskData.status = taskElement.status;
+
+                    array.push(eventData);
+                    updatefunc(array);
+                }
+
+            } else {
+
+                console.log("Error in Event Tasks GET Request");
+                errorfunc(request);
+            }
+        }
+
+    }
+
+    request.open("GET", url);
+    request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
+    request.send();
+}
+
 function postEventToServer(event, afterfunc, errorfunc, evtupdate = false) {
 
     var evturl = S_EVENTS;
@@ -279,7 +334,26 @@ function postEventToServer(event, afterfunc, errorfunc, evtupdate = false) {
     requestEvent.send(evtJsonString);
 }
 
-function deleteEventFromServer(event, afterfunc, errorfunc) {
+function postTaskForEventToServer(task, afterfunc, errorfunc, evtupdate = false) {
+
+    var taskurl = S_TASKS;
+    var type = "POST";
+    if (evtupdate) {
+        taskurl = S_TASK_ID+task.id;
+        type = "PATCH";
+    }
+
+    var jsonForTask = {};
+    jsonForTask.details = task.details;
+    jsonForTask.name = task.name;
+    jsonForTask.deadline_at = task.deadline.getTime();
+    jsonForTask.status = task.status;
+
+    if (task.parentid) {
+        jsonForTask.parent_id = task.parentid;
+    }
+
+    var taskJsonString = JSON.stringify(jsonForTask);
 
     var request = new XMLHttpRequest();
 
@@ -289,17 +363,47 @@ function deleteEventFromServer(event, afterfunc, errorfunc) {
             if (request.status === 200) {
                 afterfunc();
             } else {
-                console.log("Error in Event DELETE Request");
+                console.log("Error in Tasks "+ type +" Request");
+                errorfunc(request);
+            }
+        }
+    }
+
+
+    request.open(type, taskurl);
+    request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
+    request.setRequestHeader("Content-Type", "application/json");
+    request.send(taskJsonString);
+}
+
+function deleteFromServer(element, afterfunc, errorfunc, elementtype, url) {
+
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function() {
+
+        if (request.readyState === 4) {
+            if (request.status === 200) {
+                afterfunc();
+            } else {
+                console.log("Error in " + elementtype + " DELETE Request");
                 errorfunc(request);
             }
         }
 
     }
 
-    request.open("DELETE", S_EVENT_ID+event.id);
+    request.open("DELETE", url);
     request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
     request.send();
+}
 
+function deleteEventFromServer(event, afterfunc, errorfunc) {
+    return deleteFromServer(event, afterfunc, errorfunc, "Event", S_EVENT_ID+event.id);
+}
+
+function deleteTaskForEventFromServer(task, afterfunc, errorfunc) {
+    return deleteFromServer(event, afterfunc, errorfunc, "Task", S_TASK_ID+task.id);
 }
 
 function generateEmptyEvent() {
