@@ -220,20 +220,15 @@ function getListOfTasksForEvent(event, updatefunc, errorfunc) {
                     var taskElement = jsonTasksData[i];
                     var taskData = {};
 
-                    if (taskElement.id) {
-                        taskData.id = taskElement.id;
-                    }
-
-                    if (taskElement.parent_id) {
-                        taskData.parentid = taskElement.parent_id;
-                    }
-
+                    taskData.id = taskElement.id;
+                    taskData.parentid = taskElement.parent_id;
+                    taskData.evtid = taskElement.event_id;
                     taskData.deadline = new Date(taskElement.deadline_at);
                     taskData.name = taskElement.name;
                     taskData.details = taskElement.details;
                     taskData.status = taskElement.status;
 
-                    array.push(eventData);
+                    array.push(taskData);
                     updatefunc(array);
                 }
 
@@ -336,7 +331,7 @@ function postEventToServer(event, afterfunc, errorfunc, evtupdate = false) {
 
 function postTaskForEventToServer(task, afterfunc, errorfunc, evtupdate = false) {
 
-    var taskurl = S_TASKS;
+    var taskurl = S_TASKS+"?event_id="+task.evtid;
     var type = "POST";
     if (evtupdate) {
         taskurl = S_TASK_ID+task.id;
@@ -422,6 +417,17 @@ function generateEmptyEvent() {
     event.timezone = "";
 
     return event;
+}
+
+function generateEmptyTask() {
+
+    var task = {};
+
+    task.details = "";
+    task.name = "";
+    task.deadline = "";
+    task.status = "";
+    task.parentid = -1
 }
 
 function basicErrorFunc(request) {
