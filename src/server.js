@@ -223,16 +223,16 @@ function postEventToServer(event, afterfunc, errorfunc, evtupdate = false) {
 
                 var jsonForPattern = {}
 
-                //Date conversion to timezone
-                var localtz = -(new Date()).getTimezoneOffset()/60
-                //var startTime = convertDateFromToTimezone(event.startTime, event.timezone, localtz);
-                //var endTime = convertDateFromToTimezone(event.endTime, event.timezone, localtz);
-
                 jsonForPattern.started_at = event.startTime.getTime();
                 jsonForPattern.ended_at = event.endTime.getTime();
                 jsonForPattern.timezone = event.timezone;
                 jsonForPattern.exrule = event.excrule;
                 jsonForPattern.rrule = event.reprule;
+
+                if (evtupdate) {
+                    jsonForPattern.duration = jsonForPattern.ended_at - jsonForPattern.started_at;
+                }
+
                 var patJsonString = JSON.stringify(jsonForPattern);
 
                 console.log(jsonForPattern.started_at, jsonForPattern.ended_at);
