@@ -4,7 +4,7 @@ import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
 import "qrc:/src/server.js" as Server;
 
-import QtFirebase 1.0
+//import QtFirebase 1.0
 
 Item {
 
