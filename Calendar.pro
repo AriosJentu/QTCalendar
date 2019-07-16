@@ -20,6 +20,9 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+QTFIREBASE_CONFIG += auth
+include(/home/arios/QtExtensions/QtFirebase/qtfirebase.pri)
+
 DISTFILES += \
     android/AndroidManifest.xml \
     android/build.gradle \
@@ -34,6 +37,7 @@ DISTFILES += \
     qml/EditRuleView.qml \
     qml/EditView.qml \
     qml/EventView.qml \
+    qml/LoginView.qml \
     qml/MapView.qml \
     qml/SelectorView.qml \
     qml/TestView.qml \
@@ -44,8 +48,3 @@ contains(ANDROID_TARGET_ARCH,arm64-v8a) {
     ANDROID_PACKAGE_SOURCE_DIR = \
         $$PWD/android
 }
-
-#FIREBASE_CPP_SDK_DIR = /home/arios/QtExtensions/QtFirebase/firebase_cpp_sdk
-
-QTFIREBASE_CONFIG += auth
-include(/home/arios/QtExtensions/QtFirebase/qtfirebase.pri)

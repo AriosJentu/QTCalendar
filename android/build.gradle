@@ -2,6 +2,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenLocal()
     }
 
     dependencies {
@@ -13,6 +14,15 @@ buildscript {
 repositories {
     google()
     jcenter()
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        jcenter()
+
+        maven { url "https://maven.google.com" }
+    }
 }
 
 apply plugin: 'com.android.application'
@@ -54,6 +64,10 @@ android {
 
     lintOptions {
         abortOnError false
+    }
+
+    dexOptions {
+        preDexLibraries = false
     }
 
     defaultConfig {
@@ -109,14 +123,16 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation fileTree(dir: 'src', include: ['*.jar'])
 
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+
     //For auth support
-    implementation 'com.google.firebase:firebase-auth:16.0.2'
+    //implementation 'com.google.firebase:firebase-auth:16.0.2'
 }
 
 
 apply from: "/home/arios/QtExtensions/QtFirebase/firebase_cpp_sdk/Android/firebase_dependencies.gradle"
 firebaseCpp.dependencies {
-  auth // auth / database
+    auth // auth / database
 }
 
 apply plugin: 'com.google.gms.google-services'

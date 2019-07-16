@@ -11,5 +11,6 @@
         <file>assets/miregular.ttf</file>
         <file>qml/EditRuleView.qml</file>
         <file>qml/MapView.qml</file>
+        <file>qml/LoginView.qml</file>
     </qresource>
 </RCC>
