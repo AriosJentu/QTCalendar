@@ -35,7 +35,7 @@ Item {
             }
 
             height: {
-                var res = parent.height*0.5 - parent.spacing;
+                var res = parent.height*0.4 - parent.spacing;
                 if (parent.width > parent.height) {
                     res = parent.height;
                 }
@@ -154,11 +154,56 @@ Item {
                         text: Server.ICONS.map
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
+                        enabled: (currentEvent && currentEvent.location) || false
 
                         onClicked: {
                             mainStackView.push(mapView);
                             mainStackView.currentItem.loadEvent(currentEvent, true, false);
                         }
+                    }
+                }
+            }
+
+            Component {
+                id: viewTasksListHeader
+
+                Rectangle {
+
+                    width: tasksListView.width
+                    height: viewTaskTitle.height
+                    anchors.margins: 10
+
+                    Label {
+                        id: viewTaskTitle
+                        text: "Tasks"
+                        font.pointSize: 30
+                    }
+
+                    RoundButton {
+                        id: addTaskButton
+                        width: viewTaskTitle.height*1.3-10
+                        height: viewTaskTitle.height*1.3-10
+                        anchors.right: parent.right
+                        anchors.margins: 5
+
+                        text: Server.ICONS.new_evt
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
+                    }
+
+
+                    RoundButton {
+                        id: refreshTasksButton
+                        width: viewTaskTitle.height*1.3-10
+                        height: viewTaskTitle.height*1.3-10
+                        anchors.right: addTaskButton.left
+                        anchors.margins: 5
+
+                        text: Server.ICONS.refresh
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
+
+                        onClicked: tasksListView.getTasksForCurrentEvent();
                     }
                 }
             }
@@ -317,28 +362,181 @@ Item {
             }
 
             height: {
-                var res = parent.height*0.5;
+                var res = parent.height*0.6;
                 if (parent.width > parent.height) {
                     res = parent.height;
                 }
                 res;
             }
-            border.color: Qt.darker("#F4F4F4", 1.2)
 
-            ScrollView {
+            Rectangle {
+                id: eventDescriptsElement
                 width: parent.width
-                anchors.margins: 10
-                anchors.fill: parent
-                clip: true
+                height: parent.height*0.2
+                border.color: Qt.darker("#F4F4F4", 1.2)
 
-                Label {
-                    id: eventInfoLabel
-                    wrapMode: Text.Wrap
-                    text: currentEvent ? currentEvent.details : "None"
+                ScrollView {
+                    width: parent.width
+                    anchors.margins: 10
+                    anchors.fill: parent
+                    clip: true
+
+                    Label {
+                        id: eventInfoLabel
+                        wrapMode: Text.Wrap
+                        text: currentEvent ? currentEvent.details : "None"
+                    }
                 }
             }
 
+            Rectangle {
+                width: parent.width
+                height: parent.height*0.8 - eventRow.spacing
+                border.color: Qt.darker("#F4F4F4", 1.2)
+                anchors.top: eventDescriptsElement.bottom
+                anchors.topMargin: eventRow.spacing
 
+                ListView {
+
+                    id: tasksListView
+                    spacing: 4
+                    clip: true
+                    header: viewTasksListHeader
+                    anchors.fill: parent
+                    anchors.margins: 10
+
+                    model: []
+                    interactive: true
+
+                    function getTasksForCurrentEvent() {
+                        Server.getListOfTasksForEvent(currentEvent, function(array) {
+                            model = array;
+                        }, Server.basicErrorFunc);
+                    }
+
+                    delegate: Rectangle {
+                        width: tasksListView.width
+                        height: taskItemColumn.height
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        Rectangle {
+                            width: parent.width
+                            height: 1
+                            color: "#EEEEEE"
+                        }
+
+                        Rectangle {
+
+                            property string hoverColor: "transparent"
+                            id: currentTaskRectangle
+                            width: parent.width
+                            height: parent.height
+                            color: hoverColor
+
+                            Column {
+                                id: taskItemColumn
+                                anchors.left: parent.left
+                                anchors.leftMargin: 20
+                                anchors.right: parent.right
+                                height: descrLabel.height + nameLabel.height + deadlineLabel.height + statusLabel.height + 8
+
+                                Label {
+                                    id: nameLabel
+                                    width: parent.width
+                                    wrapMode: Text.Wrap
+                                    text: modelData.name
+                                    font.bold: true
+                                }
+
+                                Label {
+                                    id: descrLabel
+                                    width: parent.width
+                                    wrapMode: Text.Wrap
+                                    text: "  "+modelData.details
+                                }
+
+                                Label {
+                                    id: deadlineLabel
+                                    width: parent.width
+                                    wrapMode: Text.Wrap
+                                    text: {
+                                        var localtz = -(new Date()).getTimezoneOffset()/60;
+                                        var deadlineTime = Server.convertDateFromToTimezone(modelData.deadline, localtz, currentEvent.timezone);
+                                        var tz = " "+Server.getTimezoneStringFromOffset(Server.getTimezoneOffset(currentEvent.timezone));
+
+                                        if (Server.getTimezoneOffset(currentEvent.timezone) === localtz) {
+                                            tz = "";
+                                        }
+
+                                        "  " + deadlineTime.toLocaleString(Qt.locale(), "yyyy-MM-dd HH:mm") + tz
+                                    }
+                                }
+
+                                Label {
+                                    id: statusLabel
+                                    width: parent.width
+                                    wrapMode: Text.Wrap
+                                    text: "  " + modelData.status
+                                    font.italic: true
+                                }
+                            }
+
+                            MouseArea {
+
+                                width: taskItemColumn.width
+                                height: taskItemColumn.height
+                                hoverEnabled: true
+                                acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                                onPressAndHold: {
+                                    taskContextMenu.popup();
+                                    currentTaskRectangle.hoverColor = "#EEEEEE"
+                                }
+
+                                onClicked: {
+
+                                    if (mouse.button === Qt.RightButton) {
+                                        taskContextMenu.popup();
+                                        currentTaskRectangle.hoverColor = "#EEEEEE";
+                                    } else {
+                                        //mainStackView.push(viewPage);
+                                        //mainStackView.currentItem.setEvent(modelData);
+                                    }
+
+                                }
+
+                                Menu {
+                                    id: taskContextMenu
+                                    MenuItem {
+                                        text: "Edit"
+                                        onTriggered: {
+                                            //modelData.selectedDate = maincalendar.selectedDate;
+                                            //mainStackView.push(editPage);
+                                            //mainStackView.currentItem.setEvent(modelData);
+                                        }
+                                    }
+                                    MenuItem {
+                                        text: "Delete"
+                                        onTriggered: {
+                                            Server.deleteTaskForEventFromServer(modelData, function() {
+                                                console.log("Task successfully removed");
+                                                tasksListView.getTasksForCurrentEvent();
+                                            }, Server.basicErrorFunc);
+                                        }
+                                    }
+
+                                    onClosed: {
+                                        currentTaskRectangle.hoverColor = "transparent";
+                                    }
+                                }
+                            }
+
+
+                        }
+                    }
+
+                }
+            }
         }
 
     }
@@ -356,5 +554,7 @@ Item {
         viewEventMonthYearNameText = Qt.locale().standaloneMonthName(
             modelobj.selectedDate.getMonth()) +
             modelobj.selectedDate.toLocaleDateString(Qt.locale(), " yyyy")
+
+        tasksListView.getTasksForCurrentEvent();
     }
 }
