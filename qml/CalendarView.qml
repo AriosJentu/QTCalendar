@@ -222,6 +222,8 @@ Item {
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
+                    enabled: false
+
                     onClicked: {
                         mainStackView.push(loginView);
                         mainStackView.currentItem.setSelectedDate(maincalendar.selectedDate);
@@ -341,22 +343,17 @@ Item {
                             height: parent.height
                             hoverEnabled: true
                             acceptedButtons: Qt.LeftButton | Qt.RightButton
-                            onPressed: {
-                                currentEventRectangle.hoverColor = "#EEEEEE"
-                            }
-                            onReleased: {
-                                currentEventRectangle.hoverColor = "transparent";
-                            }
+
                             onPressAndHold: {
                                 contextMenu.popup();
-                                currentEventRectangle.hoverColor = "transparent";
+                                currentEventRectangle.hoverColor = "#EEEEEE"
                             }
 
                             onClicked: {
 
                                 if (mouse.button === Qt.RightButton) {
                                     contextMenu.popup();
-                                    currentEventRectangle.hoverColor = "transparent";
+                                    currentEventRectangle.hoverColor = "#EEEEEE";
                                 } else {
                                     mainStackView.push(viewPage);
                                     mainStackView.currentItem.setEvent(modelData);
@@ -382,6 +379,9 @@ Item {
                                             eventsListView.getEventsForCurrentDate();
                                         }, Server.basicErrorFunc);
                                     }
+                                }
+                                onClosed: {
+                                    currentEventRectangle.hoverColor = "transparent";
                                 }
                             }
                         }
