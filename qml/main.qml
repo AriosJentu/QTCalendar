@@ -49,4 +49,10 @@ Window {
         MapView {}
     }
 
+    Component {
+        id: loginView
+        LoginView {}
+    }
+
+
 }

@@ -222,7 +222,10 @@ Item {
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
-                    //onClicked:{}
+                    onClicked: {
+                        mainStackView.push(loginView);
+                        mainStackView.currentItem.setSelectedDate(maincalendar.selectedDate);
+                    }
                 }
             }
         }
