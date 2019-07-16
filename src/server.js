@@ -424,41 +424,6 @@ function generateEmptyEvent() {
     return event;
 }
 
-function generateRandomEvent(inputdate) {
-
-    var event = {};
-
-    var randstart = Math.floor(Math.random()*23);
-    var randend = Math.floor(Math.random()*(23-randstart)) + randstart;
-
-    var date = inputdate;
-    date.setHours(randstart, 0, 0, 0);
-    var start = date.getTime();
-    date.setHours(randend, 59, 59, 999);
-    var ends = date.getTime();
-
-    event.startTime = new Date(start);
-    event.endTime = new Date(ends);
-    event.name = "[AJ] Test Event With Random Number " + Math.floor(Math.random()*1500);
-    event.details = "[AJ] Test Event Details With Random Number " + Math.floor(Math.random()*1500);
-    event.owner = "AriosJentu";
-    event.location = "Vladivostok";
-
-    event.excrule = "";
-    event.reprule = "";
-    event.timezone = "UTC";
-
-    return event;
-}
-
-function generateUpdateForEvent(event) {
-
-    event.name = "[AJ] Test Update Event With Random Number " + Math.floor(Math.random()*1500);
-    event.details = "[AJ] Test Update Event Details With Random Number " + Math.floor(Math.random()*1500);
-
-    return event;
-}
-
 function basicErrorFunc(request) {
     console.log("HTTP Request failed", request.readyState, request.status);
 }
