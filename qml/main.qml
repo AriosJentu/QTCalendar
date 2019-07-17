@@ -54,5 +54,10 @@ Window {
         LoginView {}
     }
 
+    Component {
+        id: editTaskView
+        EditTaskView {}
+    }
+
 
 }

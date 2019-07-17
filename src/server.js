@@ -565,6 +565,19 @@ function getOrdinals() {
     return Object.keys(ordinals)
 }
 
+const taskstates = {"In process": "IN-PROCESS", "Cancelled": "CANCELLED", "Completed": "COMPLETED", "Needs actions": "NEEDS-ACTIONS"}
+function getTaskReadableStates() {
+    return Object.keys(taskstates);
+}
+
+function getTaskStateFromReadableState(state) {
+    return taskstates[state];
+}
+
+function getReadableStateFromTaskState(state) {
+    return Object.keys(taskstates)[Object.values(taskstates).indexOf(state)];
+}
+
 function getEnding(number) {
     if (number === 1) {
        return "";
