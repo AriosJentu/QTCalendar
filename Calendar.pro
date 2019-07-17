@@ -35,6 +35,7 @@ DISTFILES += \
     qml/Calendar.qml \
     qml/CalendarView.qml \
     qml/EditRuleView.qml \
+    qml/EditTaskView.qml \
     qml/EditView.qml \
     qml/EventView.qml \
     qml/LoginView.qml \

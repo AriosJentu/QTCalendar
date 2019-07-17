@@ -12,5 +12,6 @@
         <file>qml/EditRuleView.qml</file>
         <file>qml/MapView.qml</file>
         <file>qml/LoginView.qml</file>
+        <file>qml/EditTaskView.qml</file>
     </qresource>
 </RCC>
