@@ -199,6 +199,11 @@ Item {
                         text: Server.ICONS.new_evt
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
+
+                        onClicked: {
+                            mainStackView.push(editTaskView);
+                            mainStackView.currentItem.setTask(Server.generateEmptyTask(), currentEvent, true);
+                        }
                     }
 
 
@@ -509,8 +514,8 @@ Item {
                                         taskContextMenu.popup();
                                         currentTaskRectangle.hoverColor = "#EEEEEE";
                                     } else {
-                                        //mainStackView.push(viewPage);
-                                        //mainStackView.currentItem.setEvent(modelData);
+                                        mainStackView.push(editTaskView);
+                                        mainStackView.currentItem.setTask(modelData, currentEvent, false);
                                     }
 
                                 }
@@ -520,9 +525,8 @@ Item {
                                     MenuItem {
                                         text: "Edit"
                                         onTriggered: {
-                                            //modelData.selectedDate = maincalendar.selectedDate;
-                                            //mainStackView.push(editPage);
-                                            //mainStackView.currentItem.setEvent(modelData);
+                                            mainStackView.push(editTaskView);
+                                            mainStackView.currentItem.setTask(modelData, currentEvent, false);
                                         }
                                     }
                                     MenuItem {
