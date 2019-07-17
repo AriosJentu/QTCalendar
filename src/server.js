@@ -44,7 +44,7 @@ function getVisibilityForDate(inputdate, afterfunc, errorfunc) {
     date.setHours(23, 59, 59, 999);
     var ends = date.getTime();
 
-    var dat = encodeQueryData({"from": start, "to": ends});
+    var dat = encodeQueryData({"from": start, "to": ends, "new_only": true});
     var url = S_INSTANCES+dat;
 
     request.onreadystatechange = function() {
@@ -77,7 +77,7 @@ function getEventsForDate(inputdate, updatefunc, errorfunc) {
     date.setHours(23, 59, 59, 999);
     var ends = date.getTime();
 
-    var dat = encodeQueryData({"from": start, "to": ends});
+    var dat = encodeQueryData({"from": start, "to": ends, "new_only": true});
     var url = S_INSTANCES+dat;
 
     request.onreadystatechange = function() {
@@ -425,9 +425,11 @@ function generateEmptyTask() {
 
     task.details = "";
     task.name = "";
-    task.deadline = "";
+    task.deadline = new Date();
     task.status = "";
     task.parentid = -1
+
+    return task;
 }
 
 function basicErrorFunc(request) {
@@ -570,12 +572,16 @@ function getTaskReadableStates() {
     return Object.keys(taskstates);
 }
 
-function getTaskStateFromReadableState(state) {
-    return taskstates[state];
-}
-
 function getReadableStateFromTaskState(state) {
     return Object.keys(taskstates)[Object.values(taskstates).indexOf(state)];
+}
+
+function getIndexOfState(state) {
+    return Object.values(taskstates).indexOf(state);
+}
+
+function getStateFromIndex(index) {
+    return Object.values(taskstates)[index];
 }
 
 function getEnding(number) {
