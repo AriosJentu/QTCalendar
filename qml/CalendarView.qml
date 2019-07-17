@@ -8,11 +8,9 @@ import "qrc:/src/server.js" as Server;
 Item {
 
     id: calendarWindow
-    //anchors.fill: parent
 
     MessageDialog {
         id: messageDialog
-        title: "Server Error"
         text: ""
     }
 
@@ -43,7 +41,7 @@ Item {
             frameVisible: true
             weekNumbersVisible: true
 
-            selectedDate: new Date()
+            selectedDate: new Date();
             focus: true
 
             style: CalendarStyle {
@@ -53,7 +51,7 @@ Item {
                     readonly property color selectedDateColor: "#4F9EE0"
                     property bool visibility: false;
 
-                    function getVisibilityForCurrentDate() {                        
+                    function getVisibilityForCurrentDate() {
                         Server.getVisibilityForDate(styleData.date, function(cnt) {
                             visibility = cnt > 0
                         }, Server.basicErrorFunc);

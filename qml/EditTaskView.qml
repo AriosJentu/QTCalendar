@@ -15,7 +15,6 @@ Item {
 
     MessageDialog {
         id: messageDialog
-        title: "Server Error"
         text: ""
     }
 
@@ -294,7 +293,7 @@ Item {
                         saveInfo();
                         Server.postTaskForEventToServer(currentTask, function() {
                             pushInfo();
-                        }, function() {
+                        }, function(request) {
                             messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't post task to server";
                             messageDialog.open();
                         }, !isNew);

@@ -15,7 +15,6 @@ Item {
 
     MessageDialog {
         id: messageDialog
-        title: "Server Error"
         text: ""
     }
 
@@ -114,13 +113,23 @@ Item {
                         font.pixelSize: 20
 
                         onClicked: {
-                            Server.postEventToServer(currentEvent, function() {
-                                mainStackView.push(mainPage);
-                                mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
-                            }, function(request) {
-                                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't post event to server";
+
+                            if (currentEvent.startTime > currentEvent.endTime) {
+
+                                messageDialog.text = "You can't set start date later than end date";
                                 messageDialog.open();
-                            }, !isNewEvent)
+
+                            } else {
+
+                                Server.postEventToServer(currentEvent, function() {
+                                    mainStackView.push(mainPage);
+                                    mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
+                                }, function(request) {
+                                    messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't post event to server";
+                                    messageDialog.open();
+                                }, !isNewEvent)
+                            }
+
                         }
                     }
                 }
