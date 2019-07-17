@@ -10,13 +10,16 @@ Item {
     //anchors.fill: parent
 
     property var currentEvent
+    property var currentTask
     property bool isStartDate: true
     property bool isNewEvent: false
+    property bool isTaskView
 
     function loadEvent(event, isStart, isNew) {
         isStartDate = isStart;
         isNewEvent = isNew;
         currentEvent = event;
+        isTaskView = false;
 
         var localtz = -(new Date()).getTimezoneOffset()/60;
         var startTime = Server.convertDateFromToTimezone(event.startTime, localtz, event.timezone);
@@ -29,24 +32,35 @@ Item {
 
     function setEventDateTime(date, time) {
 
-        if (isStartDate) {
-            currentEvent.startTime = date
-            currentEvent.startTime.setHours(selectHourCombo.currentIndex)
-            currentEvent.startTime.setMinutes(selectMinuteCombo.currentIndex)
+        if (!isTaskView) {
+            if (isStartDate) {
+                currentEvent.startTime = date
+                currentEvent.startTime.setHours(selectHourCombo.currentIndex)
+                currentEvent.startTime.setMinutes(selectMinuteCombo.currentIndex)
+            } else {
+                currentEvent.endTime = date
+                currentEvent.endTime.setHours(selectHourCombo.currentIndex)
+                currentEvent.endTime.setMinutes(selectMinuteCombo.currentIndex)
+            }
         } else {
-            currentEvent.endTime = date
-            currentEvent.endTime.setHours(selectHourCombo.currentIndex)
-            currentEvent.endTime.setMinutes(selectMinuteCombo.currentIndex)
+            currentTask.deadline = date;
+            currentTask.deadline.setHours(selectHourCombo.currentIndex)
+            currentTask.deadline.setMinutes(selectMinuteCombo.currentIndex)
         }
+
         convertDatesBack();
     }
 
     function convertDatesBack() {
         var localtz = -(new Date()).getTimezoneOffset()/60;
-        if (isStartDate) {
-            currentEvent.startTime = Server.convertDateFromToTimezone(currentEvent.startTime, currentEvent.timezone, localtz);
+        if (!isTaskView) {
+            if (isStartDate) {
+                currentEvent.startTime = Server.convertDateFromToTimezone(currentEvent.startTime, currentEvent.timezone, localtz);
+            } else {
+                currentEvent.endTime = Server.convertDateFromToTimezone(currentEvent.endTime, currentEvent.timezone, localtz);
+            }
         } else {
-            currentEvent.endTime = Server.convertDateFromToTimezone(currentEvent.endTime, currentEvent.timezone, localtz);
+            currentTask.deadline = Server.convertDateFromToTimezone(currentTask.deadline, currentEvent.timezone, localtz)
         }
 
     }
@@ -54,6 +68,25 @@ Item {
     function pushInfo() {
         mainStackView.push(editPage);
         mainStackView.currentItem.setEvent(currentEvent, isNewEvent);
+    }
+
+    function loadTask(task, event, isNew) {
+        isTaskView = true;
+        currentEvent = event;
+        currentTask = task;
+        isNewEvent = isNew;
+
+        var localtz = -(new Date()).getTimezoneOffset()/60;
+        var time = Server.convertDateFromToTimezone(task.deadline, localtz, event.timezone);
+
+        selectorcalendar.selectedDate = time;
+        selectHourCombo.currentIndex = time.getHours();
+        selectMinuteCombo.currentIndex = time.getMinutes();
+    }
+
+    function pushTaskInfo() {
+        mainStackView.push(editTaskView);
+        mainStackView.currentItem.setTask(currentTask, currentEvent, isNewEvent);
     }
 
 
@@ -223,7 +256,13 @@ Item {
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
-                    onClicked: pushInfo()
+                    onClicked: {
+                        if (isTaskView) {
+                            pushTaskInfo();
+                        } else {
+                            pushInfo();
+                        }
+                    }
                 }
 
                 RoundButton {
@@ -240,7 +279,11 @@ Item {
                     onClicked: {
 
                         setEventDateTime(selectorcalendar.selectedDate);
-                        pushInfo();
+                        if (isTaskView) {
+                            pushTaskInfo();
+                        } else {
+                            pushInfo();
+                        }
                     }
                 }
 
