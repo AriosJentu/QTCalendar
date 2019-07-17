@@ -491,7 +491,7 @@ Item {
                                     id: statusLabel
                                     width: parent.width
                                     wrapMode: Text.Wrap
-                                    text: "  " + modelData.status
+                                    text: "  " + Server.getReadableStateFromTaskState(modelData.status);
                                     font.italic: true
                                 }
                             }
