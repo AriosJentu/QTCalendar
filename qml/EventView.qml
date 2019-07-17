@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
+import QtQuick.Dialogs 1.1
 import "qrc:/src/server.js" as Server;
 
 Item {
@@ -16,6 +17,12 @@ Item {
     property var currentEvent
 
     property string dateFormat: "d MMMM yyyy, hh:mm"
+
+    MessageDialog {
+        id: messageDialog
+        title: "Server Error"
+        text: ""
+    }
 
     Flow {
         id: eventRow
@@ -139,7 +146,10 @@ Item {
                                 console.log("Event successfully removed");
                                 mainStackView.push(mainPage);
                                 mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
-                            }, Server.basicErrorFunc);
+                            }, function(request) {
+                                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event";
+                                messageDialog.open();
+                            });
 
                         }
                     }

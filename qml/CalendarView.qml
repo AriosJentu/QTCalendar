@@ -2,12 +2,19 @@ import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
+import QtQuick.Dialogs 1.2
 import "qrc:/src/server.js" as Server;
 
 Item {
 
     id: calendarWindow
     //anchors.fill: parent
+
+    MessageDialog {
+        id: messageDialog
+        title: "Server Error"
+        text: ""
+    }
 
     Flow {
         id: row
@@ -276,7 +283,10 @@ Item {
                         }
 
                         model = array
-                    }, Server.basicErrorFunc);
+                    }, function(request) {
+                        messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't get list of events";
+                        messageDialog.open();
+                    });
                 }
 
 
@@ -377,7 +387,10 @@ Item {
                                         Server.deleteEventFromServer(modelData, function() {
                                             console.log("Event successfully removed");
                                             eventsListView.getEventsForCurrentDate();
-                                        }, Server.basicErrorFunc);
+                                        }, function(request) {
+                                            messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event";
+                                            messageDialog.open();
+                                        });
                                     }
                                 }
                                 onClosed: {

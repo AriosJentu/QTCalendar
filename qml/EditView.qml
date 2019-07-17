@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
 import QtQuick.Controls 1.5 as OldContr
+import QtQuick.Dialogs 1.2
 import "qrc:/src/server.js" as Server;
 
 Item {
@@ -11,6 +12,12 @@ Item {
     property bool isNewEvent: false
     property string startDateString: ""
     property string endDateString: ""
+
+    MessageDialog {
+        id: messageDialog
+        title: "Server Error"
+        text: ""
+    }
 
     Flow {
 
@@ -110,7 +117,10 @@ Item {
                             Server.postEventToServer(currentEvent, function() {
                                 mainStackView.push(mainPage);
                                 mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
-                            }, Server.basicErrorFunc, !isNewEvent)
+                            }, function(request) {
+                                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't post event to server";
+                                messageDialog.open();
+                            }, !isNewEvent)
                         }
                     }
                 }
