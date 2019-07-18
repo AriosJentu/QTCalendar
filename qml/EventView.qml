@@ -20,7 +20,6 @@ Item {
 
     MessageDialog {
         id: messageDialog
-        title: "Server Error"
         text: ""
     }
 
@@ -202,7 +201,7 @@ Item {
 
                         onClicked: {
                             mainStackView.push(editTaskView);
-                            mainStackView.currentItem.setTask(Server.generateEmptyTask(), currentEvent, true);
+                            mainStackView.currentItem.setTask(Server.generateEmptyTask(currentEvent), currentEvent, true);
                         }
                     }
 
@@ -535,7 +534,10 @@ Item {
                                             Server.deleteTaskForEventFromServer(modelData, function() {
                                                 console.log("Task successfully removed");
                                                 tasksListView.getTasksForCurrentEvent();
-                                            }, Server.basicErrorFunc);
+                                            }, function(request) {
+                                                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event";
+                                                messageDialog.open();
+                                            });
                                         }
                                     }
 
