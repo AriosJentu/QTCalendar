@@ -6,6 +6,7 @@ const S_TASKS = SERVER_LOCATION+"tasks";
 const S_TASK_ID = S_TASKS+"/";
 const S_PATTERNS = SERVER_LOCATION+"patterns";
 const S_PATTERN_ID = S_PATTERNS+"/";
+const S_EXPORT = SERVER_LOCATION+"export"
 const AUTH_NAME = "X-Firebase-Auth";
 const AUTH_TOKEN = "serega_mem";
 
@@ -83,27 +84,26 @@ function onRequestGetEventPattern(request, updatefunc, errorfunc, array, jsonDat
 
                 var eventData = {};
 
-                if (eventElement.id) {
+                if (eventElement && eventElement.id) {
                     eventData.id = eventElement.id;
+                    eventData.name = eventElement.name;
+                    eventData.details = eventElement.details;
+                    eventData.owner = eventElement.owner_id;
+                    eventData.location = eventElement.location;
+                    eventData.status = eventElement.status;
                 }
 
-                if (patternElement.id) {
+                if (patternElement && patternElement.id) {
                     eventData.patrnid = patternElement.id;
+                    eventData.excrule = patternElement.exrule;
+                    eventData.reprule = patternElement.rrule;
+                    eventData.timezone = patternElement.timezone;
                 }
 
 
                 eventData.startTime = new Date(starttime);
                 eventData.endTime = new Date(endtime);
 
-                eventData.name = eventElement.name;
-                eventData.details = eventElement.details;
-                eventData.owner = eventElement.owner_id;
-                eventData.location = eventElement.location;
-                eventData.status = eventElement.status;
-
-                eventData.excrule = patternElement.exrule;
-                eventData.reprule = patternElement.rrule;
-                eventData.timezone = patternElement.timezone;
 
                 eventData.selectedDate = jsonData.inputdate;
 
@@ -417,6 +417,28 @@ function deleteEventFromServer(event, afterfunc, errorfunc) {
 
 function deleteTaskForEventFromServer(task, afterfunc, errorfunc) {
     return deleteFromServer(task, afterfunc, errorfunc, "Task", S_TASK_ID+task.id);
+}
+
+function onRequestExport(request, afterfunc, errorfunc) {
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+            afterfunc(request.responseText);
+        } else {
+            console.log("Error in " + elementtype + " DELETE Request");
+            errorfunc(request);
+        }
+    }
+}
+
+function exportCalendar(afterfunc, errorfunc) {
+
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function() { onRequestExport(request, afterfunc, errorfunc); }
+
+    request.open("GET", S_EXPORT);
+    request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
+    request.send()
 }
 
 function generateEmptyEvent() {
@@ -842,4 +864,18 @@ function convertRRuleToReadableString(rrule) {
     }
 
     return str;
+}
+
+function openFile(fileUrl) {
+    var request = new XMLHttpRequest();
+    request.open("GET", fileUrl, false);
+    request.send(null);
+    return request.responseText;
+}
+
+function saveFile(fileUrl, text) {
+    var request = new XMLHttpRequest();
+    request.open("PUT", fileUrl, false);
+    request.send(text);
+    return request.status;
 }
