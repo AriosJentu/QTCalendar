@@ -225,7 +225,14 @@ Item {
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
-                    onClicked: eventsListView.getEventsForCurrentDate()
+                    onClicked: {
+
+                        Server.getVisibilityForMonth(maincalendar.visibleMonth, maincalendar.visibleYear, function(visibilitydata) {
+                            maincalendar.visibleForDates = visibilitydata;
+                        }, Server.basicErrorFunc)
+
+                        eventsListView.getEventsForCurrentDate()
+                    }
                 }
             }
         }
