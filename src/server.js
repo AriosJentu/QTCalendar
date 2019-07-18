@@ -6,7 +6,8 @@ const S_TASKS = SERVER_LOCATION+"tasks";
 const S_TASK_ID = S_TASKS+"/";
 const S_PATTERNS = SERVER_LOCATION+"patterns";
 const S_PATTERN_ID = S_PATTERNS+"/";
-const S_EXPORT = SERVER_LOCATION+"export"
+const S_EXPORT = SERVER_LOCATION+"export";
+const S_SHARE = SERVER_LOCATION+"share";
 const AUTH_NAME = "X-Firebase-Auth";
 const AUTH_TOKEN = "serega_mem";
 
@@ -24,7 +25,8 @@ const ICONS = {
     picker: "",
     accept: "",
     userlocation: "",
-    userpos: ""
+    userpos: "",
+    copy: ""
 }
 
 function encodeQueryData(data) {
@@ -57,7 +59,7 @@ function getVisibilityForDate(inputdate, afterfunc, errorfunc) {
     date.setHours(23, 59, 59, 999);
     var ends = date.getTime();
 
-    var dat = encodeQueryData({"from": start, "to": ends, "new_only": true});
+    var dat = encodeQueryData({"from": start, "to": ends});
     var url = S_INSTANCES+dat;
 
     request.onreadystatechange = function() { onRequestVisibilityForDate(request, afterfunc, errorfunc); }
@@ -75,7 +77,7 @@ function onRequestGetMonthEventInstances(request, afterfunc, errorfunc, fromdate
             var result = {}
             var one_day = 1000*60*60*24;
             var difindays = (todate - fromdate)/one_day;
-            console.log(difindays);
+
             for (var i = 0; i < difindays; i++) {
 
                 var datewithday = new Date(fromdate);
@@ -481,7 +483,7 @@ function onRequestExport(request, afterfunc, errorfunc) {
         if (request.status === 200) {
             afterfunc(request.responseText);
         } else {
-            console.log("Error in " + elementtype + " DELETE Request");
+            console.log("Error in Export GET Request");
             errorfunc(request);
         }
     }
@@ -495,7 +497,62 @@ function exportCalendar(afterfunc, errorfunc) {
 
     request.open("GET", S_EXPORT);
     request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
-    request.send()
+    request.send();
+}
+
+function onRequestShareEvent(request, afterfunc, errorfunc) {
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+            afterfunc(request.responseText.split("/").slice(-1)[0]);
+        } else {
+            console.log("Error in Export GET Request");
+            errorfunc(request);
+        }
+    }
+}
+
+
+var sharingActions = ["READ", "UPDATE", "DELETE"]
+function shareEvent(event, states, afterfunc, errorfunc) {
+
+    var sharestates = []
+    for (var i = 0; i < sharingActions.length; i++) {
+        if (states[i]) {
+            sharestates.push(sharingActions[i])
+        }
+    }
+
+    var jsonForShare = [];
+
+    for (i = 0; i < sharestates.length; i++) {
+        var eventArray = {}
+        eventArray.entity_id = event.id;
+        eventArray.entity_type = "EVENT";
+        eventArray.action = sharestates[i];
+
+        jsonForShare.push(eventArray);
+    }
+
+    for (i = 0; i < sharestates.length; i++) {
+
+        var patternArray = {}
+        patternArray.entity_id = event.patrnid;
+        patternArray.entity_type = "PATTERN";
+        patternArray.action = sharestates[i];
+
+        jsonForShare.push(patternArray);
+    }
+
+    var shareJsonString = JSON.stringify(jsonForShare);
+
+    var request = new XMLHttpRequest();
+
+    request.onreadystatechange = function() { onRequestShareEvent(request, afterfunc, errorfunc); }
+
+    request.open("POST", S_SHARE);
+    request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
+    request.setRequestHeader("Content-Type", "application/json");
+    request.send(shareJsonString);
 }
 
 function generateEmptyEvent() {
