@@ -125,7 +125,7 @@ Item {
 
                     readonly property color currentDateColor: "#84C391"
                     readonly property color selectedDateColor: "#4F9EE0"
-
+                    readonly property color selectedCurrentDateColor: "#F85C50"
 
                     Rectangle {
                         id: dateDelegateRect
@@ -143,6 +143,9 @@ Item {
 
                             if (styleData.selected) {
                                 color = selectedDateColor;
+                                if (date1 === date2) {
+                                    color = selectedCurrentDateColor;
+                                }
                             }
 
                             if (!styleData.visibleMonth) {

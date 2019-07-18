@@ -49,6 +49,7 @@ Item {
 
                     readonly property color currentDateColor: "#84C391"
                     readonly property color selectedDateColor: "#4F9EE0"
+                    readonly property color selectedCurrentDateColor: "#F85C50"
                     property bool visibility: false;
 
                     function getVisibilityForCurrentDate() {
@@ -78,6 +79,10 @@ Item {
 
                             if (styleData.selected) {
                                 color = selectedDateColor;
+                                if (date1 === date2) {
+                                    color = selectedCurrentDateColor;
+                                }
+
                                 eventsListView.getEventsForCurrentDate();
                             }
 
@@ -216,7 +221,7 @@ Item {
                     onClicked: eventsListView.getEventsForCurrentDate()
                 }
 
-                RoundButton {
+                /*RoundButton {
                     id: accountInfo
                     width: parent.height*1.2-10
                     height: parent.height*1.2-10
@@ -233,7 +238,7 @@ Item {
                         mainStackView.push(loginView);
                         mainStackView.currentItem.setSelectedDate(maincalendar.selectedDate);
                     }
-                }
+                }*/
             }
         }
 
