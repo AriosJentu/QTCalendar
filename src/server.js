@@ -67,6 +67,63 @@ function getVisibilityForDate(inputdate, afterfunc, errorfunc) {
     request.send();
 }
 
+function onRequestGetMonthEventInstances(request, afterfunc, errorfunc, fromdate, todate) {
+
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+
+            var result = {}
+            var one_day = 1000*60*60*24;
+            var difindays = (todate - fromdate)/one_day;
+            console.log(difindays);
+            for (var i = 0; i < difindays; i++) {
+
+                var datewithday = new Date(fromdate);
+                var day = datewithday.getDay()+i
+
+                datewithday.setDate(day);
+                var toformat = datewithday.toLocaleString(Qt.locale(), "ddMMyyyy");
+                result[toformat] = false;
+            }
+
+            var jsonData = JSON.parse(request.responseText).data;
+
+            for (i = 0; i < jsonData.length; i++) {
+
+                var eventElement = jsonData[i];
+
+                var sdate = new Date(eventElement.started_at);
+                var nformat = sdate.toLocaleString(Qt.locale(), "ddMMyyyy");
+                result[nformat] = true;
+            }
+
+            afterfunc(result);
+
+        } else {
+            console.log("Error in Event Instances GET Request");
+            errorfunc(request);
+        }
+    }
+}
+
+function getVisibilityForMonth(inputmonth, inputyear, afterfunc, errorfunc) {
+
+    var request = new XMLHttpRequest();
+    var inputdate = new Date(inputyear, inputmonth, 15);
+
+    var startdate = inputdate.setMonth(inputdate.getMonth()-1);
+    var enddate = inputdate.setMonth(inputdate.getMonth()+2);
+
+    var dat = encodeQueryData({"from": startdate, "to": enddate, "new_only": true});
+    var url = S_INSTANCES+dat;
+
+    request.onreadystatechange = function() { onRequestGetMonthEventInstances(request, afterfunc, errorfunc, startdate, enddate); }
+
+    request.open("GET", url);
+    request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
+    request.send();
+}
+
 function onRequestGetEventPattern(request, updatefunc, errorfunc, array, jsonData, jsonEventsData) {
     if (request.readyState === 4) {
         if (request.status === 200) {
@@ -748,7 +805,7 @@ const availableprops = {
     "BYMONTH": ["bymonth", function(str) {return monthes[Number(str)-1]}],
     "INTERVAL": ["interval", function(str) {return Number(str)}],
     "COUNT": ["count", function(str) {return Number(str)}],
-    "UNTIL": ["until", function(str) {return parseDate(str)}]
+    "UNTIL": ["until", function(str) {return parseDate(str)}],
 }
 
 function convertRRuleToBuilderArray(rrule) {

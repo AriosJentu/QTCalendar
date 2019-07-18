@@ -44,26 +44,31 @@ Item {
             selectedDate: new Date();
             focus: true
 
+            property var visibleForDates;
+            function getVisibilityForCurrentMonth() {
+                Server.getVisibilityForMonth(maincalendar.visibleMonth, maincalendar.visibleYear, function(visibilitydata) {
+                    maincalendar.visibleForDates = visibilitydata;
+                }, Server.basicErrorFunc);
+            }
+
+            onVisibleMonthChanged: {
+                console.log("Change month")
+                getVisibilityForCurrentMonth();
+            }
+
             style: CalendarStyle {
                 dayDelegate: Item {
 
                     readonly property color currentDateColor: "#84C391"
                     readonly property color selectedDateColor: "#4F9EE0"
                     readonly property color selectedCurrentDateColor: "#F85C50"
-                    property bool visibility: false;
-
-                    function getVisibilityForCurrentDate() {
-                        Server.getVisibilityForDate(styleData.date, function(cnt) {
-                            visibility = cnt > 0
-                        }, Server.basicErrorFunc);
-                    }
-
 
                     Rectangle {
                         id: dateDelegateRect
                         anchors.fill: parent
 
                         color: {
+
                             var color = "#FFFFFF";
 
                             var date1 = Qt.formatDateTime(new Date(), "yyMMdd")
@@ -86,9 +91,6 @@ Item {
                                 eventsListView.getEventsForCurrentDate();
                             }
 
-                            visibility = false;
-                            getVisibilityForCurrentDate();
-
                             color;
                         }
                     }
@@ -98,12 +100,19 @@ Item {
                         id: transparentSelection
                         anchors.fill: parent
                         color: Qt.hsla(0, 0, 0, alpha)
-
                     }
 
                     Image {
 
-                        visible: visibility
+                        visible: {
+                            var date = Qt.formatDateTime(styleData.date, "ddMMyyyy");
+                            if (maincalendar.visibleForDates && maincalendar.visibleForDates[date]) {
+                                true;
+                            } else {
+                                false;
+                            }
+                        }
+
                         anchors.top: parent.top
                         anchors.left: parent.left
                         anchors.margins: 0
@@ -128,7 +137,6 @@ Item {
                             color;
                         }
                         anchors.centerIn: parent
-
                     }
                 }
             }
@@ -220,25 +228,6 @@ Item {
 
                     onClicked: eventsListView.getEventsForCurrentDate()
                 }
-
-                /*RoundButton {
-                    id: accountInfo
-                    width: parent.height*1.2-10
-                    height: parent.height*1.2-10
-                    anchors.right: refreshDatabase.left
-                    anchors.margins: 5
-
-                    text: Server.ICONS.account
-                    font.family: root.fontAwesome.name
-                    font.pixelSize: 20
-
-                    enabled: false
-
-                    onClicked: {
-                        mainStackView.push(loginView);
-                        mainStackView.currentItem.setSelectedDate(maincalendar.selectedDate);
-                    }
-                }*/
             }
         }
 
@@ -410,5 +399,6 @@ Item {
     function setSelectedDate(date) {
         maincalendar.selectedDate = date;
         eventsListView.getEventsForCurrentDate();
+        maincalendar.getVisibilityForCurrentMonth();
     }
 }
