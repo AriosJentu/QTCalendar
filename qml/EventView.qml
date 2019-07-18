@@ -15,6 +15,7 @@ Item {
     property string viewEventMonthYearNameText: "September 2019"
 
     property var currentEvent
+    property string sharingToken: ""
 
     property string dateFormat: "d MMMM yyyy, hh:mm"
 
@@ -22,6 +23,60 @@ Item {
         id: messageDialog
         text: ""
     }
+
+    Dialog {
+        id: tokenDialog
+        title: "Sharing Token"
+        standardButtons: StandardButton.Close
+        height: tokenField.height*4
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+
+        TextField {
+            id: tokenField
+            text: sharingToken
+            readOnly: true
+            selectByMouse: true
+        }
+    }
+
+    Dialog {
+        id: sharingDialog
+        title: "Select action for sharing"
+        standardButtons: StandardButton.Apply | StandardButton.Cancel
+        height: checkRead.height*6
+        x: (parent.width - width) / 2
+        y: (parent.height - height) / 2
+
+        onApplied: {
+            Server.shareEvent(currentEvent, [checkRead.checked, checkUpdate.checked, checkDelete.checked], function(string) {
+                sharingToken = string;
+                close();
+                tokenDialog.open();
+            }, function(request) {
+                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't share event";
+                messageDialog.open();
+            })
+        }
+
+        CheckBox {
+            id: checkRead
+            text: "Read"
+        }
+
+        CheckBox {
+            id: checkUpdate
+            text: "Update"
+            anchors.top: checkRead.bottom
+        }
+
+        CheckBox {
+            id: checkDelete
+            text: "Delete"
+            anchors.top: checkUpdate.bottom
+        }
+    }
+
 
     Flow {
         id: eventRow
@@ -90,15 +145,13 @@ Item {
                                 text: viewEventMonthYearNameText
                                 font.pointSize: 12
                             }
-
-
                         }
                     }
 
                     RoundButton {
                         id: closeEventButton
-                        width: viewEventDayLabel.height*1.2-10
-                        height: viewEventDayLabel.height*1.2-10
+                        width: viewEventDayLabel.height-10
+                        height: viewEventDayLabel.height-10
                         anchors.right: viewEventDayRow.right
                         anchors.margins: 5
 
@@ -114,8 +167,8 @@ Item {
 
                     RoundButton {
                         id: editEventButton
-                        width: viewEventDayLabel.height*1.2-10
-                        height: viewEventDayLabel.height*1.2-10
+                        width: viewEventDayLabel.height-10
+                        height: viewEventDayLabel.height-10
                         anchors.right: closeEventButton.left
                         anchors.margins: 5
 
@@ -131,8 +184,8 @@ Item {
 
                     RoundButton {
                         id: deleteEventButton
-                        width: viewEventDayLabel.height*1.2-10
-                        height: viewEventDayLabel.height*1.2-10
+                        width: viewEventDayLabel.height-10
+                        height: viewEventDayLabel.height-10
                         anchors.right: editEventButton.left
                         anchors.margins: 5
 
@@ -155,8 +208,8 @@ Item {
 
                     RoundButton {
                         id: eventOnMapButton
-                        width: viewEventDayLabel.height*1.2-10
-                        height: viewEventDayLabel.height*1.2-10
+                        width: viewEventDayLabel.height-10
+                        height: viewEventDayLabel.height-10
                         anchors.right: deleteEventButton.left
                         anchors.margins: 5
 
@@ -169,6 +222,20 @@ Item {
                             mainStackView.push(mapView);
                             mainStackView.currentItem.loadEvent(currentEvent, true, false);
                         }
+                    }
+
+                    RoundButton {
+                        id: shareEvent
+                        width: viewEventDayLabel.height-10
+                        height: viewEventDayLabel.height-10
+                        anchors.right: eventOnMapButton.left
+                        anchors.margins: 5
+
+                        text: Server.ICONS.share
+                        font.family: root.fontAwesome.name
+                        font.pixelSize: 20
+
+                        onClicked: sharingDialog.open();
                     }
                 }
             }
