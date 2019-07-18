@@ -60,7 +60,7 @@ Item {
 
                     readonly property color currentDateColor: "#84C391"
                     readonly property color selectedDateColor: "#4F9EE0"
-                    readonly property color selectedCurrentDateColor: "#F85C50"
+                    readonly property color selectedCurrentDateColor: "#117243"
 
                     Rectangle {
                         id: dateDelegateRect
