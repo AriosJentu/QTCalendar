@@ -14,7 +14,7 @@ const ICONS = {
     refresh: "",
     account: "",
     new_evt: "",
-    remove_evt: "",
+    remove_evt: "",
     map: "",
     save: "",
     today: "",
@@ -33,6 +33,18 @@ function encodeQueryData(data) {
    return "?"+ret.join('&');
 }
 
+function onRequestVisibilityForDate(request, afterfunc, errorfunc) {
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+            var jsonRes = JSON.parse(request.responseText);
+            afterfunc(jsonRes.count);
+        } else {
+            console.log("Error in Event Instances GET Request");
+            errorfunc(request);
+        }
+    }
+}
+
 function getVisibilityForDate(inputdate, afterfunc, errorfunc) {
 
     afterfunc(0);
@@ -47,22 +59,141 @@ function getVisibilityForDate(inputdate, afterfunc, errorfunc) {
     var dat = encodeQueryData({"from": start, "to": ends, "new_only": true});
     var url = S_INSTANCES+dat;
 
-    request.onreadystatechange = function() {
-        if (request.readyState === 4) {
-            if (request.status === 200) {
-                var jsonRes = JSON.parse(request.responseText);
-                afterfunc(jsonRes.count);
-            } else {
-                console.log("Error in Event Instances GET Request");
-                errorfunc(request);
-            }
-        }
-    }
+    request.onreadystatechange = function() { onRequestVisibilityForDate(request, afterfunc, errorfunc); }
 
     request.open("GET", url);
     request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
     request.send();
 }
+
+function onRequestGetEventPattern(request, updatefunc, errorfunc, array, jsonData, jsonEventsData) {
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+
+            var jsonPatternData = JSON.parse(request.responseText).data;
+
+            for (let i = 0; i < jsonPatternData.length; i++) {
+
+                var eventElement = jsonEventsData[i];
+                var patternElement = jsonPatternData[i];
+                var eventInstElement = jsonData[i];
+
+                var starttime = Number(eventInstElement.started_at);
+                var endtime = Number(eventInstElement.ended_at);
+
+                var eventData = {};
+
+                if (eventElement.id) {
+                    eventData.id = eventElement.id;
+                }
+
+                if (patternElement.id) {
+                    eventData.patrnid = patternElement.id;
+                }
+
+
+                eventData.startTime = new Date(starttime);
+                eventData.endTime = new Date(endtime);
+
+                eventData.name = eventElement.name;
+                eventData.details = eventElement.details;
+                eventData.owner = eventElement.owner_id;
+                eventData.location = eventElement.location;
+                eventData.status = eventElement.status;
+
+                eventData.excrule = patternElement.exrule;
+                eventData.reprule = patternElement.rrule;
+                eventData.timezone = patternElement.timezone;
+
+                eventData.selectedDate = jsonData.inputdate;
+
+                array.push(eventData);
+                updatefunc(array);
+
+            }
+
+        } else {
+
+            console.log("Error in Event Patterns GET Request");
+            errorfunc(request);
+        }
+    }
+}
+
+function onRequestGetEvent(request, updatefunc, errorfunc, array, jsonData) {
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+
+            var patrids = [];
+
+            if (jsonData.length === 0) {
+                return;
+            }
+
+            for (let i = 0; i < jsonData.length; i++) {
+                patrids.push("id=" + jsonData[i].pattern_id);
+            }
+
+            var jsonEventsData = JSON.parse(request.responseText).data;
+
+            var requestPattern = new XMLHttpRequest();
+            var paturl = S_PATTERNS+"?"+patrids.join("&");
+
+            requestPattern.onreadystatechange = function() { onRequestGetEventPattern(requestPattern, updatefunc, errorfunc, array, jsonData, jsonEventsData); }
+
+            requestPattern.open("GET", paturl);
+            requestPattern.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
+            requestPattern.send()
+
+
+        } else {
+
+            console.log("Error in Event Elements GET Request");
+            errorfunc(request);
+        }
+    }
+
+}
+
+function onRequestGetEventInstance(request, updatefunc, errorfunc, array, inputdate) {
+
+    updatefunc(array);
+
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+
+            var jsonData = JSON.parse(request.responseText).data;
+            jsonData.inputdate = inputdate;
+
+            var identifs = [];
+            var patrids = [];
+
+            if (jsonData.length === 0) {
+                return;
+            }
+
+            for (let i = 0; i < jsonData.length; i++) {
+                identifs.push("id=" + jsonData[i].event_id);
+                patrids.push("id=" + jsonData[i].pattern_id);
+            }
+
+            var requestEvents = new XMLHttpRequest();
+            var url = S_EVENTS+"?"+identifs.join("&");
+
+            requestEvents.onreadystatechange = function() { onRequestGetEvent(requestEvents, updatefunc, errorfunc, array, jsonData); }
+
+            requestEvents.open("GET", url);
+            requestEvents.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
+            requestEvents.send()
+
+        } else {
+            console.log("Error in Event Instances GET Request");
+            errorfunc(request);
+        }
+    }
+}
+
+
 
 function getEventsForDate(inputdate, updatefunc, errorfunc) {
 
@@ -80,122 +211,42 @@ function getEventsForDate(inputdate, updatefunc, errorfunc) {
     var dat = encodeQueryData({"from": start, "to": ends, "new_only": true});
     var url = S_INSTANCES+dat;
 
-    request.onreadystatechange = function() {
-        array = []
-        updatefunc(array);
-
-        if (request.readyState === 4) {
-            if (request.status === 200) {
-
-                var jsonData = JSON.parse(request.responseText).data;
-
-                var identifs = [];
-                var patrids = [];
-
-                if (jsonData.length === 0) {
-                    return;
-                }
-
-                for (let i = 0; i < jsonData.length; i++) {
-                    identifs.push("id=" + jsonData[i].event_id);
-                    patrids.push("id=" + jsonData[i].pattern_id);
-                }
-
-                var requestEvents = new XMLHttpRequest();
-                var url = S_EVENTS+"?"+identifs.join("&");
-
-                requestEvents.onreadystatechange = function() {
-                    if (requestEvents.readyState === 4) {
-                        if (requestEvents.status === 200) {
-
-                            var jsonEventsData = JSON.parse(requestEvents.responseText).data;
-
-                            var requestPattern = new XMLHttpRequest();
-                            var paturl = S_PATTERNS+"?"+patrids.join("&");
-
-                            requestPattern.onreadystatechange = function() {
-
-                                if (requestPattern.readyState === 4) {
-                                    if (requestPattern.status === 200) {
-
-                                        var jsonPatternData = JSON.parse(requestPattern.responseText).data;
-
-                                        for (let i = 0; i < jsonPatternData.length; i++) {
-
-                                            var eventElement = jsonEventsData[i];
-                                            var patternElement = jsonPatternData[i];
-                                            var eventInstElement = jsonData[i];
-
-                                            var starttime = Number(eventInstElement.started_at);
-                                            var endtime = Number(eventInstElement.ended_at);
-
-                                            var eventData = {};
-
-                                            if (eventElement.id) {
-                                                eventData.id = eventElement.id;
-                                            }
-
-                                            if (patternElement.id) {
-                                                eventData.patrnid = patternElement.id;
-                                            }
-
-
-                                            eventData.startTime = new Date(starttime);
-                                            eventData.endTime = new Date(endtime);
-
-                                            eventData.name = eventElement.name;
-                                            eventData.details = eventElement.details;
-                                            eventData.owner = eventElement.owner_id;
-                                            eventData.location = eventElement.location;
-                                            eventData.status = eventElement.status;
-
-                                            eventData.excrule = patternElement.exrule;
-                                            eventData.reprule = patternElement.rrule;
-                                            eventData.timezone = patternElement.timezone;
-
-                                            eventData.selectedDate = inputdate;
-
-                                            array.push(eventData);
-                                            updatefunc(array);
-
-                                        }
-
-
-                                    } else {
-
-                                        console.log("Error in Event Patterns GET Request");
-                                        errorfunc(request);
-                                    }
-                                }
-                            }
-
-                            requestPattern.open("GET", paturl);
-                            requestPattern.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
-                            requestPattern.send()
-
-
-                        } else {
-
-                            console.log("Error in Event Elements GET Request");
-                            errorfunc(request);
-                        }
-                    }
-                }
-
-                requestEvents.open("GET", url);
-                requestEvents.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
-                requestEvents.send()
-
-            } else {
-                console.log("Error in Event Instances GET Request");
-                errorfunc(request);
-            }
-        }
-    }
+    request.onreadystatechange = function() { onRequestGetEventInstance(request, updatefunc, errorfunc, array, inputdate); }
 
     request.open("GET", url);
     request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
     request.send();
+}
+
+function onRequestGetTasksForEvent(request, updatefunc, errorfunc, array) {
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+
+            var jsonTasksData = JSON.parse(request.responseText).data;
+
+            for (let i = 0; i < jsonTasksData.length; i++) {
+
+                var taskElement = jsonTasksData[i];
+                var taskData = {};
+
+                taskData.id = taskElement.id;
+                taskData.parentid = taskElement.parent_id;
+                taskData.evtid = taskElement.event_id;
+                taskData.deadline = new Date(taskElement.deadline_at);
+                taskData.name = taskElement.name;
+                taskData.details = taskElement.details;
+                taskData.status = taskElement.status;
+
+                array.push(taskData);
+                updatefunc(array);
+            }
+
+        } else {
+
+            console.log("Error in Event Tasks GET Request");
+            errorfunc(request);
+        }
+    }
 }
 
 function getListOfTasksForEvent(event, updatefunc, errorfunc) {
@@ -208,43 +259,66 @@ function getListOfTasksForEvent(event, updatefunc, errorfunc) {
     var dat = encodeQueryData({"event_id": event.id});
     var url = S_TASKS+dat;
 
-    request.onreadystatechange = function() {
-
-        if (request.readyState === 4) {
-            if (request.status === 200) {
-
-                var jsonTasksData = JSON.parse(request.responseText).data;
-
-                for (let i = 0; i < jsonTasksData.length; i++) {
-
-                    var taskElement = jsonTasksData[i];
-                    var taskData = {};
-
-                    taskData.id = taskElement.id;
-                    taskData.parentid = taskElement.parent_id;
-                    taskData.evtid = taskElement.event_id;
-                    taskData.deadline = new Date(taskElement.deadline_at);
-                    taskData.name = taskElement.name;
-                    taskData.details = taskElement.details;
-                    taskData.status = taskElement.status;
-
-                    array.push(taskData);
-                    updatefunc(array);
-                }
-
-            } else {
-
-                console.log("Error in Event Tasks GET Request");
-                errorfunc(request);
-            }
-        }
-
-    }
+    request.onreadystatechange = function() { onRequestGetTasksForEvent(request, updatefunc, errorfunc, array); }
 
     request.open("GET", url);
     request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
     request.send();
 }
+
+function onRequestPostEventPattern(request, afterfunc, errorfunc, type) {
+
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+            afterfunc();
+        } else {
+            console.log("Error in Pattern "+ type +" Request");
+            errorfunc(request);
+        }
+    }
+}
+
+function onRequestPostEvent(request, event, afterfunc, errorfunc, evtupdate, type) {
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+
+            var createdEventID = JSON.parse(request.responseText).data[0].id;
+
+            var jsonForPattern = {}
+
+            jsonForPattern.started_at = event.startTime.getTime();
+            jsonForPattern.ended_at = event.endTime.getTime();
+            jsonForPattern.timezone = event.timezone;
+            jsonForPattern.exrule = event.excrule;
+            jsonForPattern.rrule = event.reprule;
+
+            if (evtupdate) {
+                jsonForPattern.duration = jsonForPattern.ended_at - jsonForPattern.started_at;
+            }
+
+            var patJsonString = JSON.stringify(jsonForPattern);
+
+            var url = S_PATTERNS+encodeQueryData({"event_id": createdEventID});
+            if (evtupdate) {
+                url = S_PATTERN_ID+event.patrnid;
+            }
+
+            var requestPattern = new XMLHttpRequest();
+
+            requestPattern.onreadystatechange = function() { onRequestPostEventPattern(requestPattern, afterfunc, errorfunc, type); }
+
+            requestPattern.open(type, url);
+            requestPattern.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
+            requestPattern.setRequestHeader("Content-Type", "application/json");
+            requestPattern.send(patJsonString);
+
+        } else {
+            console.log("Error in Event "+ type +" Request");
+            errorfunc(request);
+        }
+    }
+}
+
 
 function postEventToServer(event, afterfunc, errorfunc, evtupdate = false) {
 
@@ -264,69 +338,23 @@ function postEventToServer(event, afterfunc, errorfunc, evtupdate = false) {
 
     var requestEvent = new XMLHttpRequest();
 
-    requestEvent.onreadystatechange = function() {
-
-        if (requestEvent.readyState === 4) {
-            if (requestEvent.status === 200) {
-
-                var createdEventID = JSON.parse(requestEvent.responseText).data[0].id;
-
-                var jsonForPattern = {}
-
-                jsonForPattern.started_at = event.startTime.getTime();
-                jsonForPattern.ended_at = event.endTime.getTime();
-                jsonForPattern.timezone = event.timezone;
-                jsonForPattern.exrule = event.excrule;
-                jsonForPattern.rrule = event.reprule;
-
-                if (evtupdate) {
-                    jsonForPattern.duration = jsonForPattern.ended_at - jsonForPattern.started_at;
-                }
-
-                var patJsonString = JSON.stringify(jsonForPattern);
-
-                console.log(jsonForPattern.started_at, jsonForPattern.ended_at);
-                console.log(event.startTime.getDate(), event.endTime.getDate());
-
-                var url = S_PATTERNS+encodeQueryData({"event_id": createdEventID});
-                if (evtupdate) {
-                    url = S_PATTERN_ID+event.patrnid;
-                }
-
-                var requestPattern = new XMLHttpRequest();
-
-                requestPattern.onreadystatechange = function() {
-
-                    if (requestPattern.readyState === 4) {
-                        if (requestPattern.status === 200) {
-                            afterfunc();
-                        } else {
-                            console.log("Error in Pattern "+ type +" Request");
-                            errorfunc(requestPattern);
-                        }
-                    }
-                }
-
-                console.log(patJsonString);
-
-                console.log(url);
-                requestPattern.open(type, url);
-                requestPattern.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
-                requestPattern.setRequestHeader("Content-Type", "application/json");
-                requestPattern.send(patJsonString);
-
-            } else {
-                console.log("Error in Event "+ type +" Request");
-                errorfunc(requestEvent);
-            }
-        }
-    }
-
+    requestEvent.onreadystatechange = function() { onRequestPostEvent(requestEvent, event, afterfunc, errorfunc, evtupdate, type); }
 
     requestEvent.open(type, evturl);
     requestEvent.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
     requestEvent.setRequestHeader("Content-Type", "application/json");
     requestEvent.send(evtJsonString);
+}
+
+function onRequestPostTask(request, afterfunc, errorfunc, type) {
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+            afterfunc();
+        } else {
+            console.log("Error in Tasks "+ type +" Request");
+            errorfunc(request);
+        }
+    }
 }
 
 function postTaskForEventToServer(task, afterfunc, errorfunc, evtupdate = false) {
@@ -352,18 +380,7 @@ function postTaskForEventToServer(task, afterfunc, errorfunc, evtupdate = false)
 
     var request = new XMLHttpRequest();
 
-    request.onreadystatechange = function() {
-
-        if (request.readyState === 4) {
-            if (request.status === 200) {
-                afterfunc();
-            } else {
-                console.log("Error in Tasks "+ type +" Request");
-                errorfunc(request);
-            }
-        }
-    }
-
+    request.onreadystatechange = function() { onRequestPostTask(request, afterfunc, errorfunc, type); }
 
     request.open(type, taskurl);
     request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
@@ -371,22 +388,23 @@ function postTaskForEventToServer(task, afterfunc, errorfunc, evtupdate = false)
     request.send(taskJsonString);
 }
 
+function onRequestDelete(request, afterfunc, errorfunc, elementtype) {
+
+    if (request.readyState === 4) {
+        if (request.status === 200) {
+            afterfunc();
+        } else {
+            console.log("Error in " + elementtype + " DELETE Request");
+            errorfunc(request);
+        }
+    }
+}
+
 function deleteFromServer(element, afterfunc, errorfunc, elementtype, url) {
 
     var request = new XMLHttpRequest();
 
-    request.onreadystatechange = function() {
-
-        if (request.readyState === 4) {
-            if (request.status === 200) {
-                afterfunc();
-            } else {
-                console.log("Error in " + elementtype + " DELETE Request");
-                errorfunc(request);
-            }
-        }
-
-    }
+    request.onreadystatechange = function() { onRequestDelete(request, afterfunc, errorfunc, elementtype); }
 
     request.open("DELETE", url);
     request.setRequestHeader(AUTH_NAME, AUTH_TOKEN);
@@ -419,15 +437,16 @@ function generateEmptyEvent() {
     return event;
 }
 
-function generateEmptyTask() {
+function generateEmptyTask(event) {
 
     var task = {};
 
     task.details = "";
     task.name = "";
     task.deadline = new Date();
-    task.status = "";
-    task.parentid = -1
+    task.status = "IN-PROCESS";
+    task.parentid = -1;
+    task.evtid = event.id;
 
     return task;
 }
