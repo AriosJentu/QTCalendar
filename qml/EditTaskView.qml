@@ -21,7 +21,7 @@ Item {
     function setTask(task, event, isNewTask) {
         currentTask = task;
         currentEvent = event;
-        isNew = isNewTask
+        isNew = isNewTask;
     }
 
     function pushInfo() {
@@ -30,8 +30,6 @@ Item {
     }
 
     function saveInfo() {
-        console.log(taskNameTextField.text)
-        console.log(currentTask.name)
         currentTask.name = taskNameTextField.text;
         currentTask.details = taskDescriptionsTextField.text;
     }
@@ -108,6 +106,12 @@ Item {
                     }
                     placeholderText: "Task name"
                     anchors.margins: 10
+
+                    onTextChanged: {
+                        if (currentTask && typeof(currentTask.name) == "string") {
+                            currentTask.name = text;
+                        }
+                    }
                 }
 
                 Label {
@@ -147,6 +151,12 @@ Item {
                     }
                     placeholderText: "Task details"
                     anchors.margins: 10
+
+                    onTextChanged: {
+                        if (currentTask && typeof(currentTask.details) == "string") {
+                            currentTask.details = text;
+                        }
+                    }
                 }
 
                 Label {
