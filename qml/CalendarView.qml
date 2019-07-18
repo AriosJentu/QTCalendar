@@ -52,7 +52,6 @@ Item {
             }
 
             onVisibleMonthChanged: {
-                console.log("Change month")
                 getVisibilityForCurrentMonth();
             }
 
@@ -399,6 +398,8 @@ Item {
     function setSelectedDate(date) {
         maincalendar.selectedDate = date;
         eventsListView.getEventsForCurrentDate();
-        maincalendar.getVisibilityForCurrentMonth();
+        Server.getVisibilityForMonth(date.getMonth(), date.getYear()+1900, function(visibilitydata) {
+            maincalendar.visibleForDates = visibilitydata;
+        }, Server.basicErrorFunc)
     }
 }
