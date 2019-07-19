@@ -31,6 +31,8 @@ const ICONS = {
 
 const ONEHOUR = 1000*60*60;
 const ONEDAY = ONEHOUR*24;
+const ONEWEEK = ONEDAY*7;
+const ONEMONTH = ONEDAY*30;
 
 function encodeQueryData(data) {
    const ret = [];
@@ -101,8 +103,7 @@ function onRequestGetMonthEventInstances(request, afterfunc, errorfunc, fromdate
                 result[nformat] = true;
 
                 difindays = ((new Date(eventElement.ended_at)).getTime() - sdate.getTime())/ONEDAY;
-
-                for (var k = 0; k < difindays; k++) {
+                for (var k = 1; k < difindays+1; k++) {
                     var adate = sdate.addDays(k);
                     var dformat = adate.toLocaleString(Qt.locale(), "ddMMyyyy");
                     result[dformat] = true;
@@ -167,6 +168,7 @@ function onRequestGetEventPattern(request, updatefunc, errorfunc, array, jsonDat
                     eventData.excrule = patternElement.exrule;
                     eventData.reprule = patternElement.rrule;
                     eventData.timezone = patternElement.timezone;
+                    eventData.duration = patternElement.duration;
                 }
 
 
@@ -277,7 +279,7 @@ function getEventsForDate(inputdate, updatefunc, errorfunc) {
     date.setHours(23, 59, 59, 999);
     var ends = date.getTime();
 
-    var dat = encodeQueryData({"from": start, "to": ends, "new_only": true});
+    var dat = encodeQueryData({"from": start, "to": ends});
     var url = S_INSTANCES+dat;
 
     request.onreadystatechange = function() { onRequestGetEventInstance(request, updatefunc, errorfunc, array, inputdate); }
@@ -360,13 +362,15 @@ function onRequestPostEvent(request, event, afterfunc, errorfunc, evtupdate, typ
             jsonForPattern.timezone = event.timezone;
             jsonForPattern.rrule = event.reprule;
 
-            if (evtupdate && !event.reprule) {
-                jsonForPattern.duration = jsonForPattern.ended_at - jsonForPattern.started_at;
+            if (event && event.duration && event.duration > 0) {
+                console.log("Duration found: ", event.duration)
+                jsonForPattern.duration = event.duration;
             } else {
-                jsonForPattern.duration = ONEHOUR;
+                jsonForPattern.duration = jsonForPattern.ended_at - jsonForPattern.started_at;
             }
 
             var patJsonString = JSON.stringify(jsonForPattern);
+            console.log(patJsonString);
 
             var url = S_PATTERNS+encodeQueryData({"event_id": createdEventID});
             if (evtupdate) {
@@ -577,6 +581,7 @@ function generateEmptyEvent() {
     event.details = "";
     event.owner = "";
     event.location = "";
+    event.duration = 0;
 
     event.excrule = "";
     event.reprule = null;
@@ -690,10 +695,26 @@ function convertDateFromToTimezone(date, timezoneFrom, timezoneTo) {
     return ndate
 }
 
-const types = {"Yearly": "YEARLY", "Monthly": "MONTHLY", "Weekly": "WEEKLY", "Daily": "DAILY", "Never":""}
-const formattypes = {"Yearly": "year", "Monthly": "month", "Weekly": "week", "Daily": "day", "Never":""}
+const types = {"Yearly": "YEARLY", "Monthly": "MONTHLY", "Weekly": "WEEKLY", "Daily": "DAILY", "Never":""};
+const formattypes = {"Yearly": "year", "Monthly": "month", "Weekly": "week", "Daily": "day", "Never":""};
+const durationtypes = ["hour", "day", "week", "month"];
+const durationtypesends = ["hours", "days", "weeks", "months"];
+const durationsmultipliers = [ONEHOUR, ONEDAY, ONEWEEK, ONEMONTH];
+
 function getRepeatTypes() {
     return Object.keys(types);
+}
+
+function getDurationTypes(index) {
+    return getEnding(index) === "s" ? durationtypesends : durationtypes;
+}
+
+function getDurationMultiplier(name) {
+    var arr = durationtypes;
+    if (name[name.length - 1] === "s") {
+        arr = durationtypesends;
+    }
+    return durationsmultipliers[arr.indexOf(name)];
 }
 
 const monthes = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -1072,4 +1093,31 @@ function saveFile(fileUrl, text) {
     request.open("PUT", fileUrl, false);
     request.send(text);
     return request.status;
+}
+
+function parseTimeToTypes(time) {
+
+    if (!time || time === 0) {
+        return ["Full time", ""]
+    }
+
+    var hours = time/ONEHOUR;
+    var array = [hours, "hour" + getEnding(hours)];
+
+    var days = time/ONEDAY;
+    if (time%ONEDAY === 0) {
+        array = [days, "day" + getEnding(days)];
+    }
+
+    var weeks = time/ONEWEEK;
+    if (time%ONEWEEK === 0) {
+        array = [weeks, "week" + getEnding(weeks)];
+    }
+
+    var months = time/ONEMONTH;
+    if (time%ONEMONTH === 0) {
+        array = [months, "week" + getEnding(months)];
+    }
+
+    return array;
 }
