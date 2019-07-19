@@ -678,8 +678,8 @@ function convertDateFromToTimezone(date, timezoneFrom, timezoneTo) {
     return ndate
 }
 
-const types = {"Yearly": "YEARLY", "Monthly": "MONTHLY", "Weekly": "WEEKLY", "Daily": "DAILY", "Hourly":"HOURLY", "Never":""}
-const formattypes = {"Yearly": "year", "Monthly": "month", "Weekly": "week", "Daily": "day", "Hourly":"hour", "Never":""}
+const types = {"Yearly": "YEARLY", "Monthly": "MONTHLY", "Weekly": "WEEKLY", "Daily": "DAILY", "Never":""}
+const formattypes = {"Yearly": "year", "Monthly": "month", "Weekly": "week", "Daily": "day", "Never":""}
 function getRepeatTypes() {
     return Object.keys(types);
 }
@@ -854,15 +854,19 @@ function parseDays(str) {
     return days;
 }
 
+function getKeyFromValue(array, str) {
+    return Object.keys(array)[Object.values(array).indexOf(str)];
+}
+
 const availableprops = {
-    "FREQ": ["type", function(str) {return Object.keys(types)[Object.values(types).indexOf(str)]}],
+    "FREQ": ["type", function(str) {return getKeyFromValue(types, str); }],
     "BYDAY": ["byday", parseDays],
-    "BYMONTHDAY": ["bymonthday", function(str) {return Number(str)}],
-    "BYSETPOS": ["bysetpos", function(str) {return Object.keys(ordinals)[Object.values(ordinals).indexOf(Number(str))]}],
+    "BYMONTHDAY": ["bymonthday", Number],
+    "BYSETPOS": ["bysetpos", function(str) { return getKeyFromValue(ordinals, str); }],
     "BYMONTH": ["bymonth", function(str) {return monthes[Number(str)-1]}],
-    "INTERVAL": ["interval", function(str) {return Number(str)}],
-    "COUNT": ["count", function(str) {return Number(str)}],
-    "UNTIL": ["until", function(str) {return parseDate(str)}],
+    "INTERVAL": ["interval", Number],
+    "COUNT": ["count", Number],
+    "UNTIL": ["until", parseDate],
 }
 
 function convertRRuleToBuilderArray(rrule) {
@@ -978,6 +982,70 @@ function convertRRuleToReadableString(rrule) {
     }
 
     return str;
+}
+Date.prototype.addDays = function(days) {
+  var result = new Date(this);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+Date.isLeapYear = function (year) {
+    return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0));
+};
+
+Date.getDaysInMonth = function (year, month) {
+    return [31, (Date.isLeapYear(year) ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
+};
+
+Date.prototype.isLeapYear = function () {
+    return Date.isLeapYear(this.getFullYear());
+};
+
+Date.prototype.getDaysInMonth = function () {
+    return Date.getDaysInMonth(this.getFullYear(), this.getMonth());
+};
+
+Date.prototype.addMonths = function (value) {
+    var date = new Date(this);
+    var n = date.getDate();
+    date.setDate(1);
+    date.setMonth(this.getMonth() + value);
+    date.setDate(Math.min(n, this.getDaysInMonth()));
+    return date;
+};
+
+Date.prototype.addYears = function(years) {
+    var date = new Date(this);
+    return date.addMonths(years*12);
+}
+
+function getRRuleEndDate(event) {
+
+    var startdate = event.startTime;
+    var buildarr = convertRRuleToBuilderArray(event.reprule);
+
+    var enddate = startdate;
+    if (buildarr.count === 0) {
+        buildarr.count = 100
+    }
+
+    if (buildarr.type === "Yearly") {
+        enddate = enddate.addYears(buildarr.count*buildarr.interval+1);
+    }
+
+    if (buildarr.type === "Monthly") {
+        enddate = enddate.addMonths(buildarr.count*buildarr.interval+1);
+    }
+
+    if (buildarr.type === "Weekly") {
+        enddate = enddate.addDays(buildarr.count*7*buildarr.interval+1);
+    }
+
+    if (buildarr.type === "Daily") {
+        enddate = enddate.addDays(buildarr.count*buildarr.interval+1);
+    }
+
+    return enddate;
 }
 
 function openFile(fileUrl) {
