@@ -97,6 +97,14 @@ function onRequestGetMonthEventInstances(request, afterfunc, errorfunc, fromdate
                 var sdate = new Date(eventElement.started_at);
                 var nformat = sdate.toLocaleString(Qt.locale(), "ddMMyyyy");
                 result[nformat] = true;
+
+                difindays = ((new Date(eventElement.ended_at)).getTime() - sdate.getTime())/one_day;
+
+                for (var k = 0; k < difindays; k++) {
+                    var adate = sdate.addDays(k);
+                    var dformat = adate.toLocaleString(Qt.locale(), "ddMMyyyy");
+                    result[dformat] = true;
+                }
             }
 
             afterfunc(result);
@@ -116,7 +124,7 @@ function getVisibilityForMonth(inputmonth, inputyear, afterfunc, errorfunc) {
     var startdate = inputdate.setMonth(inputdate.getMonth()-1);
     var enddate = inputdate.setMonth(inputdate.getMonth()+2);
 
-    var dat = encodeQueryData({"from": startdate, "to": enddate, "new_only": true});
+    var dat = encodeQueryData({"from": startdate, "to": enddate});
     var url = S_INSTANCES+dat;
 
     request.onreadystatechange = function() { onRequestGetMonthEventInstances(request, afterfunc, errorfunc, startdate, enddate); }
@@ -331,7 +339,7 @@ function onRequestPostEventPattern(request, afterfunc, errorfunc, type) {
         if (request.status === 200) {
             afterfunc();
         } else {
-            console.log("Error in Pattern "+ type +" Request");
+            console.log("Error in Pattern "+ type +" Request", request.responseText);
             errorfunc(request);
         }
     }
@@ -348,7 +356,7 @@ function onRequestPostEvent(request, event, afterfunc, errorfunc, evtupdate, typ
             jsonForPattern.started_at = event.startTime.getTime();
             jsonForPattern.ended_at = event.endTime.getTime();
             jsonForPattern.timezone = event.timezone;
-            jsonForPattern.exrule = event.excrule;
+            //jsonForPattern.exrule = event.excrule;
             jsonForPattern.rrule = event.reprule;
 
             if (evtupdate) {
@@ -363,6 +371,7 @@ function onRequestPostEvent(request, event, afterfunc, errorfunc, evtupdate, typ
             }
 
             var requestPattern = new XMLHttpRequest();
+            console.log(patJsonString);
 
             requestPattern.onreadystatechange = function() { onRequestPostEventPattern(requestPattern, afterfunc, errorfunc, type); }
 
@@ -567,7 +576,7 @@ function generateEmptyEvent() {
     event.location = "";
 
     event.excrule = "";
-    event.reprule = "";
+    event.reprule = null;
     event.timezone = "";
 
     return event;
@@ -793,7 +802,7 @@ function buildRRule(bArray) {
 
     var str = "FREQ="+types[bArray.type];
 
-    if (bArray.type === "Never") return "";
+    if (bArray.type === "Never") return null;
 
     if (bArray.type === "Weekly") {
         str += ";BYDAY="
@@ -875,7 +884,7 @@ function convertRRuleToBuilderArray(rrule) {
     var str = rrule;
 
     var whilestatement = true;
-    while (whilestatement) {
+    while (whilestatement && str) {
 
         var indx = str.search("=");
         if (indx === -1) {
@@ -925,7 +934,7 @@ function convertRRuleToReadableString(rrule) {
     var arr = convertRRuleToBuilderArray(rrule)
 
     if (arr.type === "Never") {
-        return "None";
+        return "Never";
     }
 
     var str = "Every ";
