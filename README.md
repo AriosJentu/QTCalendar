@@ -19,10 +19,5 @@ This project uses Google's ![Material Design Icons](https://material.io/tools/ic
 
 
 ## Screenshots:
-![](screenshots/mainview.png)
-![](screenshots/eventview.png)
-![](screenshots/sharing.png)
-![](screenshots/taskeditor.png)
-![](screenshots/eventgen.png)
-![](screenshots/rruleeditor.png)
-![](screenshots/mapview.png)
+
+<img src="screenshots/mainview.jpg" width="30%" height="30%"><img src="screenshots/eventview.jpg" width="30%" height="30%"><img src="screenshots/sharing.jpg" width="30%" height="30%"><img src="screenshots/taskeditor.jpg" width="30%" height="30%"><img src="screenshots/eventgen.jpg" width="30%" height="30%"><img src="screenshots/rruleeditor.jpg" width="30%" height="30%"><img src="screenshots/mapview.jpg" width="30%" height="30%">
