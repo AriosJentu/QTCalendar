@@ -25,6 +25,12 @@ Item {
 
     function updateEvent() {
         currentEvent.reprule = buildRRuleString()
+        currentEvent.endTime = Server.getRRuleEndDate(currentEvent)
+
+        if (currentEvent.reprule === "") {
+            currentEvent.endTime = currentEvent.startTime;
+        }
+
         pushInfo()
     }
 
