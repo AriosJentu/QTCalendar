@@ -38,19 +38,19 @@ Item {
                 currentEvent.startTime.setHours(selectHourCombo.currentIndex)
                 currentEvent.startTime.setMinutes(selectMinuteCombo.currentIndex)
 
-                if (currentEvent.reprule !== "") {
+                /*if (currentEvent.reprule !== "") {
                     currentEvent.endTime = Client.getRRuleEndDate(currentEvent).getTime();
-                }
+                }*/
 
             } else {
                 currentEvent.endTime = date
                 currentEvent.endTime.setHours(selectHourCombo.currentIndex)
                 currentEvent.endTime.setMinutes(selectMinuteCombo.currentIndex)
 
-                if (currentEvent.reprule !== "") {
+                /*if (currentEvent.reprule !== "") {
                     currentEvent.startTime = currentEvent.endTime;
                     currentEvent.startTime = 2*currentEvent.endTime - Client.getRRuleEndDate(currentEvent).getTime();
-                }
+                }*/
             }
         } else {
             currentTask.deadline = date;
