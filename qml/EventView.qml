@@ -54,7 +54,7 @@ Item {
                 close();
                 tokenDialog.open();
             }, function(request) {
-                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't share event";
+                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't share event\n" + request.responseText;
                 messageDialog.open();
             })
         }
@@ -199,7 +199,7 @@ Item {
                                 mainStackView.push(mainPage);
                                 mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                             }, function(request) {
-                                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event";
+                                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event\n" + request.responseText;
                                 messageDialog.open();
                             });
 
@@ -602,7 +602,7 @@ Item {
                                                 console.log("Task successfully removed");
                                                 tasksListView.getTasksForCurrentEvent();
                                             }, function(request) {
-                                                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event";
+                                                messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event\n" + request.responseText;
                                                 messageDialog.open();
                                             });
                                         }

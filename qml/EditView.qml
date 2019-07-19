@@ -125,7 +125,7 @@ Item {
                                     mainStackView.push(mainPage);
                                     mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                                 }, function(request) {
-                                    messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't post event to server";
+                                    messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't post event to server\n" + request.responseText;
                                     messageDialog.open();
                                 }, !isNewEvent)
                             }

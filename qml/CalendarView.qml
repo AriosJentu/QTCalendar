@@ -282,7 +282,7 @@ Item {
 
                         model = array
                     }, function(request) {
-                        messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't get list of events";
+                        messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't get list of events\n" + request.responseText;
                         messageDialog.open();
                     });
                 }
@@ -386,7 +386,7 @@ Item {
                                             console.log("Event successfully removed");
                                             eventsListView.getEventsForCurrentDate();
                                         }, function(request) {
-                                            messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event";
+                                            messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event\n" + request.responseText;
                                             messageDialog.open();
                                         });
                                     }

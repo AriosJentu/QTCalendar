@@ -304,7 +304,7 @@ Item {
                         Client.postTaskForEventToServer(currentTask, function() {
                             pushInfo();
                         }, function(request) {
-                            messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't post task to server";
+                            messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't post task to server\n" + request.responseText;
                             messageDialog.open();
                         }, !isNew);
                     }

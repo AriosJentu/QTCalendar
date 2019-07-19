@@ -25,11 +25,11 @@ Item {
 
     function updateEvent() {
         currentEvent.reprule = buildRRuleString()
-        currentEvent.endTime = Client.getRRuleEndDate(currentEvent)
+        /*currentEvent.endTime = Client.getRRuleEndDate(currentEvent)
 
         if (currentEvent.reprule === "") {
             currentEvent.endTime = currentEvent.startTime;
-        }
+        }*/
 
         pushInfo()
     }
