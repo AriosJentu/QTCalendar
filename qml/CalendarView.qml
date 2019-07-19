@@ -384,7 +384,8 @@ Item {
                                     onTriggered: {
                                         Client.deleteEventFromServer(modelData, function() {
                                             console.log("Event successfully removed");
-                                            eventsListView.getEventsForCurrentDate();
+                                            //eventsListView.getEventsForCurrentDate();
+                                            setSelectedDate(maincalendar.selectedDate)
                                         }, function(request) {
                                             messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't remove event\n" + request.responseText;
                                             messageDialog.open();
