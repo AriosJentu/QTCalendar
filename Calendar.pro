@@ -43,7 +43,7 @@ DISTFILES += \
     qml/SelectorView.qml \
     qml/TestView.qml \
     qml/main.qml \
-    src/server.js
+    src/client.js
 
 contains(ANDROID_TARGET_ARCH,arm64-v8a) {
     ANDROID_PACKAGE_SOURCE_DIR = \

@@ -2,7 +2,7 @@ import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
-import "qrc:/src/server.js" as Server;
+import "qrc:/src/client.js" as Client;
 
 //import QtFirebase 1.0
 
@@ -92,7 +92,7 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: 5
 
-                    text: Server.ICONS.back
+                    text: Client.ICONS.back
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 

@@ -3,7 +3,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.1
-import "qrc:/src/server.js" as Server;
+import "qrc:/src/client.js" as Client;
 
 Item {
 
@@ -49,7 +49,7 @@ Item {
         y: (parent.height - height) / 2
 
         onApplied: {
-            Server.shareEvent(currentEvent, [checkRead.checked, checkUpdate.checked, checkDelete.checked], function(string) {
+            Client.shareEvent(currentEvent, [checkRead.checked, checkUpdate.checked, checkDelete.checked], function(string) {
                 sharingToken = string;
                 close();
                 tokenDialog.open();
@@ -160,7 +160,7 @@ Item {
                             mainStackView.currentItem.setSelectedDate(currentEvent.selectedDate);
                         }
 
-                        text: Server.ICONS.back
+                        text: Client.ICONS.back
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
                     }
@@ -172,7 +172,7 @@ Item {
                         anchors.right: closeEventButton.left
                         anchors.margins: 5
 
-                        text: Server.ICONS.edit_evt
+                        text: Client.ICONS.edit_evt
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -189,12 +189,12 @@ Item {
                         anchors.right: editEventButton.left
                         anchors.margins: 5
 
-                        text: Server.ICONS.remove_evt
+                        text: Client.ICONS.remove_evt
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
                         onClicked: {
-                            Server.deleteEventFromServer(currentEvent, function() {
+                            Client.deleteEventFromServer(currentEvent, function() {
                                 console.log("Event successfully removed");
                                 mainStackView.push(mainPage);
                                 mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
@@ -213,7 +213,7 @@ Item {
                         anchors.right: deleteEventButton.left
                         anchors.margins: 5
 
-                        text: Server.ICONS.map
+                        text: Client.ICONS.map
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
                         enabled: (currentEvent && currentEvent.location) || false
@@ -231,7 +231,7 @@ Item {
                         anchors.right: eventOnMapButton.left
                         anchors.margins: 5
 
-                        text: Server.ICONS.share
+                        text: Client.ICONS.share
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -262,13 +262,13 @@ Item {
                         anchors.right: parent.right
                         anchors.margins: 5
 
-                        text: Server.ICONS.new_evt
+                        text: Client.ICONS.new_evt
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
                         onClicked: {
                             mainStackView.push(editTaskView);
-                            mainStackView.currentItem.setTask(Server.generateEmptyTask(currentEvent), currentEvent, true);
+                            mainStackView.currentItem.setTask(Client.generateEmptyTask(currentEvent), currentEvent, true);
                         }
                     }
 
@@ -280,7 +280,7 @@ Item {
                         anchors.right: addTaskButton.left
                         anchors.margins: 5
 
-                        text: Server.ICONS.refresh
+                        text: Client.ICONS.refresh
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -335,11 +335,11 @@ Item {
                                 if (currentEvent) {
 
                                     var localtz = -(new Date()).getTimezoneOffset()/60;
-                                    var tz = " "+Server.getTimezoneStringFromOffset(Server.getTimezoneOffset(currentEvent.timezone));
+                                    var tz = " "+Client.getTimezoneStringFromOffset(Client.getTimezoneOffset(currentEvent.timezone));
                                     var localStartTime = "<br/>&nbsp;&nbsp;" + "<i>" + currentEvent.startTime.toLocaleString(Qt.locale(), dateFormat) + " (Local Time)</i>";
                                     var localEndTime = "<br/>&nbsp;&nbsp;" + "<i>" + currentEvent.endTime.toLocaleString(Qt.locale(), dateFormat) + " (Local Time)</i>";
 
-                                    if (Server.getTimezoneOffset(currentEvent.timezone) === localtz) {
+                                    if (Client.getTimezoneOffset(currentEvent.timezone) === localtz) {
                                         tz = "";
                                         localStartTime = "";
                                         localEndTime = "";
@@ -350,11 +350,11 @@ Item {
                                         "&nbsp;&nbsp;<b></b>" + currentEvent.name;
                                         break;
                                     case 1:
-                                        var startTime = Server.convertDateFromToTimezone(currentEvent.startTime, localtz, currentEvent.timezone);
+                                        var startTime = Client.convertDateFromToTimezone(currentEvent.startTime, localtz, currentEvent.timezone);
                                         "&nbsp;&nbsp;<b></b>" + startTime.toLocaleString(Qt.locale(), dateFormat) + tz + localStartTime;
                                         break;
                                     case 2:
-                                        var endTime = Server.convertDateFromToTimezone(currentEvent.endTime, localtz, currentEvent.timezone);
+                                        var endTime = Client.convertDateFromToTimezone(currentEvent.endTime, localtz, currentEvent.timezone);
                                         "&nbsp;&nbsp;<b></b>" + endTime.toLocaleString(Qt.locale(), dateFormat) + tz + localEndTime;
                                         break;
                                     case 3:
@@ -362,11 +362,11 @@ Item {
                                         if (currentEvent && currentEvent.reprule) {
                                             repeats = currentEvent.reprule;
                                         }
-                                        "&nbsp;&nbsp;<b></b>" + Server.convertRRuleToReadableString(repeats);
+                                        "&nbsp;&nbsp;<b></b>" + Client.convertRRuleToReadableString(repeats);
                                         break;
                                     case 4:
-                                        var array = Server.getListOfTimezones();
-                                        var tzindex = Server.getTimezoneIndex(currentEvent.timezone);
+                                        var array = Client.getListOfTimezones();
+                                        var tzindex = Client.getTimezoneIndex(currentEvent.timezone);
                                         "&nbsp;&nbsp;<b></b>" + array[0][tzindex] + " ("+currentEvent.timezone+")";
                                         break;
                                     case 5:
@@ -490,9 +490,9 @@ Item {
                     interactive: true
 
                     function getTasksForCurrentEvent() {
-                        Server.getListOfTasksForEvent(currentEvent, function(array) {
+                        Client.getListOfTasksForEvent(currentEvent, function(array) {
                             model = array;
-                        }, Server.basicErrorFunc);
+                        }, Client.basicErrorFunc);
                     }
 
                     delegate: Rectangle {
@@ -542,10 +542,10 @@ Item {
                                     wrapMode: Text.Wrap
                                     text: {
                                         var localtz = -(new Date()).getTimezoneOffset()/60;
-                                        var deadlineTime = Server.convertDateFromToTimezone(modelData.deadline, localtz, currentEvent.timezone);
-                                        var tz = " "+Server.getTimezoneStringFromOffset(Server.getTimezoneOffset(currentEvent.timezone));
+                                        var deadlineTime = Client.convertDateFromToTimezone(modelData.deadline, localtz, currentEvent.timezone);
+                                        var tz = " "+Client.getTimezoneStringFromOffset(Client.getTimezoneOffset(currentEvent.timezone));
 
-                                        if (Server.getTimezoneOffset(currentEvent.timezone) === localtz) {
+                                        if (Client.getTimezoneOffset(currentEvent.timezone) === localtz) {
                                             tz = "";
                                         }
 
@@ -557,7 +557,7 @@ Item {
                                     id: statusLabel
                                     width: parent.width
                                     wrapMode: Text.Wrap
-                                    text: "  " + Server.getReadableStateFromTaskState(modelData.status);
+                                    text: "  " + Client.getReadableStateFromTaskState(modelData.status);
                                     font.italic: true
                                 }
                             }
@@ -598,7 +598,7 @@ Item {
                                     MenuItem {
                                         text: "Delete"
                                         onTriggered: {
-                                            Server.deleteTaskForEventFromServer(modelData, function() {
+                                            Client.deleteTaskForEventFromServer(modelData, function() {
                                                 console.log("Task successfully removed");
                                                 tasksListView.getTasksForCurrentEvent();
                                             }, function(request) {

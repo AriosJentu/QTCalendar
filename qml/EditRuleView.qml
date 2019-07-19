@@ -2,7 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
 import QtQuick.Controls 1.5 as OldContr
-import "qrc:/src/server.js" as Server
+import "qrc:/src/client.js" as Client
 
 Item {
 
@@ -25,7 +25,7 @@ Item {
 
     function updateEvent() {
         currentEvent.reprule = buildRRuleString()
-        currentEvent.endTime = Server.getRRuleEndDate(currentEvent)
+        currentEvent.endTime = Client.getRRuleEndDate(currentEvent)
 
         if (currentEvent.reprule === "") {
             currentEvent.endTime = currentEvent.startTime;
@@ -35,17 +35,17 @@ Item {
     }
 
     function buildRRuleString() {
-        var arr = Server.generateBuilderArray();
+        var arr = Client.generateBuilderArray();
         arr.type = repeatTypeCombobox.model[repeatTypeCombobox.currentIndex];
         arr.count = Number(endRepeatingTextBox.text);
         arr = ruleLoaderComponent.item.buildRRule(arr);
-        var res = Server.buildRRule(arr);
+        var res = Client.buildRRule(arr);
         return res;
     }
 
     function parseRRule() {
 
-        var arr = Server.convertRRuleToBuilderArray(currentEvent.reprule);
+        var arr = Client.convertRRuleToBuilderArray(currentEvent.reprule);
         repeatTypeCombobox.currentIndex = repeatTypeCombobox.model.indexOf(arr.type);
         endRepeatingTextBox.text = arr.count.toString();
 
@@ -104,7 +104,7 @@ Item {
                 }
 
                 id: editRuleEveryObjectLabel
-                text: singleTypeRepeatString + Server.getEnding(Number(repeatEveryTextBox.text))
+                text: singleTypeRepeatString + Client.getEnding(Number(repeatEveryTextBox.text))
                 width: metricElement.width*1.5
                 height: metricElement.height*3
                 anchors.left: repeatEveryTextBox.right
@@ -255,7 +255,7 @@ Item {
             ComboBox {
                 id: selectorDayOnMonthDay
                 anchors.left: radioButtonOnMonthDay.right
-                model: Server.getIntArray(31, false, 1);
+                model: Client.getIntArray(31, false, 1);
                 width: radioButtonOnMonthDay.width/2
                 anchors.margins: 5
             }
@@ -271,7 +271,7 @@ Item {
                 id: selectorOrdinalOnWeekDay
                 anchors.top: radioButtonOnMonthDay.bottom
                 anchors.left: radioButtonOnWeekDay.right
-                model: Server.getOrdinals();
+                model: Client.getOrdinals();
                 width: radioButtonOnWeekDay.width
                 anchors.margins: 5
             }
@@ -280,7 +280,7 @@ Item {
                 id: selectorDaysOnWeekDay
                 anchors.top: radioButtonOnMonthDay.bottom
                 anchors.left: selectorOrdinalOnWeekDay.right
-                model: Server.getWeeks()[0];
+                model: Client.getWeeks()[0];
                 width: radioButtonOnWeekDay.width*1.2
                 anchors.margins: 5
             }
@@ -340,7 +340,7 @@ Item {
             ComboBox {
                 id: selectorMonthOnYearlyDay
                 anchors.left: radioButtonOnYearDay.right
-                model: Server.getMonthes();
+                model: Client.getMonthes();
                 width: radioButtonOnYearDay.width*2
                 anchors.margins: 5
             }
@@ -348,7 +348,7 @@ Item {
             ComboBox {
                 id: selectorDayOfMonthOnYearlyDay
                 anchors.left: selectorMonthOnYearlyDay.right
-                model: Server.getIntArray(31, false, 1);
+                model: Client.getIntArray(31, false, 1);
                 width: radioButtonOnYearDay.width*1.1
                 anchors.margins: 5
             }
@@ -364,7 +364,7 @@ Item {
                 id: selectorOrdinalOnYearDay
                 anchors.left: radioButtonOnSpecialYearDay.right
                 anchors.top: radioButtonOnYearDay.bottom
-                model: Server.getOrdinals();
+                model: Client.getOrdinals();
                 width: radioButtonOnSpecialYearDay.width*1.1
                 anchors.margins: 5
             }
@@ -373,7 +373,7 @@ Item {
                 id: selectorDayTypeOnYearDay
                 anchors.left: selectorOrdinalOnYearDay.right
                 anchors.top: radioButtonOnYearDay.bottom
-                model: Server.getWeeks()[0];
+                model: Client.getWeeks()[0];
                 width: radioButtonOnSpecialYearDay.width*1.6
                 anchors.margins: 5
             }
@@ -382,7 +382,7 @@ Item {
                 id: selectorMonthOnYearDay
                 anchors.left: radioButtonOnSpecialYearDay.right
                 anchors.top: selectorOrdinalOnYearDay.bottom
-                model: Server.getMonthes();
+                model: Client.getMonthes();
                 width: radioButtonOnSpecialYearDay.width*1.6
                 anchors.margins: 5
             }
@@ -490,7 +490,7 @@ Item {
                         height: metricElement.height*3 - 20
                         anchors.left: editRuleRepeatLabel.right
                         y: 10
-                        model: Server.getRepeatTypes()
+                        model: Client.getRepeatTypes()
                         anchors.margins: 5
                     }
 
@@ -509,7 +509,7 @@ Item {
                         verticalAlignment: Text.AlignVCenter;
                         anchors.top: repeatTypeCombobox.bottom
                         anchors.margins: 5
-                        visible: Server.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
+                        visible: Client.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
                     }
 
                     TextField {
@@ -524,7 +524,7 @@ Item {
                         validator: RegExpValidator{regExp: /[0-9]+/}
                         anchors.margins: 5
                         anchors.topMargin: 10
-                        visible: Server.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
+                        visible: Client.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
 
                         onTextChanged: {
 
@@ -547,7 +547,7 @@ Item {
                         }
 
                         id: editRuleEndAnotherLabel
-                        text: "time" + Server.getEnding(Number(endRepeatingTextBox.text))
+                        text: "time" + Client.getEnding(Number(endRepeatingTextBox.text))
                         width: nmetricElement.width*2
                         height: nmetricElement.height*3
                         verticalAlignment: Text.AlignVCenter;
@@ -555,7 +555,7 @@ Item {
                         anchors.left: endRepeatingTextBox.right
                         anchors.leftMargin: 10
                         anchors.margins: 5
-                        visible: Server.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
+                        visible: Client.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
                     }
 
 
@@ -579,14 +579,14 @@ Item {
                                     return;
                                 }
 
-                                var arr = Server.convertRRuleToBuilderArray(currentEvent.reprule);
+                                var arr = Client.convertRRuleToBuilderArray(currentEvent.reprule);
                                 if (repeatTypeCombobox.model[repeatTypeCombobox.currentIndex] === arr.type){
                                     item.parseRRule(arr);
                                 }
                             }
 
                             function getCurrentComponent() {
-                                switch(Server.getRepeatTypes()[repeatTypeCombobox.currentIndex]) {
+                                switch(Client.getRepeatTypes()[repeatTypeCombobox.currentIndex]) {
                                     case "Yearly":
                                         return ruleYearlyComponent
                                     case "Monthly":
@@ -626,7 +626,7 @@ Item {
                             anchors.right: parent.right
                             anchors.margins: 5
 
-                            text: Server.ICONS.back
+                            text: Client.ICONS.back
                             font.family: root.fontAwesome.name
                             font.pixelSize: 20
 
@@ -641,7 +641,7 @@ Item {
                             anchors.right: cancelRuleButton.left
                             anchors.margins: 5
 
-                            text: Server.ICONS.accept
+                            text: Client.ICONS.accept
                             font.family: root.fontAwesome.name
                             font.pixelSize: 20
 

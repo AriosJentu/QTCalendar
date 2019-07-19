@@ -3,7 +3,7 @@ import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
 import QtQuick.Controls 1.5 as OldContr
 import QtQuick.Dialogs 1.2
-import "qrc:/src/server.js" as Server
+import "qrc:/src/client.js" as Client
 
 Item {
 
@@ -179,10 +179,10 @@ Item {
                             if (obj && currentEvent && currentEvent.timezone) {
 
                                 var localtz = -(new Date()).getTimezoneOffset()/60;
-                                var convTime = Server.convertDateFromToTimezone(obj, localtz, currentEvent.timezone);
-                                var tz = Server.getTimezoneStringFromOffset(Server.getTimezoneOffset(currentEvent.timezone))
+                                var convTime = Client.convertDateFromToTimezone(obj, localtz, currentEvent.timezone);
+                                var tz = Client.getTimezoneStringFromOffset(Client.getTimezoneOffset(currentEvent.timezone))
 
-                                if (Server.getTimezoneOffset(currentEvent.timezone) === localtz) {
+                                if (Client.getTimezoneOffset(currentEvent.timezone) === localtz) {
                                     tz = "";
                                 }
 
@@ -207,7 +207,7 @@ Item {
                     anchors.top: taskDescriptionsTextField.bottom
                     x: parent.width - width
 
-                    text: Server.ICONS.picker
+                    text: Client.ICONS.picker
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -246,21 +246,21 @@ Item {
                     anchors.left: taskStatusLabel.right
                     anchors.top: taskDeadlinePickerButton.bottom
 
-                    model: Server.getTaskReadableStates()
+                    model: Client.getTaskReadableStates()
                     anchors.margins: 10
 
                     currentIndex: {
                         var index = 0
                         if (currentTask && currentTask.status) {
                             console.log(currentTask.status);
-                            index = Server.getIndexOfState(currentTask.status);
+                            index = Client.getIndexOfState(currentTask.status);
                         }
                         index;
                     }
 
                     onCurrentIndexChanged: {
                         if (currentTask && currentTask.status) {
-                            currentTask.status = Server.getStateFromIndex(currentIndex);
+                            currentTask.status = Client.getStateFromIndex(currentIndex);
                             console.log(currentTask.status);
                         }
                     }
@@ -280,7 +280,7 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: 5
 
-                    text: Server.ICONS.back
+                    text: Client.ICONS.back
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -295,13 +295,13 @@ Item {
                     anchors.right: cancelTaskButton.left
                     anchors.margins: 5
 
-                    text: Server.ICONS.accept
+                    text: Client.ICONS.accept
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
                     onClicked: {
                         saveInfo();
-                        Server.postTaskForEventToServer(currentTask, function() {
+                        Client.postTaskForEventToServer(currentTask, function() {
                             pushInfo();
                         }, function(request) {
                             messageDialog.text = "HTTP Request Failed\nReady State: " + request.readyState + "\nStatus: " + request.status + "\nCan't post task to server";

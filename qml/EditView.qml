@@ -3,7 +3,7 @@ import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
 import QtQuick.Controls 1.5 as OldContr
 import QtQuick.Dialogs 1.2
-import "qrc:/src/server.js" as Server;
+import "qrc:/src/client.js" as Client;
 
 Item {
 
@@ -53,8 +53,8 @@ Item {
 
                     if (obj) {
                         var localtz = -(new Date()).getTimezoneOffset()/60;
-                        var convTime = Server.convertDateFromToTimezone(obj, localtz, currentEvent.timezone);
-                        var tz = Server.getTimezoneStringFromOffset(Server.getTimezoneOffset(currentEvent.timezone))
+                        var convTime = Client.convertDateFromToTimezone(obj, localtz, currentEvent.timezone);
+                        var tz = Client.getTimezoneStringFromOffset(Client.getTimezoneOffset(currentEvent.timezone))
 
                         date = convTime.toLocaleString(Qt.locale(), "yyyy-MM-dd HH:mm") + " " + tz;
                     }
@@ -95,7 +95,7 @@ Item {
                             mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                         }
 
-                        text: Server.ICONS.back
+                        text: Client.ICONS.back
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
                     }
@@ -108,7 +108,7 @@ Item {
                         anchors.right: closeEditButton.left
                         anchors.margins: 5
 
-                        text: Server.ICONS.save
+                        text: Client.ICONS.save
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -121,7 +121,7 @@ Item {
 
                             } else {
 
-                                Server.postEventToServer(currentEvent, function() {
+                                Client.postEventToServer(currentEvent, function() {
                                     mainStackView.push(mainPage);
                                     mainStackView.currentItem.setSelectedDate(currentEvent.startTime);
                                 }, function(request) {
@@ -167,7 +167,7 @@ Item {
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 
-                        text: Server.ICONS.picker
+                        text: Client.ICONS.picker
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -211,7 +211,7 @@ Item {
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 
-                        text: Server.ICONS.picker
+                        text: Client.ICONS.picker
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -249,7 +249,7 @@ Item {
                                 repeats = currentEvent.reprule;
                             }
 
-                            "<b>Repeat event:</b> " + Server.convertRRuleToReadableString(repeats);
+                            "<b>Repeat event:</b> " + Client.convertRRuleToReadableString(repeats);
                         }
                     }
 
@@ -261,7 +261,7 @@ Item {
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 
-                        text: Server.ICONS.edit_evt
+                        text: Client.ICONS.edit_evt
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -360,7 +360,7 @@ Item {
 
                         id: eventTimezonesCombobox
                         model: {
-                            array = Server.getListOfTimezones()
+                            array = Client.getListOfTimezones()
                             array[0]
                         }
                         currentIndex: {
@@ -368,11 +368,11 @@ Item {
                             if (currentEvent && currentEvent.timezone) {
                                 tzindex = currentEvent.timezone;
                             }
-                            Server.getTimezoneIndex(tzindex);
+                            Client.getTimezoneIndex(tzindex);
                         }
 
                         onCurrentIndexChanged: {
-                            currentEvent.timezone = Server.getTimezoneStringFromOffset(array[1][currentIndex].offset)
+                            currentEvent.timezone = Client.getTimezoneStringFromOffset(array[1][currentIndex].offset)
                             startDateString = test.getDateString(currentEvent.startTime);
                             endDateString = test.getDateString(currentEvent.endTime);
                         }
@@ -420,7 +420,7 @@ Item {
                         anchors.margins: 10
                         x: viewEditEventList.width - width
 
-                        text: Server.ICONS.map
+                        text: Client.ICONS.map
                         font.family: root.fontAwesome.name
                         font.pixelSize: 20
 
@@ -539,7 +539,7 @@ Item {
     function setNewEvent(date) {
         isNewEvent = true;
 
-        currentEvent = Server.generateEmptyEvent();
+        currentEvent = Client.generateEmptyEvent();
 
         currentEvent.id = 0;
         currentEvent.patrnid = 0;
@@ -550,6 +550,6 @@ Item {
         startDateString = test.getDateString(currentEvent.startTime);
         endDateString = test.getDateString(currentEvent.endTime);
 
-        currentEvent.timezone = Server.getTimezoneStringFromOffset(-(new Date()).getTimezoneOffset()/60);
+        currentEvent.timezone = Client.getTimezoneStringFromOffset(-(new Date()).getTimezoneOffset()/60);
     }
 }

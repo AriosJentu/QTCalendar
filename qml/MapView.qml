@@ -5,7 +5,7 @@ import QtQuick.Controls 2.5
 import QtLocation 5.6
 import QtPositioning 5.6
 
-import "qrc:/src/server.js" as Server;
+import "qrc:/src/client.js" as Client;
 
 Item {
 
@@ -100,7 +100,7 @@ Item {
                         }
 
                         id: userLocationIcon
-                        text: Server.ICONS.userlocation
+                        text: Client.ICONS.userlocation
                         font.family: root.fontAwesome.name
                         font.pixelSize: 50
                         color: "blue"
@@ -120,7 +120,7 @@ Item {
                         }
 
                         id: eventLocationIcon
-                        text: Server.ICONS.map
+                        text: Client.ICONS.map
                         font.family: root.fontAwesome.name
                         font.pixelSize: 50
                         color: "red"
@@ -161,7 +161,7 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: 5
 
-                    text: Server.ICONS.back
+                    text: Client.ICONS.back
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -176,7 +176,7 @@ Item {
                     anchors.right: cancelLocationButton.left
                     anchors.margins: 5
 
-                    text: Server.ICONS.accept
+                    text: Client.ICONS.accept
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
                     visible: !isViewEvent
@@ -195,7 +195,7 @@ Item {
                     anchors.right: isViewEvent ? cancelLocationButton.left : acceptLocationButton.left
                     anchors.margins: 5
 
-                    text: Server.ICONS.userpos
+                    text: Client.ICONS.userpos
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
                     enabled: src.position.coordinate.longitude.toString() !== "NaN"
@@ -214,7 +214,7 @@ Item {
                     anchors.right: moveToUserLocationButton.left
                     anchors.margins: 5
 
-                    text: Server.ICONS.map
+                    text: Client.ICONS.map
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
                     enabled: eventLocation.coordinate.longitude.toString() !== "NaN"
@@ -233,7 +233,7 @@ Item {
                     anchors.right: moveToSelectedLocationButton.left
                     anchors.margins: 5
 
-                    text: Server.ICONS.remove_evt
+                    text: Client.ICONS.remove_evt
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
                     enabled: eventLocation.coordinate.longitude.toString() !== "NaN"

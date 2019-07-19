@@ -2,7 +2,7 @@ import QtQuick 2.2
 import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
-import "qrc:/src/server.js" as Server;
+import "qrc:/src/client.js" as Client;
 
 Item {
 
@@ -22,8 +22,8 @@ Item {
         isTaskView = false;
 
         var localtz = -(new Date()).getTimezoneOffset()/60;
-        var startTime = Server.convertDateFromToTimezone(event.startTime, localtz, event.timezone);
-        var endTime = Server.convertDateFromToTimezone(event.endTime, localtz, event.timezone);
+        var startTime = Client.convertDateFromToTimezone(event.startTime, localtz, event.timezone);
+        var endTime = Client.convertDateFromToTimezone(event.endTime, localtz, event.timezone);
 
         selectorcalendar.selectedDate = isStart ? startTime : endTime;
         selectHourCombo.currentIndex = isStart ? startTime.getHours() : endTime.getHours();
@@ -39,7 +39,7 @@ Item {
                 currentEvent.startTime.setMinutes(selectMinuteCombo.currentIndex)
 
                 if (currentEvent.reprule !== "") {
-                    currentEvent.endTime = Server.getRRuleEndDate(currentEvent).getTime();
+                    currentEvent.endTime = Client.getRRuleEndDate(currentEvent).getTime();
                 }
 
             } else {
@@ -49,7 +49,7 @@ Item {
 
                 if (currentEvent.reprule !== "") {
                     currentEvent.startTime = currentEvent.endTime;
-                    currentEvent.startTime = 2*currentEvent.endTime - Server.getRRuleEndDate(currentEvent).getTime();
+                    currentEvent.startTime = 2*currentEvent.endTime - Client.getRRuleEndDate(currentEvent).getTime();
                 }
             }
         } else {
@@ -65,12 +65,12 @@ Item {
         var localtz = -(new Date()).getTimezoneOffset()/60;
         if (!isTaskView) {
             if (isStartDate) {
-                currentEvent.startTime = Server.convertDateFromToTimezone(currentEvent.startTime, currentEvent.timezone, localtz);
+                currentEvent.startTime = Client.convertDateFromToTimezone(currentEvent.startTime, currentEvent.timezone, localtz);
             } else {
-                currentEvent.endTime = Server.convertDateFromToTimezone(currentEvent.endTime, currentEvent.timezone, localtz);
+                currentEvent.endTime = Client.convertDateFromToTimezone(currentEvent.endTime, currentEvent.timezone, localtz);
             }
         } else {
-            currentTask.deadline = Server.convertDateFromToTimezone(currentTask.deadline, currentEvent.timezone, localtz)
+            currentTask.deadline = Client.convertDateFromToTimezone(currentTask.deadline, currentEvent.timezone, localtz)
         }
 
     }
@@ -87,7 +87,7 @@ Item {
         isNewEvent = isNew;
 
         var localtz = -(new Date()).getTimezoneOffset()/60;
-        var time = Server.convertDateFromToTimezone(task.deadline, localtz, event.timezone);
+        var time = Client.convertDateFromToTimezone(task.deadline, localtz, event.timezone);
 
         selectorcalendar.selectedDate = time;
         selectHourCombo.currentIndex = time.getHours();
@@ -265,7 +265,7 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: 5
 
-                    text: Server.ICONS.back
+                    text: Client.ICONS.back
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -285,7 +285,7 @@ Item {
                     anchors.right: cancelDateButton.left
                     anchors.margins: 5
 
-                    text: Server.ICONS.accept
+                    text: Client.ICONS.accept
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -320,7 +320,7 @@ Item {
                         anchors.left: eventDateTimeDayLabel.right
                         anchors.margins: 10;
 
-                        model: Server.getIntArray(24);
+                        model: Client.getIntArray(24);
                     }
 
                     ComboBox {
@@ -330,7 +330,7 @@ Item {
                         anchors.left: selectHourCombo.right
                         anchors.margins: 10;
 
-                        model: Server.getIntArray(60);
+                        model: Client.getIntArray(60);
                     }
 
                 }

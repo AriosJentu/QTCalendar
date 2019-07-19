@@ -7,11 +7,11 @@
         <file>qml/EventView.qml</file>
         <file>qml/EditView.qml</file>
         <file>qml/SelectorView.qml</file>
-        <file>src/server.js</file>
         <file>assets/miregular.ttf</file>
         <file>qml/EditRuleView.qml</file>
         <file>qml/MapView.qml</file>
         <file>qml/LoginView.qml</file>
         <file>qml/EditTaskView.qml</file>
+        <file>src/client.js</file>
     </qresource>
 </RCC>

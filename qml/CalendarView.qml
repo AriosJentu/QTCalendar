@@ -3,7 +3,7 @@ import QtQuick.Controls 1.2
 import QtQuick.Controls.Styles 1.1
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
-import "qrc:/src/server.js" as Server;
+import "qrc:/src/client.js" as Client;
 
 Item {
 
@@ -46,9 +46,9 @@ Item {
 
             property var visibleForDates;
             function getVisibilityForCurrentMonth() {
-                Server.getVisibilityForMonth(maincalendar.visibleMonth, maincalendar.visibleYear, function(visibilitydata) {
+                Client.getVisibilityForMonth(maincalendar.visibleMonth, maincalendar.visibleYear, function(visibilitydata) {
                     maincalendar.visibleForDates = visibilitydata;
-                }, Server.basicErrorFunc);
+                }, Client.basicErrorFunc);
             }
 
             onVisibleMonthChanged: {
@@ -190,7 +190,7 @@ Item {
                     anchors.right: parent.right
                     anchors.margins: 5
 
-                    text: Server.ICONS.new_evt
+                    text: Client.ICONS.new_evt
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -207,7 +207,7 @@ Item {
                     anchors.right: addEventButton.left
                     anchors.margins: 5
 
-                    text: Server.ICONS.today
+                    text: Client.ICONS.today
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
@@ -221,15 +221,15 @@ Item {
                     anchors.right: gotoTodayButton.left
                     anchors.margins: 5
 
-                    text: Server.ICONS.refresh
+                    text: Client.ICONS.refresh
                     font.family: root.fontAwesome.name
                     font.pixelSize: 20
 
                     onClicked: {
 
-                        Server.getVisibilityForMonth(maincalendar.visibleMonth, maincalendar.visibleYear, function(visibilitydata) {
+                        Client.getVisibilityForMonth(maincalendar.visibleMonth, maincalendar.visibleYear, function(visibilitydata) {
                             maincalendar.visibleForDates = visibilitydata;
-                        }, Server.basicErrorFunc)
+                        }, Client.basicErrorFunc)
 
                         eventsListView.getEventsForCurrentDate()
                     }
@@ -268,7 +268,7 @@ Item {
 
                 function getEventsForCurrentDate() {
 
-                    Server.getEventsForDate(maincalendar.selectedDate, function(array) {
+                    Client.getEventsForDate(maincalendar.selectedDate, function(array) {
                         if (array.length > 0) {
 
                             var ldate = array[0].selectedDate.toLocaleString(maincalendar.locale, "yyyy-MM-dd");
@@ -328,11 +328,11 @@ Item {
                                 text: {
 
                                     var localtz = -(new Date()).getTimezoneOffset()/60;
-                                    var startTime = Server.convertDateFromToTimezone(modelData.startTime, localtz, modelData.timezone);
-                                    var endTime = Server.convertDateFromToTimezone(modelData.endTime, localtz, modelData.timezone);
-                                    var tz = " "+Server.getTimezoneStringFromOffset(Server.getTimezoneOffset(modelData.timezone));
+                                    var startTime = Client.convertDateFromToTimezone(modelData.startTime, localtz, modelData.timezone);
+                                    var endTime = Client.convertDateFromToTimezone(modelData.endTime, localtz, modelData.timezone);
+                                    var tz = " "+Client.getTimezoneStringFromOffset(Client.getTimezoneOffset(modelData.timezone));
 
-                                    if (Server.getTimezoneOffset(modelData.timezone) === localtz) {
+                                    if (Client.getTimezoneOffset(modelData.timezone) === localtz) {
                                         tz = "";
                                     }
 
@@ -382,7 +382,7 @@ Item {
                                 MenuItem {
                                     text: "Delete"
                                     onTriggered: {
-                                        Server.deleteEventFromServer(modelData, function() {
+                                        Client.deleteEventFromServer(modelData, function() {
                                             console.log("Event successfully removed");
                                             eventsListView.getEventsForCurrentDate();
                                         }, function(request) {
@@ -405,8 +405,8 @@ Item {
     function setSelectedDate(date) {
         maincalendar.selectedDate = date;
         eventsListView.getEventsForCurrentDate();
-        Server.getVisibilityForMonth(date.getMonth(), date.getYear()+1900, function(visibilitydata) {
+        Client.getVisibilityForMonth(date.getMonth(), date.getYear()+1900, function(visibilitydata) {
             maincalendar.visibleForDates = visibilitydata;
-        }, Server.basicErrorFunc)
+        }, Client.basicErrorFunc)
     }
 }
