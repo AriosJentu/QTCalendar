@@ -29,6 +29,9 @@ const ICONS = {
     copy: ""
 }
 
+const ONEHOUR = 1000*60*60;
+const ONEDAY = ONEHOUR*24;
+
 function encodeQueryData(data) {
    const ret = [];
    for (let d in data)
@@ -75,8 +78,7 @@ function onRequestGetMonthEventInstances(request, afterfunc, errorfunc, fromdate
         if (request.status === 200) {
 
             var result = {}
-            var one_day = 1000*60*60*24;
-            var difindays = (todate - fromdate)/one_day;
+            var difindays = (todate - fromdate)/ONEDAY;
 
             for (var i = 0; i < difindays; i++) {
 
@@ -98,7 +100,7 @@ function onRequestGetMonthEventInstances(request, afterfunc, errorfunc, fromdate
                 var nformat = sdate.toLocaleString(Qt.locale(), "ddMMyyyy");
                 result[nformat] = true;
 
-                difindays = ((new Date(eventElement.ended_at)).getTime() - sdate.getTime())/one_day;
+                difindays = ((new Date(eventElement.ended_at)).getTime() - sdate.getTime())/ONEDAY;
 
                 for (var k = 0; k < difindays; k++) {
                     var adate = sdate.addDays(k);
@@ -356,11 +358,12 @@ function onRequestPostEvent(request, event, afterfunc, errorfunc, evtupdate, typ
             jsonForPattern.started_at = event.startTime.getTime();
             jsonForPattern.ended_at = event.endTime.getTime();
             jsonForPattern.timezone = event.timezone;
-            //jsonForPattern.exrule = event.excrule;
             jsonForPattern.rrule = event.reprule;
 
-            if (evtupdate) {
+            if (evtupdate && !event.reprule) {
                 jsonForPattern.duration = jsonForPattern.ended_at - jsonForPattern.started_at;
+            } else {
+                jsonForPattern.duration = ONEHOUR;
             }
 
             var patJsonString = JSON.stringify(jsonForPattern);
