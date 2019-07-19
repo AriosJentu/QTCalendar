@@ -377,6 +377,9 @@ Item {
                                         "&nbsp;&nbsp;<b></b>" + location;
                                         break;
                                     case 6:
+                                        "&nbsp;&nbsp;<b></b>" + Client.parseTimeToTypes(currentEvent.duration).join(" ");
+                                        break;
+                                    case 7:
                                         "&nbsp;&nbsp;<b></b>" + currentEvent.id;
                                         break;
                                     default:
@@ -426,8 +429,13 @@ Item {
                 }
 
                 ListElement {
-                    type: "Event ID:"
+                    type: "Duration:"
                     index: 6
+                }
+
+                ListElement {
+                    type: "Event ID:"
+                    index: 7
                 }
             }
         }
@@ -613,15 +621,11 @@ Item {
                                     }
                                 }
                             }
-
-
                         }
                     }
-
                 }
             }
         }
-
     }
 
     function setEvent(modelobj) {

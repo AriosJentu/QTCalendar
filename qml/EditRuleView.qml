@@ -13,8 +13,16 @@ Item {
     property string singleTypeRepeatString: "day"
 
     function loadEvent(event, isNew) {
+
         currentEvent = event;
         isNewEvent = isNew;
+
+        if (event.duration) {
+            var rduration = Client.parseTimeToTypes(event.duration)
+            durationTextBox.text = rduration[0];
+            selectorDurationType.currentIndex = Client.getDurationTypes(rduration[0]).indexOf(rduration[1]);
+        }
+
         parseRRule();
     }
 
@@ -25,11 +33,13 @@ Item {
 
     function updateEvent() {
         currentEvent.reprule = buildRRuleString()
-        /*currentEvent.endTime = Client.getRRuleEndDate(currentEvent)
-
-        if (currentEvent.reprule === "") {
-            currentEvent.endTime = currentEvent.startTime;
-        }*/
+        console.log(currentEvent.reprule)
+        if (currentEvent.reprule) {
+            currentEvent.duration = Math.max(1, Number(durationTextBox.text))*Client.getDurationMultiplier(selectorDurationType.model[selectorDurationType.currentIndex]);
+            console.log(currentEvent.duration);
+        } else {
+            currentEvent.duration = 0;
+        }
 
         pushInfo()
     }
@@ -519,7 +529,7 @@ Item {
                         height: nmetricElement.height*3 - 20
                         anchors.left: editRuleEndLabel.right
                         anchors.top: repeatTypeCombobox.bottom
-                        text: "0"
+                        text: "1"
                         maximumLength: 3
                         validator: RegExpValidator{regExp: /[0-9]+/}
                         anchors.margins: 5
@@ -542,23 +552,81 @@ Item {
 
                         TextMetrics {
                             id: mmetricElement
-                            font: editRuleRepeatLabel.font
-                            text: editRuleRepeatLabel.text
+                            font: editRuleEndAnotherLabel.font
+                            text: editRuleEndAnotherLabel.text
                         }
 
                         id: editRuleEndAnotherLabel
                         text: "time" + Client.getEnding(Number(endRepeatingTextBox.text))
+
                         width: nmetricElement.width*2
                         height: nmetricElement.height*3
                         verticalAlignment: Text.AlignVCenter;
+
                         anchors.top: repeatTypeCombobox.bottom
                         anchors.left: endRepeatingTextBox.right
                         anchors.leftMargin: 10
                         anchors.margins: 5
+
                         visible: Client.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
                     }
 
+                    Label {
 
+                        TextMetrics {
+                            id: gmetricElement
+                            font: editRuleDurationLabel.font
+                            text: editRuleDurationLabel.text
+                        }
+
+                        id: editRuleDurationLabel
+                        text: "Duration: "
+
+                        width: gmetricElement.width*2
+                        height: gmetricElement.height*3
+                        verticalAlignment: Text.AlignVCenter;
+
+                        anchors.top: endRepeatingTextBox.bottom
+                        anchors.margins: 5
+
+                        visible: Client.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
+                    }
+
+                    TextField {
+
+                        id: durationTextBox
+                        width: nmetricElement.width*2
+                        height: nmetricElement.height*3 - 20
+                        anchors.left: endRepeatingTextBox.left
+                        anchors.top: endRepeatingTextBox.bottom
+                        text: "1"
+                        maximumLength: 3
+                        validator: RegExpValidator{regExp: /[0-9]+/}
+                        anchors.topMargin: 10
+                        visible: Client.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
+
+                        onTextChanged: {
+
+                            if (text[0] === "0" && text.length > 1) {
+                                text = text.substring(1);
+                            }
+
+                            if (text == "") {
+                                text = "0";
+                            }
+                        }
+                    }
+
+                    ComboBox {
+                        id: selectorDurationType
+                        anchors.top: endRepeatingTextBox.bottom
+                        anchors.left: durationTextBox.right
+                        model: Client.getDurationTypes(Number(durationTextBox.text));
+                        width: nmetricElement.width*2.5
+                        anchors.margins: 5
+                        visible: Client.getRepeatTypes()[repeatTypeCombobox.currentIndex] !== "Never"
+
+                    }
 
                     ScrollView {
 
@@ -567,7 +635,7 @@ Item {
                         width: parent.width-10
                         height: parent.height - 10
                         anchors.margins: 5
-                        anchors.top: endRepeatingTextBox.bottom
+                        anchors.top: editRuleDurationLabel.bottom
                         clip: true
 
                         Loader {

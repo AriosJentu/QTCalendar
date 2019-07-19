@@ -274,6 +274,30 @@ Item {
             }
 
             Component {
+                id: repeatorDurationComponent
+
+                Rectangle {
+                    width: repeatorDurationComponent.width
+                    height: durationEventLabel.height + 10
+
+                    Label {
+
+                        TextMetrics {
+                            id: metricElement
+                            font: durationEventLabel.font
+                            text: durationEventLabel.text
+                        }
+
+                        id: durationEventLabel
+                        height: metricElement.height*1.5
+                        wrapMode: Label.Wrap
+
+                        text: "<b>Duration:</b> " + Client.parseTimeToTypes(currentEvent.duration).join(" ");
+                    }
+                }
+            }
+
+            Component {
                 id: eventNameComponent
 
                 Rectangle {
@@ -458,8 +482,10 @@ Item {
                             case 2: return endDatePickerComponent
 
                             case 3: return repeatorSwitcherComponent
-                            case 4: return eventTimezoneComponent
-                            case 5: return eventOnMapComponent
+                            case 4: return repeatorDurationComponent
+
+                            case 5: return eventTimezoneComponent
+                            case 6: return eventOnMapComponent
                         }
                     }
                 }
@@ -474,6 +500,7 @@ Item {
                 ListElement {index: 3}
                 ListElement {index: 4}
                 ListElement {index: 5}
+                ListElement {index: 6}
             }
 
         }
