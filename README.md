@@ -15,7 +15,7 @@ Can be build for PC (Linux/Windows), and Android.
 Fully opensource. Using server's API, which you can get ![here](https://github.com/abelidze/planner-server).
 Also, for authorization, included module ![QtFirebase](https://github.com/Larpon/QtFirebase), but now not in use.
 
-This project uses Google's ![Material Design Icons](https://material.io/tools/icons/) font.
+This project uses Google's [Material Design Icons](https://material.io/tools/icons/) font.
 
 
 ## Screenshots:
